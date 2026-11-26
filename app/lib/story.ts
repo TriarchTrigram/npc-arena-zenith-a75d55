@@ -483,6 +483,9 @@ export const bossesBeaten = (cleared: number[]): BossId[] =>
     return boss && (cleared[i] ?? 0) >= stagesIn(i) ? [boss] : [];
   });
 
+/** Every chapter with every stage cleared: what developer mode treats as open. */
+export const allCleared = (): number[] => CHAPTERS.map((_, i) => stagesIn(i));
+
 /** The book and chapter (both from 1) each boss closes. */
 export const bossChapter = (id: BossId): { book: number; chapter: number } => {
   const ch = Math.max(0, CHAPTERS.findIndex((c) => c.stages.some((s) => s.boss === id)));

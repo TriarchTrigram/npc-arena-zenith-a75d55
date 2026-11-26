@@ -14,6 +14,8 @@ export default [
   route("api/own-power", "routes/api.own-power.tsx"),
   // Progress codes: save this browser's progress under a code, or load a code's progress back.
   route("api/progress-code", "routes/api.progress-code.tsx"),
+  // Developer mode: checks the developer code on the server.
+  route("api/dev-mode", "routes/api.dev-mode.tsx"),
   // Trusted route the platform calls to run recurring actions (bearer-gated).
   // Keep it registered at this path.
   route("api/internal/scheduled", "routes/api.internal.scheduled.tsx"),

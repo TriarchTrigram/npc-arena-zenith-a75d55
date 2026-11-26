@@ -13,6 +13,7 @@ import { FORMS } from "~/lib/forms";
 import { QUESTS, claimQuest, goalDone, questReady, useQuests, type Quest, type Stats } from "~/lib/quests";
 import { cn } from "~/lib/utils";
 import { ProgressCodeSheet } from "~/components/progress-code-sheet";
+import { DevModeSheet } from "~/components/dev-mode-sheet";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -30,6 +31,7 @@ function TopBar() {
       <Button asChild variant="ghost" size="sm"><Link to="/roster"><Text id="common.fighters" /></Link></Button>
       <Button asChild variant="secondary" size="sm"><Link to="/quests" aria-current="page"><Text id="common.quests" /></Link></Button>
       <ProgressCodeSheet />
+      <DevModeSheet />
     </nav>
   );
 }

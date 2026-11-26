@@ -16,13 +16,15 @@ import {
 import { cn } from "~/lib/utils";
 import { DEF_BY_ID, FIGHTERS, NEWGEN_IDS, QUESTERS, defOf, isNewGen, type FighterDef, type Role } from "~/lib/fighters";
 import { BOSSES, BOSS_PHASES, type BossId } from "~/lib/bosses";
-import { bossChapter, bossesBeaten, loadProgress } from "~/lib/story";
-import { QUESTS, unlockedOf, useQuests } from "~/lib/quests";
+import { allCleared, bossChapter, bossesBeaten, loadProgress } from "~/lib/story";
+import { useDevMode } from "~/lib/dev-mode";
+import { QUESTS, useUnlocked } from "~/lib/quests";
 import { FighterPortrait } from "~/components/quest-scenes";
 import { FORMS, FORM_NAME, HYPER_FORM, PERFECTED_FLAME, formsOf, type Form, type FormKind } from "~/lib/forms";
 import { useHybrids } from "~/lib/hybrids";
 import { FusionSheet, HybridParents } from "~/components/fusion-sheet";
 import { ProgressCodeSheet } from "~/components/progress-code-sheet";
+import { DevModeSheet } from "~/components/dev-mode-sheet";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -64,6 +66,7 @@ function TopBar() {
         </Link>
       </Button>
       <ProgressCodeSheet />
+      <DevModeSheet />
     </nav>
   );
 }
@@ -213,12 +216,13 @@ export default function Roster() {
   const hybridKeys = useHybrids();
   const hybrids = hybridKeys.map(defOf);
   const shownHybrids = hybrids.filter((f) => role === "all" || f.role === role);
-  const unlocked = unlockedOf(useQuests());
+  const unlocked = useUnlocked();
+  const dev = useDevMode().on;
   const earned = unlocked.filter((p) => !isNewGen(p));
   const youngEarned = unlocked.filter(isNewGen);
   // Story progress lives in this browser, so it is read after the first render
   const [beaten, setBeaten] = useState<BossId[]>([]);
-  useEffect(() => setBeaten(bossesBeaten(loadProgress().cleared)), []);
+  useEffect(() => setBeaten(bossesBeaten(dev ? allCleared() : loadProgress().cleared)), [dev]);
 
   return (
     <PageContainer>

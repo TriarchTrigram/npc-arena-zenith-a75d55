@@ -15,9 +15,10 @@ import { FIGHTERS, bossRosterId, defOf, isCustomKey, isNewGen, type FighterDef, 
 import { useMyFighter } from "~/lib/my-fighter";
 import { CharacterCreator } from "~/components/character-creator";
 import { BOSSES, type BossId } from "~/lib/bosses";
-import { unlockedOf, useQuests } from "~/lib/quests";
+import { useUnlocked } from "~/lib/quests";
+import { useDevMode } from "~/lib/dev-mode";
 import { useHybrids } from "~/lib/hybrids";
-import { bossesBeaten, loadProgress } from "~/lib/story";
+import { allCleared, bossesBeaten, loadProgress } from "~/lib/story";
 import { W, H, GROUND, newGame, step, drawScene, setAir, strollPose, drawStroller, type Game, type Fighter } from "~/lib/arena-engine";
 import { arenaSound } from "~/lib/arena-sound";
 import { arenaMusic } from "~/lib/arena-music";
@@ -156,13 +157,14 @@ function Group({ title, children }: { title: StringKey; children: ReactNode }) {
 }
 
 export function FreeWorld({ music, onExit }: { music?: ReactNode; onExit?: () => void }) {
-  const quests = unlockedOf(useQuests());
+  const quests = useUnlocked();
+  const dev = useDevMode().on;
   const questers = quests.filter((p) => !isNewGen(p));
   const young = quests.filter(isNewGen);
   const rehab = useRehab();
   const hybrids = useHybrids();
   const [beaten, setBeaten] = useState<BossId[]>([]);
-  useEffect(() => setBeaten(bossesBeaten(loadProgress().cleared)), []);
+  useEffect(() => setBeaten(bossesBeaten(dev ? allCleared() : loadProgress().cleared)), [dev]);
   const reformed = beaten.filter((b) => rehab.includes(b));
   const reformedIds = reformed.map(bossRosterId);
   const me = useMyFighter();

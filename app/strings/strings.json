@@ -378,6 +378,32 @@
       "failed": "Something went wrong. Please try again."
     }
   },
+  "devMode": {
+    "open": "Developer",
+    "on": "On",
+    "title": "Developer mode",
+    "intro": "Developer mode opens everything in the game in this browser, for testing.",
+    "lockedBody": "Type the developer code to unlock it.",
+    "label": "Developer code",
+    "placeholder": "6-digit code",
+    "unlock": "Unlock",
+    "checking": "Checking…",
+    "switchLabel": "Developer mode",
+    "switchOn": "Developer mode is on.",
+    "switchOff": "Developer mode is off. Everything is back to what you've unlocked yourself.",
+    "opensHeading": "While it's on",
+    "opens1": "Every quest fighter and new-generation fighter can be picked.",
+    "opens2": "Every Story boss can be picked outside Story.",
+    "opens3": "Every Story book, chapter and stage is open, and every chapter has Skip to the boss.",
+    "opens4": "Fights don't count toward quests, Story progress or new-generation fighters, so your real save stays as it was.",
+    "lock": "Lock developer mode",
+    "lockHint": "Locking it means the code has to be typed again to use it in this browser.",
+    "error": {
+      "wrong": "That code isn't right.",
+      "busy": "Too many tries. Wait a few minutes, then try again.",
+      "failed": "Couldn't check the code. Please try again."
+    }
+  },
   "roster": {
     "eyebrow": "The roster",
     "title": "Meet the 17 fighters",

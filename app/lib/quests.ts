@@ -4,6 +4,7 @@
 // The same save keeps the new-generation fighters won by luck after a Story boss win (`rollNewGen`).
 import { useEffect, useState } from "react";
 import { NEWGEN_IDS, QUESTERS, type Power } from "./fighters";
+import { isDevMode, useDevMode } from "./dev-mode";
 
 /** What the arena counts toward quests. */
 export type Stat = "fights" | "kos" | "tournaments" | "bosses" | "forms";
@@ -101,6 +102,18 @@ export const unlockedOf = (q: QuestSave): Power[] => [
   ...QUESTS.filter((x) => x.reward && q.claimed.includes(x.id)).map((x) => x.reward!).filter((p) => QUESTERS.some((d) => d.id === p)),
   ...NEWGEN_IDS.filter((p) => q.newgen.includes(p)),
 ];
+
+/** Every quest fighter and every new-generation fighter: what developer mode opens. */
+export const everyUnlock = (): Power[] => unlockedOf({ stats: EMPTY.stats, claimed: QUESTS.map((x) => x.id), newgen: [...NEWGEN_IDS] });
+
+/** The fighters this browser can pick right now: everything in developer mode, otherwise what it has earned. */
+export const unlockedNow = (): Power[] => (isDevMode() ? everyUnlock() : unlockedOf(loadQuests()));
+
+/** `unlockedNow` for a screen, read after the first render. */
+export function useUnlocked(): Power[] {
+  const q = useQuests();
+  return useDevMode().on ? everyUnlock() : unlockedOf(q);
+}
 
 /** The saved quest progress, read after the first render so the server and browser agree. */
 export function useQuests(): QuestSave {

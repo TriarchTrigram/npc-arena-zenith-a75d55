@@ -69,7 +69,7 @@ function roadPath(pts: [number, number][]) {
   return d;
 }
 
-export function StoryMap({ chapter, done, stage, onStage, locked }: { chapter: number; done: number; stage: number; onStage: (i: number) => void; locked: boolean }) {
+export function StoryMap({ chapter, done, reach = done, stage, onStage, locked }: { chapter: number; done: number; /** The furthest stage that can be picked; developer mode opens them all. */ reach?: number; stage: number; onStage: (i: number) => void; locked: boolean }) {
   const aria = useString("story.map.aria");
   const theme = THEMES[chapter] ?? THEMES[0];
   const flip = chapter % 2 === 1;
@@ -103,7 +103,7 @@ export function StoryMap({ chapter, done, stage, onStage, locked }: { chapter: n
         <ol aria-label={aria} className="absolute inset-0">
           {stages.map((s, i) => {
             const [x, y] = road[i];
-            const open = i <= done;
+            const open = i <= reach;
             const beaten = i < done;
             const on = i === stage;
             const next = i === done && !s.boss;

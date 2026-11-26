@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
 import { DEF_BY_ID, FIGHTERS, type Power } from "~/lib/fighters";
-import { unlockedOf, useQuests } from "~/lib/quests";
+import { useUnlocked } from "~/lib/quests";
 import { PiBookOpenTextFill, PiFastForwardFill, PiFilmSlateBold, PiSwordFill } from "react-icons/pi";
 import { BOOKS, CHAPTERS, SKIP_AFTER, bookOf, canSkipToBoss, canTeam, chapterInBook, chapterOpen, chaptersOf, enemySide, lairOf, playerSide, stagesIn, type Pair } from "~/lib/story";
 import { BOSSES } from "~/lib/bosses";
@@ -12,12 +12,14 @@ import { FighterDot } from "~/components/fighter-dot";
 import { StoryMap } from "~/components/story-map";
 import { CHAPTER_TITLES, stageNameKey } from "~/components/story-scene";
 
-export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, onChapter, stage, onStage, pair, onPair, locked, onPlay, onIntro }: {
+export function StoryPanel({ cleared, wins, hasQuester, dev = false, onSkipToBoss, chapter, onChapter, stage, onStage, pair, onPair, locked, onPlay, onIntro }: {
   cleared: number[];
   /** How many times each chapter's boss has been beaten. */
   wins: number[];
   /** Whether this browser owns at least one quest fighter. */
   hasQuester: boolean;
+  /** Developer mode: every book, chapter and stage is open, and every boss can be skipped to. */
+  dev?: boolean;
   /** Starts the chapter's boss fight at once, with no stages or scene before it. */
   onSkipToBoss: () => void;
   chapter: number;
@@ -36,21 +38,24 @@ export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, o
   const secondAria = useString("story.second");
   const chaptersAria = useString("story.chaptersAria");
   const booksAria = useString("story.books.aria");
+  const isOpen = (ch: number) => dev || chapterOpen(cleared, ch);
   const book = bookOf(chapter);
   const stages = CHAPTERS[chapter].stages;
   const total = stagesIn(chapter);
   /** Opens a book on its furthest open chapter. */
   const openBook = (b: number) => {
-    const chs = chaptersOf(b).filter((ch) => chapterOpen(cleared, ch));
+    const chs = chaptersOf(b).filter((ch) => isOpen(ch));
     if (chs.length) onChapter(chs[chs.length - 1]);
   };
   const done = cleared[chapter] ?? 0;
+  // in developer mode every stage can be played and the map shows them all open
+  const reach = dev ? total : done;
   const foes = enemySide(chapter, stages[stage] ?? stages[0]);
   const side = playerSide(pair);
   const teamOk = canTeam(pair);
   const fused = pair.fuse || !teamOk;
   const chapterDone = done >= total;
-  const canSkip = canSkipToBoss({ cleared, wins }, chapter, hasQuester);
+  const canSkip = dev ? !!stages[lairOf(chapter)]?.boss : canSkipToBoss({ cleared, wins }, chapter, hasQuester);
   const bossId = stages[lairOf(chapter)]?.boss;
   const bossName = bossId ? BOSSES[bossId].name : "";
   // a cleared chapter always has one win, so at most one more is ever needed
@@ -61,7 +66,7 @@ export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, o
       <div className="flex flex-col gap-2" data-story-books>
         <div className="-my-1.5 flex gap-2 overflow-x-auto py-1.5" role="group" aria-label={booksAria}>
           {BOOKS.map((b, i) => {
-            const open = chapterOpen(cleared, b.first);
+            const open = isOpen(b.first);
             return (
               <Button
                 key={i}
@@ -80,13 +85,13 @@ export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, o
         </div>
         {/* what opens the next locked book */}
         {(() => {
-          const next = BOOKS.findIndex((b, i) => i > 0 && !chapterOpen(cleared, b.first));
+          const next = BOOKS.findIndex((b, i) => i > 0 && !isOpen(b.first));
           return next > 0 ? <Text id={`story.books.b${next + 1}Locked` as StringKey} as="p" className="text-sm text-muted-foreground" /> : null;
         })()}
       </div>
       <div className="-my-1.5 flex gap-2 overflow-x-auto py-1.5" role="group" aria-label={chaptersAria} data-story-chapters>
         {chaptersOf(book).map((ch) => {
-          const open = chapterOpen(cleared, ch);
+          const open = isOpen(ch);
           return (
             <Button
               key={ch}
@@ -133,7 +138,7 @@ export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, o
         </div>
       </div>
 
-      <StoryMap chapter={chapter} done={done} stage={stage} onStage={onStage} locked={locked} />
+      <StoryMap chapter={chapter} done={done} reach={reach} stage={stage} onStage={onStage} locked={locked} />
 
       <div className="flex flex-col gap-4 rounded-xl border-2 border-border bg-background-secondary px-4 py-4 sm:flex-row sm:items-end" data-story-stage>
         <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -166,7 +171,7 @@ export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, o
             ))}
           </ul>
         </div>
-        <Button className="shrink-0" disabled={locked || stage > done} onClick={onPlay}>
+        <Button className="shrink-0" disabled={locked || stage > reach} onClick={onPlay}>
           <PiSwordFill className="size-5" aria-hidden />
           <Text id="story.map.play" />
         </Button>
@@ -223,7 +228,7 @@ export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, o
 
 /** Picks one fighter: the 16 originals, then every quest fighter this browser has claimed. */
 export function FighterSelect({ value, label, disabled, onChange }: { value: Power; label: string; disabled: boolean; onChange: (p: Power) => void }) {
-  const earned = unlockedOf(useQuests());
+  const earned = useUnlocked();
   const ids: Power[] = [...FIGHTERS.map((f) => f.id), ...earned];
   return (
     <Select value={value} onValueChange={(v) => onChange(v as Power)} disabled={disabled}>

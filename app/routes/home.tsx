@@ -21,7 +21,9 @@ import { useMyFighter } from "~/lib/my-fighter";
 import { BOSSES } from "~/lib/bosses";
 import { UnlockCutscene } from "~/components/quest-scenes";
 import { rememberHybrid, useHybrids } from "~/lib/hybrids";
-import { loadQuests, recordFight, recordTournament, rollNewGen, unlockedOf, useQuests } from "~/lib/quests";
+import { recordFight, recordTournament, rollNewGen, unlockedNow, useUnlocked } from "~/lib/quests";
+import { useDevMode } from "~/lib/dev-mode";
+import { DevModeSheet } from "~/components/dev-mode-sheet";
 import { FusionSheet } from "~/components/fusion-sheet";
 import { FighterDot } from "~/components/fighter-dot";
 import { W, H, TEAM_COLORS, newGame, step, drawScene, buildBackdrop, buildMindscapeBackdrop, setPreFightWords, type Game, type FeedItem } from "~/lib/arena-engine";
@@ -33,7 +35,7 @@ import { BracketView, type TeamEntry } from "~/components/bracket-view";
 import { TitleScreen, type TitleMode } from "~/components/title-screen";
 import { FreeWorld } from "~/components/free-world";
 import { StoryPanel } from "~/components/story-panel";
-import { CHAPTERS, bookOf, bossesBeaten, chapterInBook, endsBook, lairOf, stagesIn, canTeam, chapterOpen, fusionOrder, loadProgress, loadSeenIntros, markIntroSeen, saveProgress, stageLineup, type Pair } from "~/lib/story";
+import { CHAPTERS, allCleared, bookOf, bossesBeaten, chapterInBook, endsBook, lairOf, stagesIn, canTeam, chapterOpen, fusionOrder, loadProgress, loadSeenIntros, markIntroSeen, saveProgress, stageLineup, type Pair } from "~/lib/story";
 import { StoryScene } from "~/components/story-scene";
 import { storyBackdrop } from "~/lib/story-backdrops";
 import type { Scene } from "~/lib/story-script";
@@ -115,7 +117,9 @@ export default function Home() {
     setPicked((cur) => (cur.some((id) => isCustomKey(id) && id !== now) ? cur.map((id) => (isCustomKey(id) ? now : id)) : cur));
     setJugg((cur) => (isCustomKey(cur) && cur !== now ? now : cur));
   }, [me.id]);
-  const earnedAll = unlockedOf(useQuests());
+  // developer mode opens every fighter, boss, chapter and stage, and keeps its fights out of the save
+  const dev = useDevMode().on;
+  const earnedAll = useUnlocked();
   const questers = earnedAll.filter((p) => !isNewGen(p));
   const young = earnedAll.filter(isNewGen);
   const [status, setStatus] = useState<Status>("ready");
@@ -142,7 +146,7 @@ export default function Home() {
   const stageRef = useRef<{ ch: number; i: number } | null>(null);
   const cleared = clearedAll[chapter] ?? 0;
   // Story bosses beaten in this browser, playable everywhere but Story
-  const bosses = bossesBeaten(clearedAll).map(bossRosterId);
+  const bosses = bossesBeaten(dev ? allCleared() : clearedAll).map(bossRosterId);
   // unlock cutscenes waiting to play, one after another: a beaten boss, then a new-generation fighter
   type Unlock = { def: FighterDef; eyebrow: StringKey; joined: StringKey };
   const [unlocks, setUnlocks] = useState<Unlock[]>([]);
@@ -162,8 +166,17 @@ export default function Home() {
     setChapter(ch);
     setStage(Math.min(all[ch] ?? 0, lairOf(ch)));
   }, []);
+  // switching developer mode off returns Story to the furthest chapter this browser has really opened
+  useEffect(() => {
+    if (dev || chapterOpen(clearedAll, chapter)) return;
+    let ch = 0;
+    while (ch + 1 < CHAPTERS.length && chapterOpen(clearedAll, ch + 1)) ch++;
+    setChapter(ch);
+    setStage(Math.min(clearedAll[ch] ?? 0, lairOf(ch)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dev]);
   const chooseChapter = (ch: number) => {
-    if (!chapterOpen(clearedAll, ch)) return;
+    if (!dev && !chapterOpen(clearedAll, ch)) return;
     setChapter(ch);
     setStage(Math.min(clearedAll[ch] ?? 0, lairOf(ch)));
   };
@@ -251,7 +264,7 @@ export default function Home() {
   speedRef.current = speed;
 
   const validFor = (m: Mode, n: number) =>
-    m === "story" ? stage <= cleared : m === "duel" ? n === 2 : m === "teams" ? n >= teamCount * 2 && n <= 16 : m === "teamTournament" ? n % teamSize === 0 && n / teamSize >= 3 && n <= MAX_PICKS : m === "juggernaut" ? n === CHALLENGERS && !picked.includes(jugg) : n >= 3 && n <= 16;
+    m === "story" ? stage <= cleared || dev : m === "duel" ? n === 2 : m === "teams" ? n >= teamCount * 2 && n <= 16 : m === "teamTournament" ? n % teamSize === 0 && n / teamSize >= 3 && n <= MAX_PICKS : m === "juggernaut" ? n === CHALLENGERS && !picked.includes(jugg) : n >= 3 && n <= 16;
   const valid = validFor(mode, picked.length);
   const teamsFor = (ids: RosterId[]) => ids.map((_, i) => i % teamCount);
   // Tournament and Team Tournament share the bracket flow; each keeps its own bracket.
@@ -308,10 +321,10 @@ export default function Home() {
         );
       } else setFallout(null);
       // the final just crowned a champion: that counts toward quests
-      if (next && champion(next) && !(bk && champion(bk))) recordTournament();
+      if (!dev && next && champion(next) && !(bk && champion(bk))) recordTournament();
     }
-    // every fight played to the end counts toward quests
-    recordFight({
+    // every fight played to the end counts toward quests, except in developer mode
+    if (!dev) recordFight({
       kos: g.fighters.filter((f) => !f.alive).length,
       forms: g.fighters.filter((f) => f.form && f.form.kind !== "phase").length,
       boss: mode === "story" && stageRef.current != null && stageRef.current.i === lairOf(stageRef.current.ch) && g.winnerTeam === 0,
@@ -322,16 +335,21 @@ export default function Home() {
       // the first win over a chapter's boss adds it to the roster
       const beaten = CHAPTERS[at0.ch]?.stages[at0.i]?.boss;
       const queued: Unlock[] = [];
-      if (beaten && (clearedAll[at0.ch] ?? 0) < stagesIn(at0.ch)) {
+      if (beaten && !dev && (clearedAll[at0.ch] ?? 0) < stagesIn(at0.ch)) {
         queued.push({ def: BOSSES[beaten], eyebrow: "arena.bosses.unlockEyebrow", joined: "arena.bosses.unlockJoined" });
       }
       // every boss win, first or replayed, is a chance for a new-generation fighter to join
-      const young = beaten ? rollNewGen() : null;
+      const young = beaten && !dev ? rollNewGen() : null;
       if (young) queued.push({ def: DEF_BY_ID[young], eyebrow: "arena.newgen.unlockEyebrow", joined: "arena.newgen.unlockJoined" });
       if (beaten) {
         afterOutro.current = queued;
         window.setTimeout(() => setScene({ kind: "outro", ch: at0.ch, stage: at0.i }), 1600);
       } else if (queued.length) window.setTimeout(() => setUnlocks((q) => [...q, ...queued]), 1600);
+      // developer mode plays the scenes but leaves the saved Story progress as it was
+      if (dev) {
+        setStatus("finished");
+        return;
+      }
       const nextCleared = [...clearedAll];
       nextCleared[at0.ch] = Math.max(nextCleared[at0.ch] ?? 0, at0.i + 1);
       const nextWins = [...winsAll];
@@ -477,7 +495,7 @@ export default function Home() {
   const start = () => {
     if (mode === "story") {
       // a stage opens with its scene; the fight starts when the scene ends
-      if (stage <= cleared) playStage(stage);
+      if (stage <= cleared || dev) playStage(stage);
       return;
     }
     if (tourMode) {
@@ -560,7 +578,7 @@ export default function Home() {
   useEffect(() => {
     if (!askedFighter) return;
     setParams({}, { replace: true, preventScrollReset: true });
-    if (!unlockedOf(loadQuests()).includes(askedFighter as Power)) return;
+    if (!unlockedNow().includes(askedFighter as Power)) return;
     enterFromTitle("duel");
     setPicked([askedFighter, askedFighter === "pyro" ? "cryo" : "pyro"]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -612,6 +630,7 @@ export default function Home() {
         <Button asChild variant="ghost" size="sm"><Link to="/roster"><Text id="common.fighters" /></Link></Button>
         <Button asChild variant="ghost" size="sm"><Link to="/quests"><Text id="common.quests" /></Link></Button>
         <ProgressCodeSheet />
+        <DevModeSheet />
       </nav>
 
       {screen === "title" ? (
@@ -822,7 +841,7 @@ export default function Home() {
             )}
             {mode === "story" ? (
               <div className="mt-6">
-                <StoryPanel cleared={clearedAll} wins={winsAll} hasQuester={questers.length > 0} onSkipToBoss={() => { restart(); startStage(lairOf(chapter)); }} chapter={chapter} onChapter={chooseChapter} stage={stage} onStage={(i) => { if (status === "finished") restart(); setStage(i); }} pair={pair} onPair={setPair} locked={fighting} onPlay={() => { restart(); if (stage <= cleared) playStage(stage); }} onIntro={() => setScene({ kind: "intro", ch: chapter, stage: 0 })} />
+                <StoryPanel cleared={clearedAll} wins={winsAll} hasQuester={questers.length > 0} dev={dev} onSkipToBoss={() => { restart(); startStage(lairOf(chapter)); }} chapter={chapter} onChapter={chooseChapter} stage={stage} onStage={(i) => { if (status === "finished") restart(); setStage(i); }} pair={pair} onPair={setPair} locked={fighting} onPlay={() => { restart(); if (stage <= cleared || dev) playStage(stage); }} onIntro={() => setScene({ kind: "intro", ch: chapter, stage: 0 })} />
               </div>
             ) : (
             <>
