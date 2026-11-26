@@ -24,7 +24,7 @@ import { rememberHybrid, useHybrids } from "~/lib/hybrids";
 import { loadQuests, recordFight, recordTournament, rollNewGen, unlockedOf, useQuests } from "~/lib/quests";
 import { FusionSheet } from "~/components/fusion-sheet";
 import { FighterDot } from "~/components/fighter-dot";
-import { W, H, TEAM_COLORS, newGame, step, drawScene, buildBackdrop, setPreFightWords, type Game, type FeedItem } from "~/lib/arena-engine";
+import { W, H, TEAM_COLORS, newGame, step, drawScene, buildBackdrop, buildMindscapeBackdrop, setPreFightWords, type Game, type FeedItem } from "~/lib/arena-engine";
 import { arenaSound } from "~/lib/arena-sound";
 import { arenaMusic, chapterTheme } from "~/lib/arena-music";
 import { MusicControl } from "~/components/music-control";
@@ -343,11 +343,14 @@ export default function Home() {
     setStatus("finished");
   };
 
-  // Story stages each have their own painting; every other mode fights in the home arena.
+  // Story stages each have their own painting; a Riftmaker vs Past Riftmaker duel gets the
+  // corrupted mindscape; every other mode fights in the home arena.
+  const isRiftmakerMindscape =
+    mode === "duel" && picked.length === 2 && picked.includes(bossRosterId("riftmaker")) && picked.includes("pastrift");
   const backdropRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
-    backdropRef.current = mode === "story" ? storyBackdrop(chapter, stage) : null;
-  }, [mode, chapter, stage, screen]);
+    backdropRef.current = mode === "story" ? storyBackdrop(chapter, stage) : isRiftmakerMindscape ? buildMindscapeBackdrop() : null;
+  }, [mode, chapter, stage, screen, isRiftmakerMindscape]);
 
   // A chapter's opening scene plays the first time it is opened in this browser.
   useEffect(() => {

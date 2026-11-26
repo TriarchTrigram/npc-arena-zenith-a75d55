@@ -3212,6 +3212,181 @@ export function buildBackdrop(): HTMLCanvasElement {
   return setAir(c, { clouds: "hsl(0 0% 100%)", motes: "confetti", amount: 1 });
 }
 
+/**
+ * The Riftmaker's mind, caught between who he was and what the Axiom made him: the warm
+ * arena he remembers on one side, the violet void of his corruption spreading in from the
+ * other, a jagged seam of cracked light between them. Only for a Riftmaker vs Past Riftmaker duel.
+ */
+export function buildMindscapeBackdrop(): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext("2d")!;
+  const FLOOR = 440;
+  const SEAM = W * 0.52;
+  let seed = 907;
+  const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+
+  // a jagged seam, drifting left to right as it falls
+  const seamPts: { x: number; y: number }[] = [];
+  for (let y = -20; y <= H + 20; y += 40) seamPts.push({ x: SEAM + Math.sin(y * 0.02) * 26 + (rnd() - 0.5) * 34, y });
+
+  const hillsOn = (y: number, amp: number, col: string, sd: number) => {
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(0, FLOOR);
+    for (let x = 0; x <= W; x += 20) ctx.lineTo(x, y - Math.abs(Math.sin(x * 0.006 + sd)) * amp);
+    ctx.lineTo(W, FLOOR);
+    ctx.fill();
+  };
+
+  // ----- left: the memory, warm and whole -----
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(0, -20);
+  for (const p of seamPts) ctx.lineTo(p.x, p.y);
+  ctx.lineTo(0, H + 20);
+  ctx.closePath();
+  ctx.clip();
+  const skyL = ctx.createLinearGradient(0, 0, 0, FLOOR);
+  skyL.addColorStop(0, "hsl(222 70% 62%)");
+  skyL.addColorStop(0.55, "hsl(280 55% 72%)");
+  skyL.addColorStop(1, "hsl(36 90% 80%)");
+  ctx.fillStyle = skyL;
+  ctx.fillRect(0, 0, W, FLOOR);
+  const sun = ctx.createRadialGradient(200, 230, 10, 200, 230, 210);
+  sun.addColorStop(0, "hsl(46 100% 90%)");
+  sun.addColorStop(0.3, "hsl(40 100% 74% / 0.75)");
+  sun.addColorStop(1, "hsl(30 100% 78% / 0)");
+  ctx.fillStyle = sun;
+  ctx.fillRect(0, 50, 420, 400);
+  hillsOn(310, 70, "hsl(270 36% 66%)", 1.4);
+  hillsOn(350, 46, "hsl(286 30% 58%)", 3.3);
+  const wallTop = 350;
+  ctx.fillStyle = "hsl(30 36% 70% / 0.9)";
+  ctx.fillRect(0, wallTop, W, FLOOR - wallTop);
+  for (let x = 10; x < W; x += 90) {
+    ctx.fillStyle = "hsl(24 28% 40% / 0.6)";
+    ctx.beginPath();
+    ctx.moveTo(x, FLOOR);
+    ctx.lineTo(x, wallTop + 40);
+    ctx.arc(x + 22, wallTop + 40, 22, Math.PI, 0);
+    ctx.lineTo(x + 44, FLOOR);
+    ctx.fill();
+  }
+  const floorL = ctx.createLinearGradient(0, FLOOR, 0, H);
+  floorL.addColorStop(0, "hsl(38 60% 72%)");
+  floorL.addColorStop(1, "hsl(32 54% 58%)");
+  ctx.fillStyle = floorL;
+  ctx.fillRect(0, FLOOR, W, H - FLOOR);
+  for (let i = 0; i < 10; i++) {
+    const x = rnd() * SEAM, y = 80 + rnd() * (FLOOR - 80);
+    ctx.fillStyle = `hsl(300 90% 70% / ${0.1 + rnd() * 0.12})`;
+    ctx.beginPath();
+    ctx.arc(x, y, 1.5 + rnd() * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // ----- right: the corruption, a violet void -----
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(W, -20);
+  ctx.lineTo(seamPts[0].x, seamPts[0].y);
+  for (const p of seamPts.slice(1)) ctx.lineTo(p.x, p.y);
+  ctx.lineTo(W, H + 20);
+  ctx.closePath();
+  ctx.clip();
+  const skyR = ctx.createLinearGradient(0, 0, 0, FLOOR);
+  skyR.addColorStop(0, "hsl(256 46% 10%)");
+  skyR.addColorStop(0.55, "hsl(276 44% 20%)");
+  skyR.addColorStop(1, "hsl(318 70% 34%)");
+  ctx.fillStyle = skyR;
+  ctx.fillRect(0, 0, W, FLOOR);
+  for (let i = 0; i < 70; i++) {
+    const x = SEAM + rnd() * (W - SEAM), y = rnd() * FLOOR, tw = 0.3 + rnd() * 0.5;
+    ctx.fillStyle = `hsl(0 0% 100% / ${tw})`;
+    ctx.fillRect(x, y, 1.4, 1.4);
+  }
+  ctx.save();
+  ctx.translate(760, 170);
+  for (let k = 0; k < 5; k++) {
+    ctx.rotate(0.55);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 50 + k * 22, 14 + k * 5, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = `hsl(318 100% 76% / ${0.55 - k * 0.07})`;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
+  ctx.restore();
+  for (let k = 0; k < 4; k++) {
+    const ix = SEAM + 40 + rnd() * (W - SEAM - 60), iy = 100 + rnd() * 200, iw = 30 + rnd() * 50;
+    ctx.fillStyle = "hsl(266 22% 24%)";
+    ctx.beginPath();
+    ctx.moveTo(ix - iw, iy);
+    ctx.lineTo(ix + iw, iy);
+    ctx.lineTo(ix + iw * 0.2, iy + iw * 0.8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "hsl(318 60% 50% / 0.5)";
+    ctx.fillRect(ix - iw, iy - 5, iw * 2, 6);
+  }
+  hillsOn(310, 70, "hsl(272 26% 24%)", 2.1);
+  hillsOn(350, 46, "hsl(262 24% 16%)", 5);
+  const floorR = ctx.createLinearGradient(0, FLOOR, 0, H);
+  floorR.addColorStop(0, "hsl(280 26% 26%)");
+  floorR.addColorStop(1, "hsl(260 30% 14%)");
+  ctx.fillStyle = floorR;
+  ctx.fillRect(0, FLOOR, W, H - FLOOR);
+  ctx.strokeStyle = "hsl(318 90% 64% / 0.5)";
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 5; i++) {
+    const x0 = SEAM + rnd() * (W - SEAM);
+    ctx.beginPath();
+    ctx.moveTo(x0, FLOOR + 6);
+    ctx.lineTo(x0 + (rnd() - 0.5) * 60, H - 10);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // ----- the seam: a jagged crack of light, corruption bleeding into the memory -----
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(seamPts[0].x, seamPts[0].y);
+  for (const p of seamPts.slice(1)) ctx.lineTo(p.x, p.y);
+  ctx.shadowColor = "hsl(300 100% 70%)";
+  ctx.shadowBlur = 24;
+  ctx.strokeStyle = "hsl(300 100% 80% / 0.85)";
+  ctx.lineWidth = 6;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = "hsl(0 0% 100% / 0.9)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.strokeStyle = "hsl(300 90% 70% / 0.5)";
+  ctx.lineWidth = 1.5;
+  for (let i = 0; i < 7; i++) {
+    const p = seamPts[(i * 3 + 1) % seamPts.length];
+    const len = 30 + rnd() * 70;
+    const ang = Math.PI + (rnd() - 0.5) * 0.9;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x + Math.cos(ang) * len, p.y + Math.sin(ang) * len);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  ctx.fillStyle = INK;
+  ctx.fillRect(0, FLOOR - 2, W, 4);
+  ctx.strokeStyle = "hsl(0 0% 100% / 0.4)";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.ellipse(W / 2, 540, 300, 40, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  return setAir(c, { motes: "sparks", hue: 300, twinkle: true, amount: 0.75 });
+}
+
 function limb(ctx: CanvasRenderingContext2D, pts: { x: number; y: number }[], col: string, w: number, flash: boolean, ink = INK) {
   ctx.beginPath();
   pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
