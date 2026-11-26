@@ -5,14 +5,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { cn } from "~/lib/utils";
 import { DEF_BY_ID, FIGHTERS, type Power } from "~/lib/fighters";
 import { unlockedOf, useQuests } from "~/lib/quests";
-import { PiBookOpenTextFill, PiFilmSlateBold, PiSwordFill } from "react-icons/pi";
-import { BOOKS, CHAPTERS, bookOf, canTeam, chapterInBook, chapterOpen, chaptersOf, enemySide, playerSide, stagesIn, type Pair } from "~/lib/story";
+import { PiBookOpenTextFill, PiFastForwardFill, PiFilmSlateBold, PiSwordFill } from "react-icons/pi";
+import { BOOKS, CHAPTERS, SKIP_AFTER, bookOf, canSkipToBoss, canTeam, chapterInBook, chapterOpen, chaptersOf, enemySide, lairOf, playerSide, stagesIn, type Pair } from "~/lib/story";
+import { BOSSES } from "~/lib/bosses";
 import { FighterDot } from "~/components/fighter-dot";
 import { StoryMap } from "~/components/story-map";
 import { CHAPTER_TITLES, stageNameKey } from "~/components/story-scene";
 
-export function StoryPanel({ cleared, chapter, onChapter, stage, onStage, pair, onPair, locked, onPlay, onIntro }: {
+export function StoryPanel({ cleared, wins, hasQuester, onSkipToBoss, chapter, onChapter, stage, onStage, pair, onPair, locked, onPlay, onIntro }: {
   cleared: number[];
+  /** How many times each chapter's boss has been beaten. */
+  wins: number[];
+  /** Whether this browser owns at least one quest fighter. */
+  hasQuester: boolean;
+  /** Starts the chapter's boss fight at once, with no stages or scene before it. */
+  onSkipToBoss: () => void;
   chapter: number;
   onChapter: (ch: number) => void;
   stage: number;
@@ -42,6 +49,12 @@ export function StoryPanel({ cleared, chapter, onChapter, stage, onStage, pair, 
   const side = playerSide(pair);
   const teamOk = canTeam(pair);
   const fused = pair.fuse || !teamOk;
+  const chapterDone = done >= total;
+  const canSkip = canSkipToBoss({ cleared, wins }, chapter, hasQuester);
+  const bossId = stages[lairOf(chapter)]?.boss;
+  const bossName = bossId ? BOSSES[bossId].name : "";
+  // a cleared chapter always has one win, so at most one more is ever needed
+  const winsLeft = Math.max(0, SKIP_AFTER - (wins[chapter] ?? 0));
 
   return (
     <div className="flex flex-col gap-6" data-story-panel>
@@ -96,11 +109,28 @@ export function StoryPanel({ cleared, chapter, onChapter, stage, onStage, pair, 
           <Text id={CHAPTER_TITLES[chapter]} as="h3" className="font-display text-xl text-foreground" />
           <Text id="story.chapterIntro" as="p" className="max-w-prose text-sm text-muted-foreground" />
           <Text id="story.progress" vars={{ count: done, total }} as="p" className="text-sm font-semibold text-foreground tabular-nums" />
+          {chapterDone && !canSkip && bossName && (
+            <Text
+              id={!hasQuester || winsLeft === 0 ? "story.skip.needQuester" : "story.skip.oneMore"}
+              vars={{ boss: bossName }}
+              as="p"
+              className="max-w-prose text-sm text-muted-foreground"
+              data-story-skip-hint
+            />
+          )}
         </div>
-        <Button size="sm" variant="outline" disabled={locked} onClick={onIntro}>
-          <PiFilmSlateBold className="size-5" aria-hidden />
-          <Text id="story.map.watchIntro" />
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          {canSkip && (
+            <Button size="sm" disabled={locked} onClick={onSkipToBoss} data-story-skip>
+              <PiFastForwardFill className="size-5" aria-hidden />
+              <Text id="story.skip.button" />
+            </Button>
+          )}
+          <Button size="sm" variant="outline" disabled={locked} onClick={onIntro}>
+            <PiFilmSlateBold className="size-5" aria-hidden />
+            <Text id="story.map.watchIntro" />
+          </Button>
+        </div>
       </div>
 
       <StoryMap chapter={chapter} done={done} stage={stage} onStage={onStage} locked={locked} />

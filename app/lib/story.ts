@@ -378,19 +378,30 @@ export function stageLineup(p: Pair, ch: number, stage: Stage): { defs: FighterD
 
 const PROGRESS_KEY = "npc-arena-story";
 
-/** How many stages of each chapter are cleared. */
-export type Progress = { cleared: number[] };
+/** How many stages of each chapter are cleared, and how many times each chapter's boss has been beaten. */
+export type Progress = { cleared: number[]; wins: number[] };
+
+/** Beat a chapter's boss this many times, and own a quest fighter, to skip straight to that boss. */
+export const SKIP_AFTER = 2;
+
+/** Whether "Skip to the boss" is open for this chapter. */
+export const canSkipToBoss = (p: Progress, ch: number, hasQuester: boolean) =>
+  hasQuester && (p.cleared[ch] ?? 0) >= stagesIn(ch) && (p.wins[ch] ?? 0) >= SKIP_AFTER;
 
 export function loadProgress(): Progress {
   try {
     const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? "null");
     if (raw && Array.isArray(raw.cleared)) {
-      return { cleared: CHAPTERS.map((_, i) => Math.max(0, Math.min(stagesIn(i), Number(raw.cleared[i]) || 0))) };
+      const cleared = CHAPTERS.map((_, i) => Math.max(0, Math.min(stagesIn(i), Number(raw.cleared[i]) || 0)));
+      const saved: unknown[] = Array.isArray(raw.wins) ? raw.wins : [];
+      // a chapter cleared before boss wins were counted has at least its one win
+      const wins = cleared.map((c, i) => Math.max(c >= stagesIn(i) ? 1 : 0, Math.min(9999, Math.floor(Number(saved[i]) || 0))));
+      return { cleared, wins };
     }
   } catch {
     // unreadable storage starts fresh
   }
-  return { cleared: CHAPTERS.map(() => 0) };
+  return { cleared: CHAPTERS.map(() => 0), wins: CHAPTERS.map(() => 0) };
 }
 
 /** A chapter opens once every stage of the one before it is cleared. */

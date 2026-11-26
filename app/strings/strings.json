@@ -1594,6 +1594,11 @@
         }
       }
     },
+    "skip": {
+      "button": "Skip to the boss",
+      "oneMore": "Beat {{boss}} one more time to skip straight to the boss on later runs.",
+      "needQuester": "Own a quest fighter to skip straight to {{boss}} on later runs."
+    },
     "map": {
       "aria": "Stages on the chapter map",
       "watchIntro": "Watch the intro",

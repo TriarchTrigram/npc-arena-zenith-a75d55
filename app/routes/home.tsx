@@ -133,6 +133,8 @@ export default function Home() {
   const [jugg, setJugg] = useState<RosterId>("pyro");
   // Story mode: each chapter's cleared count is read from this browser after the first render.
   const [clearedAll, setClearedAll] = useState<number[]>(() => CHAPTERS.map(() => 0));
+  // how many times each chapter's boss has been beaten in this browser
+  const [winsAll, setWinsAll] = useState<number[]>(() => CHAPTERS.map(() => 0));
   const [chapter, setChapter] = useState(0);
   const [stage, setStage] = useState(0);
   const [pair, setPair] = useState<Pair>({ a: "pyro", b: "hydro", fuse: true });
@@ -150,8 +152,10 @@ export default function Home() {
   const [scene, setScene] = useState<Scene | null>(null);
   const afterOutro = useRef<Unlock[]>([]);
   useEffect(() => {
-    const all = loadProgress().cleared;
+    const saved = loadProgress();
+    const all = saved.cleared;
     setClearedAll(all);
+    setWinsAll(saved.wins);
     // pick up in the furthest chapter that is open
     let ch = 0;
     while (ch + 1 < CHAPTERS.length && chapterOpen(all, ch + 1)) ch++;
@@ -328,12 +332,13 @@ export default function Home() {
         afterOutro.current = queued;
         window.setTimeout(() => setScene({ kind: "outro", ch: at0.ch, stage: at0.i }), 1600);
       } else if (queued.length) window.setTimeout(() => setUnlocks((q) => [...q, ...queued]), 1600);
-      setClearedAll((all) => {
-        const next = [...all];
-        next[at0.ch] = Math.max(next[at0.ch] ?? 0, at0.i + 1);
-        saveProgress({ cleared: next });
-        return next;
-      });
+      const nextCleared = [...clearedAll];
+      nextCleared[at0.ch] = Math.max(nextCleared[at0.ch] ?? 0, at0.i + 1);
+      const nextWins = [...winsAll];
+      if (beaten) nextWins[at0.ch] = (nextWins[at0.ch] ?? 0) + 1;
+      setClearedAll(nextCleared);
+      setWinsAll(nextWins);
+      saveProgress({ cleared: nextCleared, wins: nextWins });
     }
     setStatus("finished");
   };
@@ -814,7 +819,7 @@ export default function Home() {
             )}
             {mode === "story" ? (
               <div className="mt-6">
-                <StoryPanel cleared={clearedAll} chapter={chapter} onChapter={chooseChapter} stage={stage} onStage={(i) => { if (status === "finished") restart(); setStage(i); }} pair={pair} onPair={setPair} locked={fighting} onPlay={() => { restart(); if (stage <= cleared) playStage(stage); }} onIntro={() => setScene({ kind: "intro", ch: chapter, stage: 0 })} />
+                <StoryPanel cleared={clearedAll} wins={winsAll} hasQuester={questers.length > 0} onSkipToBoss={() => { restart(); startStage(lairOf(chapter)); }} chapter={chapter} onChapter={chooseChapter} stage={stage} onStage={(i) => { if (status === "finished") restart(); setStage(i); }} pair={pair} onPair={setPair} locked={fighting} onPlay={() => { restart(); if (stage <= cleared) playStage(stage); }} onIntro={() => setScene({ kind: "intro", ch: chapter, stage: 0 })} />
               </div>
             ) : (
             <>
