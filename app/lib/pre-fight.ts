@@ -330,6 +330,9 @@ export const TAUNTS: Record<string, Taunt> = {
   carina: { open: "beckon", reply: "laugh", shape: "star", grav: -20 },
   vela: { open: "flex", reply: "point", shape: "ring" },
   aeon: { open: "raise", reply: "bow", shape: "spark", where: "head" },
+  orogen: { open: "flex", reply: "fold", shape: "chunk", grav: 900 },
+  gnarlroot: { open: "raise", reply: "beckon", shape: "leaf", grav: 120 },
+  ambrel: { open: "beckon", reply: "bow", shape: "drop", grav: 300 },
   // one of a kind: any fused fighter, and the fighter you made
   hybrid: { open: "flex", reply: "shrug", shape: "spark" },
   own: { open: "wave", reply: "point", shape: "spark" },

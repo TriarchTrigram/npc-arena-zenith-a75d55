@@ -635,4 +635,85 @@ export const MINIONS: Crew[] = [
       surge: { from: "the-old-orbit", name: "Still Orbit" },
     }),
   },
+  // Book 4, chapter 1: Orogen's stones, the boulders and foothills that woke up when the mountain did
+  {
+    grunt: minion("grunt", "orogen", {
+      base: "terra", name: "Pebbler", color: "hsl(30 8% 40%)", mark: "hsl(150 80% 62%)",
+      power: "Scree", ability: "A handful of loose stones that rolled down the mountain and kept rolling. It is small, it is hard, and it never stops bouncing.",
+      tone: ["hsl(30 10% 50%)", "hsl(150 80% 72%)"], moves: ["Pebble Punch", "Skipping Stone", "Bounce Back"],
+      surge: { from: "upthrust", name: "Little Upthrust" },
+    }),
+    caster: minion("caster", "orogen", {
+      base: "psy", name: "Cairn Seer", color: "hsl(28 8% 30%)", mark: "hsl(150 80% 62%)",
+      power: "Stacked Stones", ability: "A pile of flat stones someone balanced on a hilltop long ago. It has been listening to the mountain breathe ever since, and now it hears it talking.",
+      tone: ["hsl(150 50% 46%)", "hsl(150 90% 80%)"], moves: ["Stone Tap", "Cairn Lift", "Hill Hum", "Topple"],
+      surge: { from: "continental-drift", name: "Small Drift" },
+    }),
+    brute: minion("brute", "orogen", {
+      base: "gravi", name: "Boulderback", color: "hsl(26 10% 24%)", mark: "hsl(150 80% 62%)",
+      power: "Dead Weight", ability: "A boulder as big as a house that sat in one field for ten thousand years. It has got up, and it is not happy about the sheep.",
+      tone: ["hsl(26 10% 34%)", "hsl(150 80% 70%)"], moves: ["Boulder Slam", "Heavy Roll", "Settle"],
+      surge: { from: "landslide", name: "Little Landslide" },
+    }),
+    elite: minion("elite", "orogen", {
+      base: "cryo", name: "The Old Peak", color: "hsl(210 10% 78%)", mark: "hsl(150 80% 60%)",
+      power: "Snowcap", ability: "The highest peak of Orogen's range, broken off and walking on its own. Snow on its head, ice in its joints, and the cold patience of something that has watched every sunrise there ever was.",
+      tone: ["hsl(204 40% 80%)", "hsl(150 80% 76%)"], moves: ["Summit Strike", "Avalanche", "Glacier Bed", "Peak Cold"],
+      surge: { from: "rockfall", name: "Snowslide" },
+    }),
+  },
+  // Book 4, chapter 2: Gnarlroot's undergrowth, everything that grows in the shade of the first tree
+  {
+    grunt: minion("grunt", "gnarlroot", {
+      base: "toxi", name: "Thornling", color: "hsl(90 30% 22%)", mark: "hsl(92 80% 60%)",
+      power: "Prickle", ability: "A bramble that pulled itself out of the ground. It has a hundred thorns and no idea which way it is facing.",
+      tone: ["hsl(100 60% 36%)", "hsl(80 100% 70%)"], moves: ["Thorn Jab", "Burr Spit", "Prickle Bloom"],
+      surge: { from: "thorn-hail", name: "Few Thorns" },
+    }),
+    caster: minion("caster", "gnarlroot", {
+      base: "vita", name: "Sapwhisper", color: "hsl(70 24% 24%)", mark: "hsl(92 80% 60%)",
+      power: "Green Song", ability: "A spirit of the leaves that hums the forest awake every spring. This year Gnarlroot has given it a new song, and the forest is waking up angry.",
+      tone: ["hsl(92 70% 50%)", "hsl(60 100% 80%)"], moves: ["Leaf Touch", "Green Seed", "Spring Mend", "Bloom"],
+      surge: { from: "gnarled-snare", name: "Small Snare" },
+    }),
+    brute: minion("brute", "gnarlroot", {
+      base: "terra", name: "Stumpgut", color: "hsl(24 30% 18%)", mark: "hsl(92 80% 60%)",
+      power: "Old Stump", ability: "What is left of a tree that was cut down a hundred years ago. It remembers the axe. It remembers everyone who sat on it.",
+      tone: ["hsl(24 30% 30%)", "hsl(92 70% 66%)"], moves: ["Stump Smash", "Splinter Toss", "Root Stamp"],
+      surge: { from: "taproot", name: "Short Taproot" },
+    }),
+    elite: minion("elite", "gnarlroot", {
+      base: "gravi", name: "The Heartwood", color: "hsl(36 40% 22%)", mark: "hsl(80 100% 66%)",
+      power: "Ring Upon Ring", ability: "The oldest oak in the forest, a thousand rings thick. It was Gnarlroot's first seedling, and it has guarded the way down to its roots ever since.",
+      tone: ["hsl(36 60% 40%)", "hsl(80 100% 74%)"], moves: ["Oak Palm", "Acorn Fall", "Heavy Bough", "Ring of Years"],
+      surge: { from: "bramble-thicket", name: "Bramble Patch" },
+    }),
+  },
+  // Book 4, chapter 3: Ambrel's keepers, the creatures the amber has held since the world was young
+  {
+    grunt: minion("grunt", "ambrel", {
+      base: "electro", name: "Ambermite", color: "hsl(34 70% 34%)", mark: "hsl(44 100% 66%)",
+      power: "Buzz", ability: "A tiny fly that was sealed in amber before the first bird ever sang. Ambrel let it out. It is very fast, very loud, and very cross about the wait.",
+      tone: ["hsl(40 100% 56%)", "hsl(50 100% 84%)"], moves: ["Sting Jab", "Buzz Bolt", "Zip"],
+      surge: { from: "sap-drops", name: "Sticky Drop" },
+    }),
+    caster: minion("caster", "ambrel", {
+      base: "chrono", name: "Combweaver", color: "hsl(30 60% 26%)", mark: "hsl(44 100% 66%)",
+      power: "Slow Honey", ability: "A spider that spins in honey instead of silk. Whatever lands in its web stays there, a little slower every second, until it is not moving at all.",
+      tone: ["hsl(36 90% 48%)", "hsl(48 100% 82%)"], moves: ["Honey Tap", "Slow Thread", "Comb Web", "Hold Still"],
+      surge: { from: "amber-pool", name: "Honey Puddle" },
+    }),
+    brute: minion("brute", "ambrel", {
+      base: "terra", name: "Fossil Ox", color: "hsl(36 30% 52%)", mark: "hsl(44 100% 66%)",
+      power: "Old Bones", ability: "The bones of a beast no one alive has ever seen, set in gold and stood back up. It still remembers which way the herd went.",
+      tone: ["hsl(40 30% 70%)", "hsl(44 100% 76%)"], moves: ["Horn Toss", "Bone Throw", "Stampede Stomp"],
+      surge: { from: "set-in-stone", name: "Set Hard" },
+    }),
+    elite: minion("elite", "ambrel", {
+      base: "toxi", name: "The Comb Queen", color: "hsl(28 70% 18%)", mark: "hsl(46 100% 70%)",
+      power: "The Hive", ability: "The queen of a hive that was sealed whole in amber in one golden afternoon. She has been waiting a very long time to finish that afternoon.",
+      tone: ["hsl(44 100% 52%)", "hsl(28 80% 20%)"], moves: ["Queen's Sting", "Royal Jelly", "Swarm Field", "Hive Sting"],
+      surge: { from: "honey-lance", name: "Honey Ray" },
+    }),
+  },
 ];

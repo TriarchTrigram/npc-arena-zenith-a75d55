@@ -87,7 +87,7 @@ export type Move = {
 };
 
 /** A Story boss's own body design, drawn by the engine on top of the stickman. */
-export type BossDesign = "antimatter" | "maelstrom" | "magmaw" | "everwinter" | "riftmaker" | "hollow" | "blacksun" | "axiom" | "lanternmaw" | "sporemother" | "mnemovore" | "dustmoth" | "somnarch" | "hush" | "elderdark" | "perihelion" | "asterion" | "carina" | "vela" | "aeon";
+export type BossDesign = "antimatter" | "maelstrom" | "magmaw" | "everwinter" | "riftmaker" | "hollow" | "blacksun" | "axiom" | "lanternmaw" | "sporemother" | "mnemovore" | "dustmoth" | "somnarch" | "hush" | "elderdark" | "perihelion" | "asterion" | "carina" | "vela" | "aeon" | "orogen" | "gnarlroot" | "ambrel";
 
 export type FighterDef = {
   id: Power;

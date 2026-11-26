@@ -1673,6 +1673,322 @@ export function drawBossDesign(
       }
       break;
     }
+    // ----- Orogen: a mountain range with a body, granite slabs and moss, jade light in its seams -----
+    case "orogen": {
+      const back = -face;
+      const stone = alive ? "hsl(28 10% 40%)" : "hsl(28 4% 36%)";
+      const dark = alive ? "hsl(28 10% 28%)" : "hsl(28 4% 26%)";
+      const jade = alive ? "hsl(150 90% 66%)" : "hsl(150 4% 46%)";
+      if (layer === "back") {
+        // the peaks of its range rising off its back and shoulders, snow on every top
+        for (const [dx, h, w] of [[-26, 70, 26], [-4, 96, 30], [20, 60, 22]] as const) {
+          const x = shoulder.x + back * (dx + 12) * s, by = shoulder.y + 14 * s, ty = by - h * s;
+          ctx.fillStyle = dx === -4 ? stone : dark;
+          ctx.strokeStyle = INK;
+          ctx.lineWidth = 1.5 * s;
+          ctx.beginPath();
+          ctx.moveTo(x - w * s, by);
+          ctx.lineTo(x - 4 * s, ty);
+          ctx.lineTo(x + 4 * s, ty + 3 * s);
+          ctx.lineTo(x + w * s, by);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = alive ? "hsl(0 0% 97%)" : "hsl(0 0% 70%)";
+          ctx.beginPath();
+          ctx.moveTo(x - 11 * s, ty + 16 * s);
+          ctx.lineTo(x - 4 * s, ty);
+          ctx.lineTo(x + 4 * s, ty + 3 * s);
+          ctx.lineTo(x + 12 * s, ty + 18 * s);
+          ctx.lineTo(x + 2 * s, ty + 13 * s);
+          ctx.closePath();
+          ctx.fill();
+        }
+        if (alive) {
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, shoulder.x + back * 10 * s, shoulder.y - 20 * s, 70 * s, "hsl(150 90% 60% / 0.14)", "hsl(150 90% 50% / 0)");
+          ctx.globalCompositeOperation = "source-over";
+        }
+      } else {
+        // its chest: three stacked slabs of granite over the body, a jade seam running between them
+        const top = shoulder.y - 2 * s, bot = hip.y + 2 * s;
+        for (let i = 0; i < 3; i++) {
+          const y0 = lerp(top, bot, i / 3), y1 = lerp(top, bot, (i + 1) / 3);
+          const w = (17 - i * 2) * s;
+          ctx.fillStyle = i % 2 ? dark : stone;
+          ctx.strokeStyle = INK;
+          ctx.lineWidth = 1.4 * s;
+          ctx.beginPath();
+          ctx.moveTo(mid.x - w + face * 2 * s, y0);
+          ctx.lineTo(mid.x + w + face * 4 * s, y0 + 2 * s);
+          ctx.lineTo(mid.x + w - 2 * s + face * 2 * s, y1);
+          ctx.lineTo(mid.x - w + 3 * s, y1 - 1 * s);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.strokeStyle = jade;
+        ctx.lineWidth = 2 * s;
+        if (alive) ctx.globalCompositeOperation = "lighter";
+        ctx.beginPath();
+        ctx.moveTo(mid.x + face * 3 * s, top + 4 * s);
+        ctx.lineTo(mid.x - face * 2 * s, lerp(top, bot, 0.33));
+        ctx.lineTo(mid.x + face * 4 * s, lerp(top, bot, 0.55));
+        ctx.lineTo(mid.x - face * 1 * s, lerp(top, bot, 0.8));
+        ctx.stroke();
+        if (alive) glow(ctx, mid.x, lerp(top, bot, 0.4), (14 + Math.sin(t * 2) * 2) * s, "hsl(150 100% 70% / 0.5)", "hsl(150 100% 50% / 0)");
+        ctx.globalCompositeOperation = "source-over";
+        // moss on the shoulder
+        ctx.fillStyle = alive ? "hsl(110 40% 34%)" : "hsl(100 6% 34%)";
+        ctx.beginPath();
+        ctx.ellipse(shoulder.x + face * 4 * s, shoulder.y - 1 * s, 12 * s, 4 * s, 0, 0, TAU);
+        ctx.fill();
+        // its head: a craggy block of stone, a cap of snow, two jade eyes deep in the rock
+        const hx = head.x, hy = head.y;
+        ctx.fillStyle = stone;
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.6 * s;
+        ctx.beginPath();
+        ctx.moveTo(hx - 12 * s, hy + 10 * s);
+        ctx.lineTo(hx - 14 * s, hy - 4 * s);
+        ctx.lineTo(hx - 6 * s, hy - 16 * s);
+        ctx.lineTo(hx + 4 * s, hy - 13 * s);
+        ctx.lineTo(hx + 13 * s, hy - 6 * s);
+        ctx.lineTo(hx + 12 * s, hy + 10 * s);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = alive ? "hsl(0 0% 97%)" : "hsl(0 0% 72%)";
+        ctx.beginPath();
+        ctx.moveTo(hx - 14 * s, hy - 4 * s);
+        ctx.lineTo(hx - 6 * s, hy - 16 * s);
+        ctx.lineTo(hx + 4 * s, hy - 13 * s);
+        ctx.lineTo(hx + 13 * s, hy - 6 * s);
+        ctx.lineTo(hx + 6 * s, hy - 7 * s);
+        ctx.lineTo(hx - 2 * s, hy - 9 * s);
+        ctx.closePath();
+        ctx.fill();
+        // a heavy brow, then the eyes under it
+        ctx.fillStyle = dark;
+        ctx.fillRect(hx - 11 * s, hy - 3 * s, 22 * s, 4 * s);
+        for (const dx of [2, 8]) {
+          const ex = hx + face * dx * s, ey = hy + 3 * s;
+          if (alive) glow(ctx, ex, ey, 5 * s, "hsl(150 100% 72% / 0.9)", "hsl(150 100% 60% / 0)");
+          ctx.fillStyle = alive ? "hsl(150 100% 88%)" : INK;
+          ctx.fillRect(ex - 1.6 * s, ey - 1 * s, 3.2 * s, 2 * s);
+        }
+      }
+      break;
+    }
+    // ----- Gnarlroot: the first tree, bark and branching antlers, leaves at every tip, roots at its feet -----
+    case "gnarlroot": {
+      const back = -face;
+      const bark = alive ? "hsl(24 30% 24%)" : "hsl(24 6% 28%)";
+      const leaf = alive ? "hsl(96 60% 44%)" : "hsl(34 20% 36%)";
+      const lit = alive ? "hsl(92 90% 66%)" : "hsl(34 10% 48%)";
+      /** A branch that forks once, leaves at both tips. */
+      const branch = (x: number, y: number, a: number, len: number, w: number, depth: number) => {
+        const ex = x + Math.cos(a) * len, ey = y + Math.sin(a) * len;
+        ctx.strokeStyle = bark;
+        ctx.lineWidth = w;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + Math.cos(a + 0.3) * len * 0.5, y + Math.sin(a + 0.3) * len * 0.5, ex, ey);
+        ctx.stroke();
+        if (depth > 0) {
+          branch(ex, ey, a - 0.5, len * 0.62, w * 0.6, depth - 1);
+          branch(ex, ey, a + 0.45, len * 0.55, w * 0.6, depth - 1);
+        } else {
+          ctx.fillStyle = leaf;
+          ctx.beginPath();
+          ctx.ellipse(ex, ey, 5 * s, 3 * s, a, 0, TAU);
+          ctx.fill();
+          if (alive) {
+            ctx.fillStyle = lit;
+            ctx.beginPath();
+            ctx.arc(ex + Math.cos(a) * 2 * s, ey + Math.sin(a) * 2 * s, 1.4 * s, 0, TAU);
+            ctx.fill();
+          }
+        }
+      };
+      if (layer === "back") {
+        // antlers of living wood spreading out of its head, swaying slowly
+        const sway = alive ? Math.sin(t * 0.8) * 0.06 : 0;
+        branch(head.x + back * 4 * s, head.y - 8 * s, -Math.PI / 2 - 0.5 * face - 0.2 + sway, 26 * s, 3.6 * s, 2);
+        branch(head.x + back * 6 * s, head.y - 6 * s, -Math.PI / 2 + 0.6 * back + sway, 24 * s, 3.4 * s, 2);
+        // roots spreading over the floor from its feet
+        const gy = Math.max(p.fF.y, p.fB.y) + 2 * s;
+        ctx.strokeStyle = bark;
+        for (const [fx, dir] of [[p.fF.x, face], [p.fB.x, back]] as const) {
+          for (let i = 0; i < 2; i++) {
+            ctx.lineWidth = (3 - i) * s;
+            ctx.beginPath();
+            ctx.moveTo(fx, gy);
+            ctx.quadraticCurveTo(fx + dir * (10 + i * 8) * s, gy + 2 * s, fx + dir * (22 + i * 12) * s, gy + (1 + i) * s);
+            ctx.stroke();
+          }
+        }
+      } else {
+        // bark over the body, split by long grain lines
+        ctx.strokeStyle = alive ? "hsl(24 30% 14%)" : "hsl(24 6% 20%)";
+        ctx.lineWidth = 1.4 * s;
+        for (const dx of [-5, 0, 5]) {
+          ctx.beginPath();
+          ctx.moveTo(shoulder.x + dx * s, shoulder.y + 4 * s);
+          ctx.quadraticCurveTo(mid.x + (dx + Math.sin(dx) * 3) * s, mid.y, hip.x + dx * 0.8 * s, hip.y - 2 * s);
+          ctx.stroke();
+        }
+        // its face: an old knot of bark with two green knotholes for eyes and a crack for a mouth
+        ctx.fillStyle = bark;
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.6 * s;
+        ctx.beginPath();
+        ctx.ellipse(head.x, head.y, (HEAD + 1) * s, (HEAD + 3) * s, 0, 0, TAU);
+        ctx.fill();
+        ctx.stroke();
+        ctx.strokeStyle = alive ? "hsl(24 30% 14%)" : "hsl(24 6% 20%)";
+        ctx.lineWidth = 1.1 * s;
+        ctx.beginPath();
+        ctx.arc(head.x - face * 3 * s, head.y + 2 * s, 7 * s, 0.4, 2.4);
+        ctx.stroke();
+        for (const dx of [2, 7]) {
+          const ex = head.x + face * dx * s, ey = head.y - 2 * s;
+          ctx.fillStyle = alive ? "hsl(24 40% 8%)" : INK;
+          ctx.beginPath();
+          ctx.ellipse(ex, ey, 2.2 * s, 2.8 * s, 0, 0, TAU);
+          ctx.fill();
+          if (alive) {
+            glow(ctx, ex, ey, 5 * s, "hsl(92 100% 66% / 0.9)", "hsl(92 100% 50% / 0)");
+            ctx.fillStyle = "hsl(80 100% 84%)";
+            ctx.beginPath();
+            ctx.arc(ex, ey, 1 * s, 0, TAU);
+            ctx.fill();
+          }
+        }
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.2 * s;
+        ctx.beginPath();
+        ctx.moveTo(head.x + face * 1 * s, head.y + 6 * s);
+        ctx.lineTo(head.x + face * 4 * s, head.y + 5 * s);
+        ctx.lineTo(head.x + face * 7 * s, head.y + 7 * s);
+        ctx.stroke();
+        // a ring of leaves round the crown
+        for (let i = 0; i < 5; i++) {
+          const a = Math.PI + 0.3 + i * 0.6;
+          ctx.fillStyle = i % 2 ? leaf : lit;
+          ctx.beginPath();
+          ctx.ellipse(head.x + Math.cos(a) * (HEAD + 1) * s, head.y + Math.sin(a) * (HEAD + 3) * s, 4 * s, 2.4 * s, a, 0, TAU);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    // ----- Ambrel: living amber, a wasp sealed in its heart, a halo of honeycomb -----
+    case "ambrel": {
+      const back = -face;
+      /** One cell of honeycomb. */
+      const hex = (x: number, y: number, r: number) => {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * TAU + Math.PI / 6;
+          if (i === 0) ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+          else ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+        }
+        ctx.closePath();
+      };
+      if (layer === "back") {
+        // a halo of honeycomb behind its head, every cell lit gold from inside
+        const hx = head.x + back * 6 * s, hy = head.y - 2 * s;
+        const cells: [number, number][] = [[0, 0], [1, 0], [-1, 0], [0.5, -0.87], [-0.5, -0.87], [0.5, 0.87], [-0.5, 0.87], [1.5, -0.87], [-1.5, -0.87], [0, -1.73]];
+        for (const [i, [cx, cy]] of cells.entries()) {
+          const x = hx + cx * 15 * s, y = hy + cy * 15 * s;
+          hex(x, y, 8 * s);
+          ctx.fillStyle = alive ? `hsl(40 100% ${44 + 10 * Math.abs(Math.sin(t * 1.4 + i))}% / 0.85)` : "hsl(36 10% 40% / 0.8)";
+          ctx.fill();
+          ctx.strokeStyle = alive ? "hsl(30 80% 22%)" : INK;
+          ctx.lineWidth = 1.4 * s;
+          ctx.stroke();
+        }
+        if (alive) {
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, hx, hy - 8 * s, 50 * s, "hsl(44 100% 66% / 0.3)", "hsl(44 100% 50% / 0)");
+          ctx.globalCompositeOperation = "source-over";
+        }
+      } else {
+        // the amber of its body, clear gold, with the sealed wasp curled in its chest
+        const cx = mid.x + face * 1 * s, cy = (shoulder.y + hip.y) / 2;
+        const g = ctx.createRadialGradient(cx - face * 4 * s, cy - 8 * s, 2 * s, cx, cy, 22 * s);
+        g.addColorStop(0, alive ? "hsl(48 100% 76% / 0.95)" : "hsl(40 10% 60% / 0.9)");
+        g.addColorStop(1, alive ? "hsl(30 90% 36% / 0.92)" : "hsl(30 6% 34% / 0.9)");
+        ctx.fillStyle = g;
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.5 * s;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 13 * s, (hip.y - shoulder.y) * 0.56, 0, 0, TAU);
+        ctx.fill();
+        ctx.stroke();
+        // the wasp: body, striped abdomen, folded wings
+        ctx.fillStyle = alive ? "hsl(24 60% 14% / 0.8)" : "hsl(24 6% 20% / 0.8)";
+        ctx.beginPath();
+        ctx.ellipse(cx, cy - 4 * s, 2.6 * s, 3 * s, 0, 0, TAU);
+        ctx.ellipse(cx + face * 1 * s, cy + 4 * s, 3.4 * s, 5.4 * s, face * 0.2, 0, TAU);
+        ctx.fill();
+        ctx.strokeStyle = alive ? "hsl(46 100% 70% / 0.8)" : "hsl(40 10% 56% / 0.6)";
+        ctx.lineWidth = 1 * s;
+        for (const dy of [3, 6]) {
+          ctx.beginPath();
+          ctx.moveTo(cx - 2.6 * s, cy + dy * s);
+          ctx.lineTo(cx + face * 1 * s + 3 * s, cy + (dy - 0.6) * s);
+          ctx.stroke();
+        }
+        ctx.fillStyle = "hsl(0 0% 100% / 0.35)";
+        for (const side of [-1, 1]) {
+          ctx.beginPath();
+          ctx.ellipse(cx + side * 4 * s, cy - 2 * s, 4 * s, 1.8 * s, side * 0.5, 0, TAU);
+          ctx.fill();
+        }
+        // its head: a cut amber gem with one dark eye in it like a fossil
+        ctx.fillStyle = alive ? "hsl(38 100% 52%)" : "hsl(36 8% 44%)";
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.6 * s;
+        ctx.beginPath();
+        ctx.moveTo(head.x, head.y - (HEAD + 3) * s);
+        ctx.lineTo(head.x + (HEAD + 1) * s, head.y - 4 * s);
+        ctx.lineTo(head.x + HEAD * 0.7 * s, head.y + (HEAD + 1) * s);
+        ctx.lineTo(head.x - HEAD * 0.7 * s, head.y + (HEAD + 1) * s);
+        ctx.lineTo(head.x - (HEAD + 1) * s, head.y - 4 * s);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = alive ? "hsl(50 100% 84% / 0.7)" : "hsl(0 0% 80% / 0.3)";
+        ctx.beginPath();
+        ctx.moveTo(head.x, head.y - (HEAD + 3) * s);
+        ctx.lineTo(head.x - (HEAD + 1) * s, head.y - 4 * s);
+        ctx.lineTo(head.x - 3 * s, head.y - 3 * s);
+        ctx.closePath();
+        ctx.fill();
+        const ex = head.x + face * 4 * s, ey = head.y + 1 * s;
+        if (alive) glow(ctx, ex, ey, 7 * s, "hsl(20 100% 50% / 0.5)", "hsl(20 100% 40% / 0)");
+        ctx.fillStyle = alive ? "hsl(20 60% 10%)" : INK;
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2.6 * s, 0, TAU);
+        ctx.fill();
+        ctx.strokeStyle = alive ? "hsl(48 100% 80%)" : "hsl(0 0% 60%)";
+        ctx.lineWidth = 0.9 * s;
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2.6 * s, -1.2, 0.6);
+        ctx.stroke();
+        // resin dripping slowly off the front hand
+        if (alive) {
+          const k = (t * 0.6) % 1;
+          ctx.fillStyle = "hsl(40 100% 54% / 0.9)";
+          ctx.beginPath();
+          ctx.ellipse(p.hF.x, p.hF.y + 3 * s + k * 14 * s, 1.8 * s, 2.4 * s + k * 1.4 * s, 0, 0, TAU);
+          ctx.fill();
+        }
+      }
+      break;
+    }
     // ----- Vela: a pulsar, a burnt-out star spinning in its chest, two beams sweeping from it like a lighthouse -----
     case "vela": {
       const spin = alive ? t * 2.2 : 0;
@@ -3205,6 +3521,148 @@ function drawBossPhase(
       }
       break;
     }
+    case "orogen": {
+      // 2: boulders torn loose, circling it slowly
+      orbit(4, 48, 12, mid.y - 4 * s, 0.9, (x, y, i) => {
+        ctx.fillStyle = i % 2 ? "hsl(28 10% 36%)" : "hsl(28 10% 46%)";
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.3 * s;
+        ctx.beginPath();
+        ctx.moveTo(x - 6 * s, y + 3 * s);
+        ctx.lineTo(x - 4 * s, y - 5 * s);
+        ctx.lineTo(x + 5 * s, y - 4 * s);
+        ctx.lineTo(x + 6 * s, y + 4 * s);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      });
+      if (phase >= 3) {
+        // 3: the jade vein broken open, light pouring out of the cracks in its chest
+        if (front) {
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, mid.x, mid.y - 6 * s, (30 + Math.sin(t * 3) * 4) * s, "hsl(150 100% 66% / 0.55)", "hsl(150 100% 50% / 0)");
+          ctx.strokeStyle = "hsl(150 100% 76% / 0.9)";
+          ctx.lineWidth = 1.6 * s;
+          for (const a of [0.4, 1.6, 2.8, 4.1, 5.3]) {
+            ctx.beginPath();
+            ctx.moveTo(mid.x, mid.y - 6 * s);
+            ctx.lineTo(mid.x + Math.cos(a) * 12 * s, mid.y - 6 * s + Math.sin(a) * 12 * s);
+            ctx.lineTo(mid.x + Math.cos(a + 0.2) * 20 * s, mid.y - 6 * s + Math.sin(a + 0.2) * 20 * s);
+            ctx.stroke();
+          }
+          ctx.globalCompositeOperation = "source-over";
+        }
+      }
+      if (phase >= 4 && !front) {
+        // 4: the whole range standing behind it, peak after peak, jade light along every ridge
+        const gy = Math.max(p.fF.y, p.fB.y);
+        for (let i = -3; i <= 3; i++) {
+          const x = mid.x + back * 20 * s + i * 46 * s, h = (120 + (3 - Math.abs(i)) * 40) * s;
+          ctx.fillStyle = `hsl(28 12% ${14 + (i % 2 ? 4 : 0)}% / 0.92)`;
+          ctx.beginPath();
+          ctx.moveTo(x - 40 * s, gy);
+          ctx.lineTo(x, gy - h);
+          ctx.lineTo(x + 40 * s, gy);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = "hsl(150 100% 66% / 0.6)";
+          ctx.lineWidth = 1.4 * s;
+          ctx.beginPath();
+          ctx.moveTo(x - 20 * s, gy - h * 0.5);
+          ctx.lineTo(x, gy - h);
+          ctx.lineTo(x + 20 * s, gy - h * 0.5);
+          ctx.stroke();
+        }
+      }
+      break;
+    }
+    case "gnarlroot": {
+      // 2: leaves torn off in a slow green whirl round it
+      orbit(6, 46, 14, mid.y - 6 * s, 1.2, (x, y, i) => {
+        ctx.fillStyle = i % 2 ? "hsl(96 60% 44%)" : "hsl(80 90% 60%)";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 5 * s, 2.6 * s, t * 2 + i, 0, TAU);
+        ctx.fill();
+      });
+      if (phase >= 3 && front) {
+        // 3: the heartwood glowing gold-green through the split in its bark
+        ctx.globalCompositeOperation = "lighter";
+        glow(ctx, mid.x, mid.y - 4 * s, (26 + Math.sin(t * 2.4) * 3) * s, "hsl(60 100% 64% / 0.6)", "hsl(80 100% 50% / 0)");
+        ctx.globalCompositeOperation = "source-over";
+        ctx.strokeStyle = "hsl(60 100% 80%)";
+        ctx.lineWidth = 2 * s;
+        ctx.beginPath();
+        ctx.moveTo(shoulder.x, shoulder.y + 4 * s);
+        ctx.lineTo(mid.x + face * 2 * s, mid.y - 4 * s);
+        ctx.lineTo(hip.x, hip.y - 4 * s);
+        ctx.stroke();
+      }
+      if (phase >= 4 && !front) {
+        // 4: the canopy, a crown of green spread across the sky behind it
+        ctx.globalCompositeOperation = "lighter";
+        glow(ctx, head.x + back * 20 * s, head.y - 40 * s, 220 * s, "hsl(96 100% 50% / 0.2)", "hsl(96 80% 40% / 0)");
+        ctx.globalCompositeOperation = "source-over";
+        for (let i = 0; i < 9; i++) {
+          const a = Math.PI + (i / 8) * Math.PI;
+          const x = head.x + back * 14 * s + Math.cos(a) * 90 * s, y = head.y - 30 * s + Math.sin(a) * 60 * s;
+          ctx.fillStyle = `hsl(${96 + (i % 3) * 10} 50% ${18 + (i % 2) * 6}% / 0.9)`;
+          ctx.beginPath();
+          ctx.arc(x, y, (28 + (i % 3) * 6) * s, 0, TAU);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    case "ambrel": {
+      /** One cell of honeycomb. */
+      const hex = (x: number, y: number, r: number) => {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * TAU + Math.PI / 6;
+          if (i === 0) ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+          else ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+        }
+        ctx.closePath();
+      };
+      // 2: cells of honeycomb circling it, golden and lit
+      orbit(5, 44, 12, mid.y - 6 * s, 1.1, (x, y) => {
+        hex(x, y, 6 * s);
+        ctx.fillStyle = "hsl(42 100% 54% / 0.9)";
+        ctx.fill();
+        ctx.strokeStyle = "hsl(30 80% 22%)";
+        ctx.lineWidth = 1.2 * s;
+        ctx.stroke();
+      });
+      if (phase >= 3) {
+        // 3: the things it has kept for an age drifting up out of it: leaves, a feather, a beetle
+        orbit(4, 34, 10, head.y - 6 * s, -0.6, (x, y, i) => {
+          ctx.fillStyle = "hsl(40 100% 60% / 0.55)";
+          ctx.beginPath();
+          ctx.arc(x, y, 7 * s, 0, TAU);
+          ctx.fill();
+          ctx.fillStyle = "hsl(24 50% 18% / 0.85)";
+          ctx.beginPath();
+          if (i === 0) ctx.ellipse(x, y, 4 * s, 1.6 * s, 0.6, 0, TAU);
+          else if (i === 1) ctx.ellipse(x, y, 1.4 * s, 4.4 * s, -0.4, 0, TAU);
+          else ctx.ellipse(x, y, 2.4 * s, 3 * s, 0, 0, TAU);
+          ctx.fill();
+        });
+      }
+      if (phase >= 4 && !front) {
+        // 4: the air setting to gold all round it
+        ctx.globalCompositeOperation = "lighter";
+        glow(ctx, mid.x + back * 10 * s, mid.y - 20 * s, 230 * s, "hsl(42 100% 56% / 0.24)", "hsl(36 100% 40% / 0)");
+        ctx.globalCompositeOperation = "source-over";
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * TAU + t * 0.2;
+          hex(mid.x + Math.cos(a) * 90 * s, mid.y - 10 * s + Math.sin(a) * 70 * s, 10 * s);
+          ctx.strokeStyle = "hsl(44 100% 66% / 0.5)";
+          ctx.lineWidth = 1.6 * s;
+          ctx.stroke();
+        }
+      }
+      break;
+    }
     case "vela": {
       // 2: splinters of glass flung round it by its spin
       orbit(6, 40, 10, mid.y, 3.2, (x, y, i) => {
@@ -3662,6 +4120,30 @@ function drawBossExtras(
         }
       } else {
         fists("hsl(326 100% 80%)", "hsl(326 100% 60% / 0)");
+      }
+      break;
+    case "orogen":
+      if (layer === "front") {
+        pauldron(ctx, shoulder, face, s, alive ? "hsl(28 10% 36%)" : "hsl(28 4% 32%)", alive ? "hsl(150 80% 60%)" : "hsl(0 0% 50%)", 3);
+        fists("hsl(150 100% 72%)", "hsl(150 100% 50% / 0)");
+      } else if (alive) {
+        // dust and grit sliding off it as it moves
+        motes(ctx, mid.x, hip.y + 30 * s, 70 * s, 120 * s, t * 0.5, 8, "hsl(28 10% 60%)", 1.4 * s, -1);
+      }
+      break;
+    case "gnarlroot":
+      if (layer === "back") {
+        if (alive) motes(ctx, mid.x, hip.y + 20 * s, 100 * s, 160 * s, t * 0.4, 10, "hsl(90 70% 54%)", 1.8 * s, -1);
+      } else {
+        fists("hsl(92 100% 70%)", "hsl(92 100% 50% / 0)");
+      }
+      break;
+    case "ambrel":
+      if (layer === "back") {
+        // a mantle of resin down its back, its hem dripping
+        cape(40, alive ? "hsl(34 90% 40% / 0.82)" : "hsl(34 8% 36% / 0.8)", alive ? "hsl(46 100% 70% / 0.9)" : "hsl(0 0% 56% / 0.6)", 6);
+      } else {
+        fists("hsl(46 100% 76%)", "hsl(44 100% 56% / 0)");
       }
       break;
     case "vela":

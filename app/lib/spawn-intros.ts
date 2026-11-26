@@ -2726,6 +2726,184 @@ export const BOSS_INTROS: Record<BossDesign, IntroSpec> = {
       ctx.restore();
     },
   },
+  // Orogen: the floor shudders, a jade crack runs across it, and a peak of grey stone pushes up out of the ground,
+  // taller and taller, shedding rock. At the top it splits open and the Titan steps out of its own mountain.
+  orogen: {
+    len: BOSS_LEN, hit: 0.64, shake: 16, wave: ["hsl(150 90% 66%)", "hsl(28 10% 30%)"],
+    body: (u, s) => base(u < 0.64 ? "crouch" : settle(u, "guard", 0.8), {
+      alpha: seg(u, 0.5, 0.64), clip: u < 0.64,
+      dy: (1 - easeOut(seg(u, 0.5, 0.64))) * 60 * s,
+      solid: "hsl(28 10% 48%)", solidA: 1 - seg(u, 0.62, 0.88),
+    }),
+    bursts: [
+      { at: 0.64, n: 34, spd: 520, shape: "chunk", a: "hsl(28 10% 46%)", b: "hsl(28 10% 70%)", grav: 1100, add: false, from: "body", dir: "out" },
+      { at: 0.64, n: 22, spd: 300, shape: "dust", a: "hsl(28 10% 60%)", b: "hsl(150 60% 70%)", grav: 0, add: false, from: "feet", dir: "flat" },
+      { at: 0.66, n: 18, spd: 260, shape: "spark", a: "hsl(150 100% 70%)", b: "hsl(150 100% 90%)", grav: -100, add: true, from: "feet", dir: "up" },
+    ],
+    trickle: { rate: 16, until: 0.6, spd: 120, shape: "chunk", a: "hsl(28 10% 44%)", b: "hsl(28 10% 64%)", grav: 900, add: false, from: "feet", dir: "up", spread: 60, life: 0.8 },
+    back: ({ ctx, x, y, s, u, t }) => {
+      const on = seg(u, 0, 0.12) * (1 - seg(u, 0.84, 1));
+      if (on <= 0) return;
+      ctx.save();
+      ctx.fillStyle = hsla(28, 20, 8, 0.4 * on);
+      ctx.fillRect(-400, -400, 2000, 1200);
+      // a jade crack running out along the floor from where it will stand
+      const run = easeOut(seg(u, 0.02, 0.3));
+      ctx.globalCompositeOperation = "lighter";
+      ctx.strokeStyle = hsla(150, 100, 66, 0.9 * on);
+      ctx.lineWidth = 3 * s;
+      for (const dir of [-1, 1]) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        for (let i = 1; i <= 8; i++) ctx.lineTo(x + dir * i * 40 * s * run, y + Math.sin(i * 2.1 + dir) * 4 * s);
+        ctx.stroke();
+      }
+      glow(ctx, x, y, 160 * s * run, 20 * s * run, hsla(150, 100, 66, 0.5 * on), hsla(150, 100, 50, 0));
+      ctx.globalCompositeOperation = "source-over";
+      // the peak rising out of the ground, then splitting open at the top as the Titan steps out
+      const rise = easeOut(seg(u, 0.12, 0.5)), split = seg(u, 0.56, 0.7), fade = 1 - seg(u, 0.64, 0.84);
+      if (rise > 0 && fade > 0) {
+        const h = 190 * s * rise, w = 90 * s, shake = Math.sin(t * 60) * 2 * s * (1 - split);
+        for (const side of [-1, 1]) {
+          const off = side * split * 40 * s;
+          ctx.fillStyle = hsla(28, 10, side < 0 ? 34 : 28, fade);
+          ctx.strokeStyle = hsla(250, 32, 14, fade);
+          ctx.lineWidth = 2 * s;
+          ctx.beginPath();
+          ctx.moveTo(x + shake + off, y);
+          ctx.lineTo(x + side * w + shake + off, y);
+          ctx.lineTo(x + side * 12 * s + shake + off, y - h);
+          ctx.lineTo(x + shake + off, y - h - 10 * s);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          // snow on the cap
+          ctx.fillStyle = hsla(0, 0, 96, 0.9 * fade);
+          ctx.beginPath();
+          ctx.moveTo(x + shake + off, y - h - 10 * s);
+          ctx.lineTo(x + side * 12 * s + shake + off, y - h);
+          ctx.lineTo(x + side * 22 * s + shake + off, y - h + 26 * s * rise);
+          ctx.lineTo(x + shake + off, y - h + 18 * s * rise);
+          ctx.closePath();
+          ctx.fill();
+        }
+        if (split > 0) {
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, x, y - h * 0.5, 50 * s * split, h * 0.6, hsla(150, 100, 70, 0.8 * fade), hsla(150, 100, 50, 0));
+          ctx.globalCompositeOperation = "source-over";
+        }
+      }
+      ctx.restore();
+    },
+  },
+  // Gnarlroot: roots break up through the floor all round the spot, writhing, and wind together into a trunk that
+  // grows and grows. Leaves burst from the top in a green flash, and the trunk unwinds into the Titan.
+  gnarlroot: {
+    len: BOSS_LEN, hit: 0.62, shake: 10, wave: ["hsl(92 90% 64%)", "hsl(24 30% 22%)"],
+    body: (u) => base(u < 0.62 ? "rise" : settle(u, "guard", 0.8), {
+      alpha: seg(u, 0.52, 0.62),
+      solid: "hsl(28 34% 30%)", solidA: 1 - seg(u, 0.6, 0.88),
+    }),
+    bursts: [
+      { at: 0.62, n: 40, spd: 420, shape: "leaf", a: "hsl(96 70% 46%)", b: "hsl(80 100% 72%)", grav: 160, add: false, from: "body", dir: "out" },
+      { at: 0.62, n: 18, spd: 260, shape: "chunk", a: "hsl(24 30% 26%)", b: "hsl(30 30% 40%)", grav: 900, add: false, from: "feet", dir: "up" },
+      { at: 0.64, n: 20, spd: 200, shape: "spark", a: "hsl(80 100% 70%)", b: "hsl(60 100% 86%)", grav: -40, add: true, from: "body", dir: "out" },
+    ],
+    trickle: { rate: 14, until: 0.6, spd: 40, shape: "leaf", a: "hsl(96 60% 44%)", b: "hsl(80 100% 70%)", grav: 80, add: false, from: "sky", dir: "out", spread: 360, life: 1.2 },
+    back: ({ ctx, x, y, s, u, t }) => {
+      const on = seg(u, 0, 0.12) * (1 - seg(u, 0.84, 1));
+      if (on <= 0) return;
+      ctx.save();
+      ctx.fillStyle = hsla(100, 40, 6, 0.45 * on);
+      ctx.fillRect(-400, -400, 2000, 1200);
+      // roots breaking out of the floor and leaning in toward the middle, winding tighter as they grow
+      const grow = easeOut(seg(u, 0.06, 0.5)), wind = seg(u, 0.3, 0.6), fade = 1 - seg(u, 0.62, 0.82);
+      if (grow > 0 && fade > 0) {
+        ctx.lineCap = "round";
+        for (let i = 0; i < 7; i++) {
+          const fromX = x + (i - 3) * 46 * s * (1 - wind * 0.85);
+          const topY = y - (90 + (i % 3) * 40) * s * grow;
+          const sway = Math.sin(t * 3 + i) * 8 * s * (1 - wind);
+          ctx.strokeStyle = hsla(24, 30, 18 + (i % 3) * 5, fade);
+          ctx.lineWidth = (10 - Math.abs(i - 3) * 1.6) * s;
+          ctx.beginPath();
+          ctx.moveTo(fromX, y + 4 * s);
+          ctx.quadraticCurveTo(fromX + sway, (y + topY) / 2, x + (fromX - x) * 0.2 + sway, topY);
+          ctx.stroke();
+        }
+        // a green glow in the knot at the top, about to leaf
+        ctx.globalCompositeOperation = "lighter";
+        glow(ctx, x, y - 130 * s * grow, 60 * s * wind, 60 * s * wind, hsla(92, 100, 64, 0.6 * fade), hsla(92, 100, 50, 0));
+        ctx.globalCompositeOperation = "source-over";
+      }
+      ctx.restore();
+    },
+  },
+  // Ambrel: gold light seeps across the floor and the air goes thick and honey-coloured. A great bead of amber drips
+  // down out of the dark, slow as resin, and sets on the ground; something moves inside it, and it cracks open.
+  ambrel: {
+    len: BOSS_LEN, hit: 0.66, shake: 9, wave: ["hsl(46 100% 72%)", "hsl(30 80% 30%)"],
+    body: (u) => base(u < 0.66 ? "crouch" : settle(u, "guard", 0.82), {
+      alpha: seg(u, 0.58, 0.66),
+      solid: "hsl(40 100% 60%)", solidA: 1 - seg(u, 0.64, 0.9),
+    }),
+    bursts: [
+      { at: 0.66, n: 36, spd: 460, shape: "shard", a: "hsl(40 100% 54%)", b: "hsl(50 100% 86%)", grav: 700, add: false, from: "body", dir: "out" },
+      { at: 0.66, n: 20, spd: 240, shape: "drop", a: "hsl(36 90% 46%)", b: "hsl(48 100% 80%)", grav: 600, add: false, from: "body", dir: "out" },
+      { at: 0.68, n: 16, spd: 200, shape: "spark", a: "hsl(46 100% 76%)", b: "hsl(0 0% 100%)", grav: 0, add: true, from: "body", dir: "out" },
+    ],
+    back: ({ ctx, x, y, s, u, t }) => {
+      const on = seg(u, 0, 0.14) * (1 - seg(u, 0.86, 1));
+      if (on <= 0) return;
+      ctx.save();
+      ctx.fillStyle = hsla(34, 80, 12, 0.45 * on);
+      ctx.fillRect(-400, -400, 2000, 1200);
+      ctx.globalCompositeOperation = "lighter";
+      glow(ctx, x, y, 240 * s, 30 * s, hsla(44, 100, 60, 0.45 * on), hsla(40, 100, 50, 0));
+      ctx.globalCompositeOperation = "source-over";
+      // the bead: a long slow drip that stretches down from above, then gathers on the floor into a drop as tall as a person
+      const drip = easeInOut(seg(u, 0.06, 0.42)), gather = easeOut(seg(u, 0.36, 0.56)), crack = seg(u, 0.58, 0.66), fade = 1 - seg(u, 0.64, 0.8);
+      if (fade <= 0) { ctx.restore(); return; }
+      const top = y - 420 * s, tipY = lerp(top, y - 20 * s, drip);
+      ctx.fillStyle = hsla(38, 100, 48, 0.85 * fade);
+      ctx.beginPath();
+      ctx.moveTo(x - 5 * s * (1 - gather), top);
+      ctx.lineTo(x - 3 * s, tipY);
+      ctx.lineTo(x + 3 * s, tipY);
+      ctx.lineTo(x + 5 * s * (1 - gather), top);
+      ctx.fill();
+      if (gather > 0) {
+        const r = 46 * s * gather;
+        const cy = y - r * 1.4;
+        const g = ctx.createRadialGradient(x - r * 0.3, cy - r * 0.4, r * 0.1, x, cy, r * 1.4);
+        g.addColorStop(0, hsla(50, 100, 80, 0.95 * fade));
+        g.addColorStop(1, hsla(30, 90, 34, 0.95 * fade));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(x, cy - r * 1.8);
+        ctx.quadraticCurveTo(x + r * 1.1, cy - r * 0.2, x + r, cy + r * 0.4);
+        ctx.arc(x, cy + r * 0.4, r, 0, Math.PI);
+        ctx.quadraticCurveTo(x - r * 1.1, cy - r * 0.2, x, cy - r * 1.8);
+        ctx.fill();
+        // the shape of something curled up inside, stirring
+        ctx.fillStyle = hsla(28, 70, 18, 0.5 * fade * gather);
+        ctx.beginPath();
+        ctx.ellipse(x + Math.sin(t * 4) * 2 * s, cy + r * 0.3, r * 0.35, r * 0.55, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        if (crack > 0) {
+          ctx.strokeStyle = hsla(50, 100, 92, fade);
+          ctx.lineWidth = 2 * s;
+          ctx.beginPath();
+          ctx.moveTo(x, cy - r * 1.2);
+          ctx.lineTo(x + 8 * s, cy - r * 0.4);
+          ctx.lineTo(x - 6 * s, cy + r * 0.2 * crack);
+          ctx.lineTo(x + 10 * s, cy + r * crack);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    },
+  },
   // Vela: everything goes dark, and far off a point of light starts to spin, two beams sweeping the arena like a
   // lighthouse, faster and faster. The beams fold in, the pulsar drops, and the floor rings with one huge beat.
   vela: {

@@ -179,6 +179,12 @@
       "velaReply": "Beat. Beat. Gone.",
       "aeonOpen": "I am the first light. You're a flicker.",
       "aeonReply": "Go out gently.",
+      "orogenOpen": "Hold still. I'm about to move the ground.",
+      "orogenReply": "I was here before the hills.",
+      "gnarlrootOpen": "Weeds. Everywhere I look, weeds.",
+      "gnarlrootReply": "Then I'll pull you up by the roots.",
+      "ambrelOpen": "Hold still. You'll look lovely in gold.",
+      "ambrelReply": "Hush now. Stay like that for ever.",
       "hybridOpen": "Two powers. Twice the trouble.",
       "hybridReply": "Just one power? Adorable.",
       "ownOpen": "I made myself for this fight.",
@@ -1592,6 +1598,129 @@
           "l2": "There's room up there for both of us.",
           "l3": "Aeon's great eye slowly closes. The light it gathered streams back up into the sky, star by star, until the night is full again. On the summit of Zenith the first star rests, and for the first time in an age, it isn't keeping watch alone."
         }
+      },
+      "c21": {
+        "intro": {
+          "l1": "The Celestials are back in the sky, and for a while the world is quiet. Then, one morning, the ground starts to hum.",
+          "l2": "Long before the first star was lit, the world was built by the Titans: giants of stone, root and amber who raised the land and then lay down under it to sleep. When the Celestials came crashing down, the shaking woke them.",
+          "l3": "The first to wake is Orogen, a whole mountain range with a body. It raised the highlands, and now it has decided they are crowded. To stop it, your fighters will have to cross the hills while the hills are still moving."
+        },
+        "s1": {
+          "l1": "Bounce! Bounce! The mountain's awake and so am I!",
+          "l2": "Great. Can you be awake somewhere else?"
+        },
+        "s2": {
+          "l1": "Ten thousand years in one field. Then somebody built a fence round me.",
+          "l2": "That was a long time ago, and it wasn't us."
+        },
+        "s3": {
+          "l1": "Every stone on this hill rolled down off Orogen. We all want to go back up.",
+          "l2": "Then you'll have to get past us first."
+        },
+        "s4": {
+          "l1": "I hear the mountain breathing. It says the land was flatter, and quieter, before you came.",
+          "l2": "It also says it's been asleep for a very long time."
+        },
+        "s5": {
+          "l1": "I have watched every sunrise since the world was raised. I have never needed to move. Until today.",
+          "l2": "Then let's make it worth the trip."
+        },
+        "s6": {
+          "l1": "Above me there is only Orogen, and Orogen is the ground you stand on.",
+          "l2": "Then we'll stand our ground."
+        },
+        "s7": {
+          "l1": "I raised these hills out of the sea before the first star burned. I lay down under them so they would stay. And you built on me.",
+          "l2": "We didn't know you were there. Nobody did.",
+          "l3": "Now you do. Every road, every wall, every town: I will shrug them off, and the land will lie flat and still, the way I made it."
+        },
+        "outro": {
+          "l1": "You stand on me so lightly... All this time I felt your weight, and never your steps.",
+          "l2": "Go back to sleep. We'll walk carefully.",
+          "l3": "Orogen sinks back into its range, peak by peak, until the highlands are only hills again and the jade light fades out of the cracks. But deep under the forest to the east, something with roots has felt the shaking too."
+        }
+      },
+      "c22": {
+        "intro": {
+          "l1": "East of the highlands lies the Elderwood, a forest so old that its trees have trees growing on them.",
+          "l2": "Under it, under everything, run the roots of Gnarlroot: the first tree, the Titan that holds the world together from below. Every country in the world stands on one of its roots.",
+          "l3": "Gnarlroot has woken and looked up, and it does not like what is growing on its roots. It has decided the world needs weeding. To stop it, your fighters will have to go into the forest, and then under it."
+        },
+        "s1": {
+          "l1": "Hush. The forest is waking up. It is waking up angry.",
+          "l2": "We've met a singing forest before. An angry one can't be worse."
+        },
+        "s2": {
+          "l1": "Which way are you? Which way am I? Doesn't matter. Prickle!",
+          "l2": "Ow. Yes. Very prickly."
+        },
+        "s3": {
+          "l1": "Every spring I sing the forest awake. This year Gnarlroot gave me new words.",
+          "l2": "Then we'll teach you an old song. It's called going home."
+        },
+        "s4": {
+          "l1": "This tree fell before anyone remembers, and we grew out of it. Gnarlroot will grow out of your towns the same way.",
+          "l2": "Not while we're here."
+        },
+        "s5": {
+          "l1": "I was Gnarlroot's first seedling. A thousand rings, and I have never let anyone down to the roots.",
+          "l2": "There's a first time for everything."
+        },
+        "s6": {
+          "l1": "Down here there is no sun. Only roots, and the one they all belong to.",
+          "l2": "Then let's go and meet it."
+        },
+        "s7": {
+          "l1": "Everything you stand on, I hold up. Every field, every road, every city. I held the world together while you grew on me like moss.",
+          "l2": "We never asked you to let go.",
+          "l3": "No. You never asked anything. So I will pull every weed out by the root, and the world will be a forest again, and only a forest."
+        },
+        "outro": {
+          "l1": "Moss... You were never moss. You were seeds. And seeds that grow are what I was for.",
+          "l2": "Then keep holding on. We'll look after what's on top.",
+          "l3": "Gnarlroot's roots ease back into the dark, and above them the Elderwood goes still and green. But far under the roots, where the sap of the first tree pools and hardens, a light the colour of honey is beginning to glow."
+        }
+      },
+      "c23": {
+        "intro": {
+          "l1": "Under the roots of the first tree, old sap has been dripping for longer than there has been time. It has pooled, and set, and become a cavern of living amber.",
+          "l2": "This is Ambrel, the third Titan, the world's memory. Whatever it wants to keep, it seals in gold for ever: the first leaf, the first feather, the last song of a bird no one has heard in an age.",
+          "l3": "Now Ambrel has woken and looked at the bright, noisy world above, and it wants to keep that too. All of it, perfect and still. To stop it, your fighters will have to go down into the gold before it sets."
+        },
+        "s1": {
+          "l1": "The herd went that way. Long ago. I will find them. Out of my way.",
+          "l2": "They're not down here. Nobody is, except us."
+        },
+        "s2": {
+          "l1": "Bzzz! I waited a hundred million years! Do you KNOW how long that is?",
+          "l2": "Longer than this fight is going to take."
+        },
+        "s3": {
+          "l1": "Ambrel set my bones in gold so nothing could ever break them. Try.",
+          "l2": "We'd rather not, but all right."
+        },
+        "s4": {
+          "l1": "Slower... slower... you'll like it in the web. Nothing ever changes in the web.",
+          "l2": "That's exactly why we won't."
+        },
+        "s5": {
+          "l1": "One golden afternoon, my whole hive was sealed. I have waited ever since to finish that afternoon.",
+          "l2": "Then let's finish it now, and let you all go."
+        },
+        "s6": {
+          "l1": "Feel the air? It is setting. In a little while you will not be able to move, and you will be beautiful for ever.",
+          "l2": "We'd rather keep moving."
+        },
+        "s7": {
+          "l1": "I keep what matters. The first leaf. The first feather. The last song of a bird that no longer sings. Up there, everything you love fades. In here, nothing ever does.",
+          "l2": "Things fade. That's how we know they mattered.",
+          "l3": "Then let me spare you the grief. I will seal your whole bright world in gold, every face, every voice, and it will be perfect, and it will never, ever end."
+        },
+        "outro": {
+          "l1": "You crack the gold so easily... Maybe a thing is not kept by holding it still. Maybe it is kept by being remembered.",
+          "l2": "We'll remember you. Promise.",
+          "l3": "Ambrel's amber softens and lets go: the leaf, the feather, the hive, the old bird's song drifting free into the dark. The hollow dims to a gentle glow. But far below it, past the last of the gold, something enormous turns over in its sleep."
+        }
       }
     },
     "skip": {
@@ -1625,7 +1754,9 @@
       "b2": "Book 2: The Elder Dark",
       "b2Locked": "Defeat all of the Reign 8 in Book 1 to open Book 2.",
       "b3": "Book 3: The Celestials",
-      "b3Locked": "Defeat the Elder Dark in Book 2 to open Book 3."
+      "b3Locked": "Defeat the Elder Dark in Book 2 to open Book 3.",
+      "b4": "Book 4: The Titans",
+      "b4Locked": "Defeat Aeon in Book 3 to open Book 4."
     },
     "ch9": {
       "title": "Chapter 1: Lights Under the Sea",
@@ -1807,6 +1938,42 @@
       "l4": "But if it looks this way tonight, it will see two kinds of light: the old stars overhead and the new ones down below, each of them keeping an eye on the other.",
       "l5": "Look up. They're still there. Good. Somebody has to watch the sky.",
       "l6": "The end of Book 3: The Celestials."
+    },
+    "ch21": {
+      "title": "Chapter 1: The Waking Mountain",
+      "stages": {
+        "s1": "Highland Road",
+        "s2": "Shepherd's Pass",
+        "s3": "Standing Stones",
+        "s4": "The Rolling Scree",
+        "s5": "Jade Falls",
+        "s6": "The Shoulder of the World",
+        "s7": "Orogen's Peak"
+      }
+    },
+    "ch22": {
+      "title": "Chapter 2: The Root Below",
+      "stages": {
+        "s1": "The Elderwood Edge",
+        "s2": "Mossy Hollow",
+        "s3": "Firefly Glade",
+        "s4": "The Fallen Giant",
+        "s5": "Root Gate",
+        "s6": "Under the Forest",
+        "s7": "Gnarlroot's Heart"
+      }
+    },
+    "ch23": {
+      "title": "Chapter 3: The Amber Hollow",
+      "stages": {
+        "s1": "The Sap Stair",
+        "s2": "Dripping Gallery",
+        "s3": "The Comb Halls",
+        "s4": "The Kept Room",
+        "s5": "The Bone Garden",
+        "s6": "The Setting Gold",
+        "s7": "Ambrel's Heart"
+      }
     }
   },
   "fusion": {

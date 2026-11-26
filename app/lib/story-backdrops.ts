@@ -1519,6 +1519,203 @@ const LOOKS: Look[] = [
       }
     },
   },
+  // ---------- Book 4: The Titans ----------
+  {
+    // Book 4, 1. The Waking Mountain: green highlands under a range of grey peaks that are starting to move
+    sky: [
+      ["hsl(204 60% 70%)", "hsl(190 50% 84%)", "hsl(150 30% 88%)"],
+      ["hsl(206 64% 60%)", "hsl(196 50% 78%)", "hsl(160 30% 84%)"],
+      ["hsl(250 30% 34%)", "hsl(20 50% 60%)", "hsl(36 70% 72%)"],
+      ["hsl(220 30% 10%)", "hsl(170 30% 18%)", "hsl(150 40% 30%)"],
+    ],
+    far: "hsl(130 20% 40%)",
+    near: "hsl(110 26% 30%)",
+    floor: ["hsl(100 20% 32%)", "hsl(90 16% 18%)"],
+    line: "hsl(150 60% 60% / 0.25)",
+    starsFrom: 3,
+    scene(ctx, stage, phase, rnd) {
+      // the range: grey peaks capped with snow, standing a little taller every stage as the mountain wakes
+      const lift = stage * 10;
+      for (let i = 0; i < 6; i++) {
+        const x = 40 + i * 175 + rnd() * 40, h = 150 + rnd() * 70 + lift, w = 120 + rnd() * 50;
+        ctx.fillStyle = phase >= 3 ? "hsl(200 14% 16%)" : phase === 2 ? "hsl(260 12% 40%)" : "hsl(210 10% 58%)";
+        ctx.beginPath();
+        ctx.moveTo(x - w, 340);
+        ctx.lineTo(x, 340 - h);
+        ctx.lineTo(x + w, 340);
+        ctx.fill();
+        ctx.fillStyle = phase >= 3 ? "hsl(200 20% 40%)" : "hsl(0 0% 97%)";
+        ctx.beginPath();
+        ctx.moveTo(x - w * 0.24, 340 - h * 0.76);
+        ctx.lineTo(x, 340 - h);
+        ctx.lineTo(x + w * 0.26, 340 - h * 0.74);
+        ctx.lineTo(x + w * 0.08, 340 - h * 0.8);
+        ctx.closePath();
+        ctx.fill();
+      }
+      // from the middle of the chapter, jade light running along the cracks in the far slopes
+      if (phase >= 1) {
+        ctx.strokeStyle = `hsl(150 100% 66% / ${0.3 + phase * 0.18})`;
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 2 + phase * 2; i++) {
+          let x = 80 + rnd() * 800, y = 330 - rnd() * 80;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          for (let k = 0; k < 5; k++) {
+            x += 10 + rnd() * 16;
+            y += (rnd() - 0.3) * 18;
+            ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+      }
+    },
+    front(ctx, stage, phase, rnd) {
+      // standing stones in the grass, and boulders that have rolled down off the waking peaks
+      for (let i = 0; i < 3 + stage; i++) {
+        const x = rnd() * W, h = 20 + rnd() * 30, w = 14 + rnd() * 20;
+        ctx.fillStyle = phase >= 3 ? "hsl(200 10% 22%)" : "hsl(28 8% 50%)";
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x - w, FLOOR);
+        ctx.lineTo(x - w * 0.7, FLOOR - h);
+        ctx.lineTo(x + w * 0.6, FLOOR - h * 0.9);
+        ctx.lineTo(x + w, FLOOR);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+      if (phase === 3) glow(ctx, W / 2, FLOOR - 10, 220, "hsl(150 100% 60%)", 0.35);
+    },
+  },
+  {
+    // Book 4, 2. The Root Below: a forest of trunks too wide to see round, roots as tall as walls, fireflies in the dark
+    sky: [
+      ["hsl(110 30% 30%)", "hsl(96 30% 46%)", "hsl(80 40% 60%)"],
+      ["hsl(120 30% 24%)", "hsl(100 30% 38%)", "hsl(80 36% 50%)"],
+      ["hsl(140 30% 14%)", "hsl(110 24% 24%)", "hsl(60 40% 34%)"],
+      ["hsl(150 40% 6%)", "hsl(120 30% 12%)", "hsl(92 50% 22%)"],
+    ],
+    far: "hsl(110 24% 18%)",
+    near: "hsl(24 30% 16%)",
+    floor: ["hsl(30 30% 20%)", "hsl(24 30% 10%)"],
+    line: "hsl(92 70% 60% / 0.2)",
+    starsFrom: 9,
+    scene(ctx, stage, phase, rnd) {
+      // light coming down in shafts through the leaves high above
+      for (let i = 0; i < 4; i++) {
+        const x = 100 + rnd() * 760;
+        const g = ctx.createLinearGradient(x, 0, x + 60, FLOOR);
+        g.addColorStop(0, `hsl(70 100% 80% / ${0.24 - phase * 0.05})`);
+        g.addColorStop(1, "hsl(70 100% 80% / 0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + 30, 0);
+        ctx.lineTo(x + 120, FLOOR);
+        ctx.lineTo(x + 50, FLOOR);
+        ctx.fill();
+      }
+      // the giant trunks, nearer and wider the deeper the stage
+      for (let i = 0; i < 5; i++) {
+        const x = 60 + i * 210 + rnd() * 60, w = 50 + rnd() * 40 + stage * 4;
+        ctx.fillStyle = `hsl(24 ${24 + i * 2}% ${phase >= 3 ? 8 : 14 + (i % 2) * 4}%)`;
+        ctx.fillRect(x - w / 2, 0, w, 360);
+        ctx.strokeStyle = "hsl(24 30% 8% / 0.6)";
+        ctx.lineWidth = 2;
+        for (let k = 0; k < 3; k++) {
+          const lx = x - w / 2 + (k + 1) * (w / 4);
+          ctx.beginPath();
+          ctx.moveTo(lx, 0);
+          ctx.quadraticCurveTo(lx + (rnd() - 0.5) * 20, 180, lx, 360);
+          ctx.stroke();
+        }
+      }
+    },
+    front(ctx, stage, phase, rnd) {
+      // great roots arching out of the ground
+      ctx.lineCap = "round";
+      for (let i = 0; i < 2 + Math.min(4, stage); i++) {
+        const x = rnd() * W, span = 120 + rnd() * 160, h = 40 + rnd() * 50;
+        ctx.strokeStyle = phase >= 3 ? "hsl(24 30% 10%)" : "hsl(24 30% 18%)";
+        ctx.lineWidth = 14 + rnd() * 8;
+        ctx.beginPath();
+        ctx.moveTo(x - span / 2, FLOOR + 6);
+        ctx.quadraticCurveTo(x, FLOOR - h * 2, x + span / 2, FLOOR + 6);
+        ctx.stroke();
+      }
+      // fireflies, more of them as it gets dark
+      for (let i = 0; i < 6 + phase * 8; i++) glow(ctx, rnd() * W, 120 + rnd() * 300, 6, "hsl(80 100% 70%)", 0.7);
+      if (phase === 3) glow(ctx, W / 2, FLOOR - 20, 240, "hsl(92 100% 56%)", 0.3);
+    },
+  },
+  {
+    // Book 4, 3. The Amber Hollow: a cavern of living amber under the forest, walls of honeycomb, things sealed in gold
+    sky: [
+      ["hsl(30 60% 20%)", "hsl(36 80% 40%)", "hsl(44 100% 60%)"],
+      ["hsl(28 60% 16%)", "hsl(34 80% 34%)", "hsl(42 100% 54%)"],
+      ["hsl(24 60% 12%)", "hsl(30 80% 26%)", "hsl(38 100% 46%)"],
+      ["hsl(20 60% 6%)", "hsl(28 80% 16%)", "hsl(40 100% 40%)"],
+    ],
+    far: "hsl(32 70% 26%)",
+    near: "hsl(30 70% 18%)",
+    floor: ["hsl(36 80% 34%)", "hsl(28 70% 14%)"],
+    line: "hsl(46 100% 70% / 0.25)",
+    starsFrom: 9,
+    flat: true,
+    scene(ctx, stage, phase, rnd) {
+      // honeycomb across the cavern wall, every cell lit from within
+      const r = 26;
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 24; col++) {
+          const x = col * r * 1.75 + (row % 2) * r * 0.87, y = row * r * 1.5 + 10;
+          if (y > 360) continue;
+          ctx.beginPath();
+          for (let k = 0; k < 6; k++) {
+            const a = (k / 6) * Math.PI * 2 + Math.PI / 6;
+            if (k === 0) ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+            else ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+          }
+          ctx.closePath();
+          ctx.fillStyle = `hsl(${36 + rnd() * 8} 90% ${(phase >= 3 ? 16 : 26) + rnd() * 14}% / 0.8)`;
+          ctx.fill();
+          ctx.strokeStyle = "hsl(28 70% 12% / 0.7)";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+      }
+      // things the amber has kept: a leaf, a feather, a beetle, a fish, hanging in the gold
+      for (let i = 0; i < 3 + stage; i++) {
+        const x = 60 + rnd() * 840, y = 60 + rnd() * 240;
+        glow(ctx, x, y, 34, "hsl(46 100% 66%)", 0.45);
+        ctx.fillStyle = "hsl(24 50% 14% / 0.8)";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 6 + rnd() * 8, 3 + rnd() * 4, rnd() * 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    },
+    front(ctx, stage, phase, rnd) {
+      // long drips of resin hanging from above, and pools of it set hard on the floor
+      for (let i = 0; i < 6 + stage; i++) {
+        const x = rnd() * W, len = 30 + rnd() * 90;
+        ctx.fillStyle = "hsl(40 100% 50% / 0.85)";
+        ctx.beginPath();
+        ctx.moveTo(x - 6, 0);
+        ctx.quadraticCurveTo(x - 3, len * 0.7, x, len);
+        ctx.quadraticCurveTo(x + 3, len * 0.7, x + 6, 0);
+        ctx.fill();
+      }
+      for (let i = 0; i < 4; i++) {
+        const x = rnd() * W;
+        ctx.fillStyle = "hsl(42 100% 54% / 0.6)";
+        ctx.beginPath();
+        ctx.ellipse(x, FLOOR - 4, 40 + rnd() * 50, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (phase === 3) glow(ctx, W / 2, FLOOR - 30, 240, "hsl(44 100% 60%)", 0.4);
+    },
+  },
 ];
 
 /** What moves over each chapter's painting, by part of the chapter (0 dawn to 3 the lair). Indexed by global chapter. */
@@ -1563,6 +1760,12 @@ const AIRS: ((phase: number) => Air)[] = [
   (p) => ({ motes: "dust", hue: 40, heat: true, twinkle: p >= 2, amount: 0.7 + p * 0.2 }),
   // Book 3, 5. The Eye of the Sky: the sea of clouds rolling below, stars crowding closer
   (p) => ({ mist: "hsl(220 20% 92%)", twinkle: p >= 1, amount: 0.8 + p * 0.25 }),
+  // Book 4, 1. The Waking Mountain: clouds over the highlands by day, grit shaken loose off the peaks as they wake
+  (p) => ({ clouds: p < 2 ? "hsl(0 0% 100%)" : undefined, motes: "dust", hue: 150, twinkle: p >= 3, amount: 0.5 + p * 0.25 }),
+  // Book 4, 2. The Root Below: green spores drifting down through the shafts of light
+  (p) => ({ mist: "hsl(100 30% 30%)", motes: "spores", hue: 90, twinkle: p >= 2, amount: 0.6 + p * 0.25 }),
+  // Book 4, 3. The Amber Hollow: gold motes hanging in the thick warm air
+  (p) => ({ motes: "dust", hue: 42, heat: true, twinkle: true, amount: 0.7 + p * 0.2 }),
 ];
 
 function paint(ch: number, stage: number): HTMLCanvasElement {

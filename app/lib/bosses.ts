@@ -4,7 +4,7 @@
 import type { BossDesign, FighterDef, Move } from "./fighters";
 import type { Form } from "./forms";
 
-export type BossId = "nullshade" | "maelstrom" | "magmaw" | "everwinter" | "riftmaker" | "hollowking" | "blacksun" | "axiom" | "lanternmaw" | "sporemother" | "mnemovore" | "dustmoth" | "somnarch" | "hush" | "elderdark" | "perihelion" | "asterion" | "carina" | "vela" | "aeon";
+export type BossId = "nullshade" | "maelstrom" | "magmaw" | "everwinter" | "riftmaker" | "hollowking" | "blacksun" | "axiom" | "lanternmaw" | "sporemother" | "mnemovore" | "dustmoth" | "somnarch" | "hush" | "elderdark" | "perihelion" | "asterion" | "carina" | "vela" | "aeon" | "orogen" | "gnarlroot" | "ambrel";
 
 const M = (m: Omit<Move, "wind" | "act" | "rec"> & Partial<Pick<Move, "wind" | "act" | "rec">>): Move => ({
   wind: 0.2,
@@ -303,6 +303,51 @@ export const BOSSES: Record<BossId, FighterDef> = {
       M({ id: "eye-of-the-sky", name: "Eye of the Sky", kind: "beam", anim: "thrust", range: 620, minRange: 70, cd: 3.3, dmg: 15, act: 0.36, status: "burn", statusDur: 1, wind: 0.32 }),
       M({ id: "rain-of-ages", name: "Rain of Ages", kind: "rain", anim: "raise", range: 560, cd: 5.4, dmg: 8, count: 8, radius: 190, size: 10, status: "burn", statusDur: 0.8, wind: 0.34 }),
       M({ id: "the-old-orbit", name: "The Old Orbit", kind: "zone", anim: "slam", range: 420, cd: 9, dmg: 6, radius: 150, dur: 4.5, pullIn: 160, status: "slow", statusDur: 0.8, wind: 0.36 }),
+    ],
+  },
+  // Book 4, chapter 1. The first Titan: a mountain range that stood up. It raised the land before there was a sky to
+  // watch it, then lay down to sleep under its own peaks. The Celestials' fall woke it, and it wants the world flat again.
+  orogen: {
+    id: "terra", boss: "orogen", name: "Orogen", power: "Tectonics", role: "tank",
+    ability: "A Titan: a mountain range with a body. Every step moves the ground, stone spikes burst up wherever it looks, and the drift of whole continents drags you in to meet its fists.",
+    color: "hsl(28 10% 32%)", glow: "hsl(150 80% 62%)", hp: 720, speed: 88,
+    moves: [
+      M({ id: "slab-fist", name: "Slab Fist", kind: "melee", anim: "slam", range: 104, cd: 1.2, dmg: 14, kb: 340, status: "stun", statusDur: 0.25, wind: 0.26 }),
+      M({ id: "upthrust", name: "Upthrust", kind: "eruption", anim: "slam", range: 600, minRange: 40, cd: 5.6, dmg: 13, radius: 48, count: 4, lift: -720, wind: 0.38 }),
+      M({ id: "rockfall", name: "Rockfall", kind: "rain", anim: "raise", range: 560, cd: 5.4, dmg: 9, count: 6, radius: 170, size: 13, shape: "rock", status: "stun", statusDur: 0.3, wind: 0.36, rec: 0.3 }),
+      M({ id: "fault-quake", name: "Fault Quake", kind: "burst", anim: "slam", range: 170, cd: 6.5, dmg: 16, radius: 190, kb: 460, lift: -340, wind: 0.36, rec: 0.36 }),
+      M({ id: "landslide", name: "Landslide", kind: "dash", anim: "lunge", range: 560, minRange: 90, cd: 4.6, dmg: 15, kb: 440, lift: -260, wind: 0.32 }),
+      M({ id: "continental-drift", name: "Continental Drift", kind: "pull", anim: "cast", range: 500, minRange: 110, cd: 4.8, dmg: 9, status: "slow", statusDur: 1, wind: 0.28 }),
+    ],
+  },
+  // Book 4, chapter 2. The second Titan: the oldest tree, whose roots hold the whole world together from underneath.
+  // Woken, it has decided that everything standing on its roots is a weed.
+  gnarlroot: {
+    id: "vita", boss: "gnarlroot", name: "Gnarlroot", power: "Old Growth", role: "control",
+    ability: "A Titan: the first tree, its roots under every country in the world. Thorns fly from its branches, roots tear up through the floor and snare whoever runs, and its sap heals every wound you give it.",
+    color: "hsl(24 30% 20%)", glow: "hsl(92 80% 60%)", hp: 740, speed: 90,
+    moves: [
+      M({ id: "bough-swing", name: "Bough Swing", kind: "melee", anim: "spin", range: 116, cd: 1.1, dmg: 13, kb: 300, status: "poison", statusDur: 1 }),
+      M({ id: "thorn-hail", name: "Thorn Hail", kind: "projectile", anim: "thrust", range: 620, minRange: 80, cd: 2.4, dmg: 6, speed: 640, size: 10, count: 5, spread: 0.3, shape: "shard", status: "poison", statusDur: 0.8 }),
+      M({ id: "gnarled-snare", name: "Gnarled Snare", kind: "pull", anim: "cast", range: 520, minRange: 110, cd: 4.6, dmg: 9, status: "stun", statusDur: 0.4, wind: 0.26 }),
+      M({ id: "taproot", name: "Taproot", kind: "eruption", anim: "slam", range: 580, minRange: 40, cd: 5.6, dmg: 13, radius: 46, count: 3, lift: -680, status: "slow", statusDur: 1, wind: 0.36 }),
+      M({ id: "sap-mend", name: "Sap Mend", kind: "heal", anim: "raise", range: 2000, cd: 13, dmg: 0, heal: 30, below: 0.6, wind: 0.4, act: 0.3 }),
+      M({ id: "bramble-thicket", name: "Bramble Thicket", kind: "zone", anim: "slam", range: 420, cd: 9, dmg: 6, radius: 150, dur: 4.5, status: "poison", statusDur: 0.8, wind: 0.36 }),
+    ],
+  },
+  // Book 4, chapter 3. The third Titan: a cavern of living amber under the forest, where the world keeps everything it
+  // wants to remember. It has started keeping people too, sealed in gold, perfect and still for ever.
+  ambrel: {
+    id: "chrono", boss: "ambrel", name: "Ambrel", power: "Amber", role: "control",
+    ability: "A Titan: a body of living amber with an ancient wasp sealed in its heart. Its resin sets in a moment and freezes whatever it catches, its honey lance burns, and it slips through its own gold to strike from behind.",
+    color: "hsl(32 80% 36%)", glow: "hsl(44 100% 66%)", hp: 760, speed: 96,
+    moves: [
+      M({ id: "resin-palm", name: "Resin Palm", kind: "melee", anim: "thrust", range: 100, cd: 1, dmg: 12, kb: 240, status: "slow", statusDur: 1 }),
+      M({ id: "sap-drops", name: "Sap Drops", kind: "projectile", anim: "cast", range: 600, minRange: 80, cd: 2.6, dmg: 7, speed: 520, size: 12, count: 3, spread: 0.2, shape: "orb", status: "slow", statusDur: 0.9 }),
+      M({ id: "honey-lance", name: "Honey Lance", kind: "beam", anim: "thrust", range: 580, minRange: 70, cd: 3.4, dmg: 14, act: 0.34, status: "burn", statusDur: 1, wind: 0.32 }),
+      M({ id: "fossil-step", name: "Fossil Step", kind: "blink", anim: "kick", range: 560, minRange: 130, cd: 4.2, dmg: 13, kb: 300, lift: -240, status: "freeze", statusDur: 0.4 }),
+      M({ id: "amber-pool", name: "Amber Pool", kind: "zone", anim: "slam", range: 400, cd: 9, dmg: 5, radius: 145, dur: 4.5, status: "slow", statusDur: 0.8, wind: 0.36 }),
+      M({ id: "set-in-stone", name: "Set in Stone", kind: "burst", anim: "raise", range: 160, cd: 8, dmg: 12, radius: 180, kb: 300, status: "freeze", statusDur: 1, wind: 0.42, rec: 0.36 }),
     ],
   },
 };
@@ -894,6 +939,93 @@ export const BOSS_PHASES: Partial<Record<BossDesign, Form[]>> = {
       moves: [
         M({ id: "gathered-heavens", name: "Gathered Heavens", kind: "zone", anim: "raise", range: 440, cd: 10, dmg: 7, radius: 210, dur: 5, pullIn: 250, status: "blind", statusDur: 0.5, wind: 0.4 }),
         M({ id: "the-beginning", name: "The Beginning", kind: "burst", anim: "raise", range: 480, cd: 12, dmg: 17, radius: 440, kb: 500, lift: -420, status: "burn", statusDur: 0.9, wind: 0.55, rec: 0.35 }),
+      ],
+    },
+  ],
+  orogen: [
+    {
+      ...P2, power: "terra", title: "THE PEAKS RISE", dodge: 0.08,
+      blurb: "Its shoulders push up into new peaks, snow on their tops. It hurls whole crags, and the ground under you tilts toward it.",
+      body: "hsl(30 10% 28%)", glow: "hsl(150 90% 66%)", a: "hsl(28 12% 44%)", b: "hsl(150 90% 70%)",
+      moves: [
+        M({ id: "crag-throw", name: "Crag Throw", kind: "projectile", anim: "slam", range: 620, minRange: 90, cd: 3.2, dmg: 12, speed: 460, size: 18, count: 1, shape: "rock", kb: 380, lift: -240, wind: 0.32 }),
+        M({ id: "tilting-ground", name: "Tilting Ground", kind: "zone", anim: "slam", range: 420, cd: 9, dmg: 6, radius: 150, dur: 4.5, pullIn: 150, status: "slow", statusDur: 0.8, wind: 0.36 }),
+      ],
+    },
+    {
+      ...P3, power: "terra", title: "THE JADE VEIN", drain: 0.12,
+      blurb: "The green seam in its chest cracks open and the mountain's heart shows through. Jade light runs along the ground, and when it is hurt, the rock grows back over the wound.",
+      body: "hsl(150 14% 22%)", glow: "hsl(150 100% 70%)", a: "hsl(150 60% 40%)", b: "hsl(150 100% 80%)",
+      moves: [
+        M({ id: "jade-vein", name: "Jade Vein", kind: "beam", anim: "thrust", range: 600, minRange: 70, cd: 3.6, dmg: 14, act: 0.36, status: "stun", statusDur: 0.35, wind: 0.32 }),
+        M({ id: "bedrock", name: "Bedrock", kind: "heal", anim: "raise", range: 2000, cd: 13, dmg: 0, heal: 30, below: 0.6, wind: 0.4, act: 0.3 }),
+      ],
+    },
+    {
+      ...P4, power: "terra", title: "THE WORLD'S SPINE", guard: 0.82, regen: 1.3,
+      blurb: "It stands up to its full height, a whole range from end to end. The plates of the world grind together under it, and Mountainfall drops the sky's worth of stone on most of the arena at once.",
+      body: "hsl(28 14% 16%)", glow: "hsl(150 100% 74%)", a: "hsl(28 14% 26%)", b: "hsl(150 100% 76%)", dark: "hsl(28 14% 6%)",
+      moves: [
+        M({ id: "plate-grind", name: "Plate Grind", kind: "blink", anim: "kick", range: 560, minRange: 130, cd: 4.4, dmg: 14, kb: 340, lift: -280, status: "stun", statusDur: 0.4 }),
+        M({ id: "mountainfall", name: "Mountainfall", kind: "burst", anim: "raise", range: 480, cd: 12, dmg: 17, radius: 430, kb: 500, lift: -420, status: "stun", statusDur: 0.8, wind: 0.55, rec: 0.35 }),
+      ],
+    },
+  ],
+  gnarlroot: [
+    {
+      ...P2, power: "vita", title: "IN LEAF", dodge: 0.1,
+      blurb: "Its bare branches burst into leaf all at once. Seed pods split and scatter, and it strides across the arena on a wave of roots.",
+      body: "hsl(26 30% 18%)", glow: "hsl(96 90% 64%)", a: "hsl(96 60% 42%)", b: "hsl(80 100% 74%)",
+      moves: [
+        M({ id: "seed-burst", name: "Seed Burst", kind: "rain", anim: "raise", range: 540, cd: 5.4, dmg: 8, count: 7, radius: 180, size: 10, status: "poison", statusDur: 0.8, wind: 0.34 }),
+        M({ id: "root-wave", name: "Root Wave", kind: "dash", anim: "lunge", range: 540, minRange: 90, cd: 4.6, dmg: 14, kb: 400, lift: -260, wind: 0.3 }),
+      ],
+    },
+    {
+      ...P3, power: "vita", title: "THE HEARTWOOD", drain: 0.14,
+      blurb: "Its bark splits down the middle and the heartwood shows, glowing gold-green. Sap runs out of it like a beam of light, and its roots drink back whatever it takes.",
+      body: "hsl(30 34% 14%)", glow: "hsl(70 100% 64%)", a: "hsl(40 80% 50%)", b: "hsl(80 100% 76%)",
+      moves: [
+        M({ id: "sap-beam", name: "Sap Beam", kind: "beam", anim: "thrust", range: 580, minRange: 70, cd: 3.6, dmg: 14, act: 0.36, status: "slow", statusDur: 1, wind: 0.32 }),
+        M({ id: "deep-roots", name: "Deep Roots", kind: "blink", anim: "kick", range: 560, minRange: 130, cd: 4.4, dmg: 13, kb: 300, lift: -260, status: "stun", statusDur: 0.4 }),
+      ],
+    },
+    {
+      ...P4, power: "vita", title: "THE WORLD TREE", guard: 0.8, regen: 1.5,
+      blurb: "Its crown spreads over the whole sky and the light goes green. The Canopy closes in around everyone, and Overgrowth bursts up across most of the arena at once.",
+      body: "hsl(28 30% 9%)", glow: "hsl(92 100% 70%)", a: "hsl(28 30% 20%)", b: "hsl(92 100% 72%)", dark: "hsl(28 30% 4%)",
+      moves: [
+        M({ id: "the-canopy", name: "The Canopy", kind: "zone", anim: "raise", range: 440, cd: 10, dmg: 7, radius: 200, dur: 5, pullIn: 240, status: "blind", statusDur: 0.5, wind: 0.4 }),
+        M({ id: "overgrowth", name: "Overgrowth", kind: "burst", anim: "slam", range: 480, cd: 12, dmg: 16, radius: 430, kb: 460, lift: -400, status: "poison", statusDur: 1, wind: 0.55, rec: 0.35 }),
+      ],
+    },
+  ],
+  ambrel: [
+    {
+      ...P2, power: "chrono", title: "THE COMB", dodge: 0.14,
+      blurb: "Honeycomb grows over its shoulders, cell by golden cell. Old wasps of amber wake inside and fly at whoever is nearest, and the comb pulls the slow ones closer.",
+      body: "hsl(32 80% 32%)", glow: "hsl(46 100% 70%)", a: "hsl(38 100% 52%)", b: "hsl(48 100% 82%)",
+      moves: [
+        M({ id: "amber-wasps", name: "Amber Wasps", kind: "rain", anim: "raise", range: 540, cd: 5.2, dmg: 8, count: 7, radius: 180, size: 9, status: "poison", statusDur: 0.8, wind: 0.34 }),
+        M({ id: "honey-pull", name: "Honey Pull", kind: "pull", anim: "cast", range: 500, minRange: 110, cd: 4.6, dmg: 9, status: "slow", statusDur: 1.2, wind: 0.26 }),
+      ],
+    },
+    {
+      ...P3, power: "chrono", title: "THE KEPT HOURS", drain: 0.12,
+      blurb: "Things it has kept for an age drift up out of its body: leaves, feathers, a beetle, a bird mid-song. Gold spikes burst from the floor, and when it is hurt it seals the wound in fresh resin.",
+      body: "hsl(28 80% 26%)", glow: "hsl(40 100% 66%)", a: "hsl(30 90% 44%)", b: "hsl(46 100% 80%)",
+      moves: [
+        M({ id: "golden-spikes", name: "Golden Spikes", kind: "eruption", anim: "slam", range: 560, minRange: 40, cd: 6, dmg: 13, radius: 46, count: 4, lift: -680, status: "freeze", statusDur: 0.4, wind: 0.38 }),
+        M({ id: "fresh-resin", name: "Fresh Resin", kind: "heal", anim: "raise", range: 2000, cd: 13, dmg: 0, heal: 28, below: 0.6, wind: 0.4, act: 0.3 }),
+      ],
+    },
+    {
+      ...P4, power: "chrono", title: "FOR EVER", guard: 0.8, regen: 1.3,
+      blurb: "The whole cavern turns to gold around it, and the air itself starts to set. Still Gold closes in on everyone, and Sealed for Ever floods most of the arena in amber at once.",
+      body: "hsl(28 80% 14%)", glow: "hsl(44 100% 74%)", a: "hsl(30 80% 22%)", b: "hsl(46 100% 76%)", dark: "hsl(28 80% 5%)",
+      moves: [
+        M({ id: "still-gold", name: "Still Gold", kind: "dash", anim: "lunge", range: 560, minRange: 90, cd: 4.6, dmg: 15, kb: 420, lift: -260, status: "slow", statusDur: 1, wind: 0.3 }),
+        M({ id: "sealed-for-ever", name: "Sealed for Ever", kind: "burst", anim: "raise", range: 480, cd: 12, dmg: 16, radius: 430, kb: 460, lift: -380, status: "freeze", statusDur: 0.9, wind: 0.55, rec: 0.35 }),
       ],
     },
   ],
