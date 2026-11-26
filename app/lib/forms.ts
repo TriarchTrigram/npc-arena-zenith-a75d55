@@ -83,7 +83,7 @@ export const FORMS = {
     body: "hsl(218 88% 56%)", glow: "hsl(195 100% 74%)", a: "hsl(222 100% 58%)", b: "hsl(190 100% 80%)",
     dmg: 1.3, kb: 1.1, cd: 0.8, speed: 1.1, act: 1.1,
     moves: [
-      M({ id: "blue-comet", name: "Blue Comet", kind: "projectile", anim: "thrust", range: 600, minRange: 90, cd: 2.6, dmg: 14, speed: 700, size: 16, status: "burn", statusDur: 2.5, kb: 260 }),
+      M({ id: "blue-comet", name: "Blue Comet", kind: "rain", anim: "raise", range: 540, cd: 3, dmg: 8, count: 3, radius: 110, size: 16, status: "burn", statusDur: 2.5, kb: 220, wind: 0.28 }),
       M({ id: "azure-inferno", name: "Azure Inferno", kind: "burst", anim: "slam", range: 150, cd: 6.5, dmg: 18, radius: 175, kb: 480, lift: -320, status: "burn", statusDur: 3, wind: 0.32, rec: 0.35 }),
     ],
   },
@@ -188,7 +188,7 @@ export const FORMS = {
     dmg: 1.2, kb: 1.15, cd: 0.7, speed: 1.1, act: 1.2,
     moves: [
       M({ id: "thousand-blades", name: "Thousand Blades", kind: "projectile", anim: "cast", range: 560, minRange: 80, cd: 3, dmg: 5, speed: 760, size: 9, count: 6, spread: 0.1, shape: "blade" }),
-      M({ id: "magnetic-storm", name: "Magnetic Storm", kind: "zone", anim: "raise", range: 320, cd: 7, dmg: 7, radius: 140, dur: 3.2, pullIn: 180, status: "slow", statusDur: 0.5, wind: 0.3 }),
+      M({ id: "magnetic-storm", name: "Magnetic Storm", kind: "rain", anim: "raise", range: 520, cd: 6, dmg: 7, count: 7, radius: 160, size: 9, shape: "shard", status: "slow", statusDur: 0.8, wind: 0.3 }),
     ],
   },
   toxi: {
@@ -198,7 +198,7 @@ export const FORMS = {
     dmg: 1.2, kb: 1.1, cd: 0.7, speed: 1.1, act: 1.2,
     moves: [
       M({ id: "hydra-venom", name: "Hydra Venom", kind: "projectile", anim: "thrust", range: 540, minRange: 80, cd: 2.6, dmg: 6, speed: 560, size: 11, count: 3, spread: 0.2, arc: true, status: "poison", statusDur: 2.5 }),
-      M({ id: "plague-garden", name: "Plague Garden", kind: "zone", anim: "slam", range: 320, cd: 7, dmg: 7, radius: 160, dur: 4, status: "poison", statusDur: 1.5, wind: 0.3 }),
+      M({ id: "plague-garden", name: "Plague Garden", kind: "eruption", anim: "slam", range: 480, minRange: 50, cd: 6.5, dmg: 10, radius: 44, count: 3, lift: -520, status: "poison", statusDur: 2.5, wind: 0.34 }),
     ],
   },
 
@@ -230,7 +230,7 @@ export const FORMS = {
     dmg: 1.2, kb: 1.1, cd: 0.7, speed: 1.15, act: 1.25,
     moves: [
       M({ id: "clockwork-judgement", name: "Clockwork Judgement", kind: "projectile", anim: "cast", range: 560, minRange: 80, cd: 3, dmg: 5, speed: 620, size: 10, count: 5, spread: 0.14, status: "slow", statusDur: 1 }),
-      M({ id: "paradox-field", name: "Paradox Field", kind: "zone", anim: "raise", range: 320, cd: 7.5, dmg: 6, radius: 160, dur: 3.5, status: "stun", statusDur: 0.3, wind: 0.32 }),
+      M({ id: "paradox-field", name: "Paradox Step", kind: "blink", anim: "kick", range: 540, minRange: 90, cd: 4, dmg: 15, kb: 300, lift: -240, status: "stun", statusDur: 0.35 }),
     ],
   },
   psy: {
@@ -313,7 +313,7 @@ FORMS.sono = {
   moves: [
     M({ id: "final-chorus", name: "Final Chorus", kind: "beam", anim: "thrust", range: 880, minRange: 60, cd: 5, dmg: 24, act: 0.4, kb: 400, wind: 0.4 }),
     M({ id: "mosh-pit", name: "Mosh Pit", kind: "zone", anim: "slam", range: 400, cd: 9, dmg: 8, radius: 160, dur: 4, pullIn: 300, status: "slow", statusDur: 0.6, wind: 0.34 }),
-    M({ id: "earsplitter", name: "Earsplitter", kind: "burst", anim: "raise", range: 180, cd: 7, dmg: 22, radius: 220, kb: 560, lift: -420, status: "stun", statusDur: 0.6, wind: 0.36, rec: 0.35 }),
+    M({ id: "earsplitter", name: "Earsplitter", kind: "eruption", anim: "slam", range: 640, minRange: 40, cd: 7, dmg: 15, radius: 48, count: 5, lift: -720, status: "stun", statusDur: 0.6, wind: 0.36, rec: 0.35 }),
   ],
 };
 FORMS.paper = {
@@ -324,7 +324,7 @@ FORMS.paper = {
   moves: [
     M({ id: "thousand-cranes", name: "Thousand Cranes", kind: "rain", anim: "raise", range: 580, cd: 6, dmg: 9, count: 9, radius: 190, wind: 0.34, rec: 0.3 }),
     M({ id: "ink-flood", name: "Ink Flood", kind: "zone", anim: "slam", range: 420, cd: 9, dmg: 8, radius: 150, dur: 4, pullIn: 260, erase: true, status: "blind", statusDur: 0.8, wind: 0.36 }),
-    M({ id: "black-crane", name: "Black Crane", kind: "projectile", anim: "thrust", range: 700, minRange: 80, cd: 4.5, dmg: 20, speed: 440, size: 26, shape: "blade", pierce: true, kb: 420, wind: 0.32 }),
+    M({ id: "black-crane", name: "Black Crane", kind: "rain", anim: "raise", range: 620, cd: 4.5, dmg: 20, count: 1, radius: 40, size: 26, shape: "blade", kb: 420, wind: 0.32 }),
   ],
 };
 FORMS.crys = {
@@ -383,7 +383,7 @@ FORMS.flora = {
     M({ id: "strangler-garden", name: "Strangler Garden", kind: "zone", anim: "slam", range: 440, cd: 9, dmg: 8, radius: 160, dur: 4.5, pullIn: 280, status: "slow", statusDur: 0.6, wind: 0.36 }),
     M({ id: "carnivore-bloom", name: "Carnivore Bloom", kind: "burst", anim: "raise", range: 180, cd: 7, dmg: 20, radius: 200, kb: 500, lift: -380, heal: 12, status: "poison", statusDur: 2, wind: 0.4, rec: 0.35 }),
     M({ id: "bramble-fist", name: "Bramble Fist", kind: "melee", anim: "uppercut", range: 88, cd: 1, dmg: 15, kb: 300, lift: -260, status: "poison", statusDur: 1.5 }),
-    M({ id: "spore-volley", name: "Spore Volley", kind: "projectile", anim: "cast", range: 580, minRange: 80, cd: 2, dmg: 6, speed: 600, size: 10, count: 6, spread: 0.16, shape: "orb", status: "poison", statusDur: 2 }),
+    M({ id: "spore-volley", name: "Spore Volley", kind: "rain", anim: "cast", range: 560, cd: 2.4, dmg: 6, count: 6, radius: 150, size: 10, shape: "orb", status: "poison", statusDur: 2 }),
     M({ id: "needle-storm", name: "Needle Storm", kind: "projectile", anim: "thrust", range: 600, minRange: 90, cd: 2.6, dmg: 9, speed: 700, size: 9, count: 4, spread: 0.14, shape: "shard", pierce: true, status: "poison", statusDur: 1.5 }),
     M({ id: "seed-lance", name: "Seed Lance", kind: "beam", anim: "thrust", range: 640, minRange: 70, cd: 4, dmg: 19, act: 0.34, kb: 320, status: "poison", statusDur: 2, wind: 0.32 }),
     M({ id: "root-rush", name: "Root Rush", kind: "dash", anim: "lunge", range: 440, cd: 3.6, dmg: 16, dist: 440, act: 0.22, kb: 380, lift: -200 }),
@@ -422,7 +422,7 @@ FORMS.chaos = {
     M({ id: "radiant-spin", name: "Radiant Spin", kind: "burst", anim: "spin", range: 170, cd: 5.5, dmg: 18, radius: 200, kb: 540, lift: -360, wind: 0.3 }),
     M({ id: "chaos-rain", name: "Chaos Rain", kind: "rain", anim: "raise", range: 580, cd: 6, dmg: 9, count: 9, radius: 190, shape: "shard", wind: 0.34, rec: 0.3 }),
     M({ id: "still-field", name: "Still Field", kind: "zone", anim: "raise", range: 400, cd: 9, dmg: 6, radius: 150, dur: 3.5, status: "stun", statusDur: 0.4, wind: 0.34 }),
-    M({ id: "gilded-pull", name: "Gilded Pull", kind: "pull", anim: "cast", range: 520, minRange: 110, cd: 3.6, dmg: 11, status: "stun", statusDur: 0.35 }),
+    M({ id: "gilded-pull", name: "Gilded Chain", kind: "beam", anim: "cast", range: 620, minRange: 70, cd: 3.6, dmg: 14, act: 0.3, kb: 300, status: "stun", statusDur: 0.35, wind: 0.3 }),
     M({ id: "flash-step", name: "Flash Step", kind: "blink", anim: "uppercut", range: 680, minRange: 100, cd: 3.2, dmg: 16, lift: -580, kb: 240 }),
     M({ id: "chaos-pillar", name: "Chaos Pillar", kind: "eruption", anim: "slam", range: 560, minRange: 40, cd: 5.4, dmg: 16, radius: 46, count: 3, lift: -680, wind: 0.34 }),
     M({ id: "golden-comet", name: "Golden Comet", kind: "projectile", anim: "raise", range: 760, minRange: 90, cd: 6, dmg: 22, speed: 460, size: 26, shape: "orb", pierce: true, kb: 500, wind: 0.4 }),

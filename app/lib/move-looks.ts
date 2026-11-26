@@ -190,16 +190,16 @@ const FORM_LOOKS: Record<string, Look> = {
   "tsunami-crash": F("tidal-wall", "hsl(215 90% 46%)", "hsl(185 100% 88%)", "drop", false, 800, "splash"),
   "hydro-cutter": F("railgun", "hsl(205 100% 56%)", "hsl(185 100% 90%)", "drop", false, 600, "ripple"),
   "thousand-blades": F("shard-storm", "hsl(220 16% 64%)", "hsl(355 90% 68%)", "shard", false, 600, "sparks"),
-  "magnetic-storm": F("stasis-field", "hsl(220 18% 50%)", "hsl(355 90% 66%)", "shard", false, 0, "sparks"),
+  "magnetic-storm": F("shard-storm", "hsl(220 18% 50%)", "hsl(355 90% 66%)", "shard", false, 0, "sparks"),
   "hydra-venom": F("acid-spit", "hsl(100 75% 42%)", "hsl(280 70% 72%)", "bubble", false, -80, "fizz"),
-  "plague-garden": F("miasma-cloud", "hsl(96 60% 34%)", "hsl(280 70% 70%)", "petal", false, -60, "fizz"),
+  "plague-garden": F("plague-garden", "hsl(96 60% 34%)", "hsl(280 70% 70%)", "petal", false, -60, "fizz"),
   // Mystic Mode
   "starfall-portals": F("light-lances", "hsl(265 85% 62%)", "hsl(186 100% 84%)", "star", true, 160, "portal"),
   "void-step": F("warp-kick", "hsl(262 80% 40%)", "hsl(186 100% 82%)", "glyph", true, 0, "portal"),
   "verdant-wrath": F("earth-spike", "hsl(135 60% 34%)", "hsl(58 100% 76%)", "leaf", false, 400, "sprout"),
   "sacred-bloom": F("mend", "hsl(135 65% 44%)", "hsl(55 100% 80%)", "petal", false, -120),
   "clockwork-judgement": F("time-bolt", "hsl(38 80% 54%)", "hsl(180 100% 84%)", "glyph", true, 0, "clock"),
-  "paradox-field": F("stasis-field", "hsl(40 70% 46%)", "hsl(180 100% 82%)", "glyph", true, 0, "clock"),
+  "paradox-field": F("rewind", "hsl(40 70% 46%)", "hsl(180 100% 82%)", "glyph", true, 0, "clock"),
   "mind-shatter": F("thunder-bolt", "hsl(292 75% 58%)", "hsl(330 100% 86%)", "glyph", true, 0, "ripple"),
   "psychic-maelstrom": F("mind-crush", "hsl(290 70% 46%)", "hsl(330 100% 84%)", "star", true, -30, "ripple"),
   // Perfected Flame: red and blue fire at once
@@ -363,7 +363,7 @@ const QUEST_LOOKS: Record<string, Look> = {
   "crescendo-rush": F("blink-barrage", "hsl(36 100% 52%)", "hsl(48 100% 86%)", "ring", true, 0, "ripple"),
   "final-chorus": F("wall-of-sound", "hsl(8 100% 50%)", "hsl(0 0% 100%)", "ring", true, 0, "ripple"),
   "mosh-pit": F("singularity", "hsl(0 70% 20%)", "hsl(8 100% 64%)", "ring", true, 0, "implode"),
-  "earsplitter": F("mind-crush", "hsl(8 100% 48%)", "hsl(36 100% 70%)", "ring", true, 0, "ripple"),
+  "earsplitter": F("earsplitter", "hsl(8 100% 48%)", "hsl(36 100% 70%)", "ring", true, 0, "ripple"),
   // Vellum
   "papercut": F("shade-slash", "hsl(42 40% 92%)", "hsl(352 85% 58%)", "leaf", false, 120, "slash"),
   "folded-fan": F("gale-kick", "hsl(352 80% 54%)", "hsl(42 50% 94%)", "leaf", false, 80, "slash"),
@@ -2831,6 +2831,27 @@ export function drawBeamLook(ctx: CanvasRenderingContext2D, id: string, bm: Beam
       glow(ctx, len, 0, w * 3, b, 0.7);
       break;
     }
+    case "mind-crush": {
+      // the mind's grip: two strands of thought twist round each other out to the target, rings squeezing shut around it
+      ctx.globalCompositeOperation = "lighter";
+      for (let i = 0; i < 2; i++) {
+        ctx.strokeStyle = i ? b : al(a, 0.9);
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let x = 0; x <= len; x += 8) ctx.lineTo(x, Math.sin(x * 0.05 - t * 22 + i * Math.PI) * w * 1.4 * Math.min(1, x / 40));
+        ctx.stroke();
+      }
+      for (let i = 0; i < 3; i++) {
+        const u = (t * 3 + i / 3) % 1;
+        ctx.strokeStyle = al(b, 1 - u);
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(len, 0, w * (4.2 - u * 3.2), 0, TAU);
+        ctx.stroke();
+      }
+      glow(ctx, len, 0, w * 3, a, 0.7);
+      break;
+    }
     case "magnet-pull": {
       ctx.strokeStyle = al(b, 0.5);
       ctx.lineWidth = 2;
@@ -3169,6 +3190,75 @@ export function drawEruptionLook(ctx: CanvasRenderingContext2D, id: string, x: n
         ctx.ellipse(x, gy - u * h, r * 0.85, 7, 0, 0, TAU);
         ctx.stroke();
       }
+      break;
+    }
+    case "plague-garden": {
+      // a bed of poisoned stalks shoots up, each one topped with a swollen pod that sways and leaks
+      ctx.globalCompositeOperation = "lighter";
+      glow(ctx, x, gy - h * 0.5, r * 1.5, b, 0.3);
+      ctx.globalCompositeOperation = "source-over";
+      for (let i = 0; i < 4; i++) {
+        const dx = (i / 3 - 0.5) * r * 1.5;
+        const hh = h * (0.62 + 0.38 * noise(x, i));
+        const sway = Math.sin(t * 5 + i * 1.7) * r * 0.14;
+        const cx = x + dx, top = gy - hh;
+        ctx.strokeStyle = a;
+        ctx.lineWidth = Math.max(3, r * 0.13);
+        ctx.beginPath();
+        ctx.moveTo(cx, gy);
+        ctx.quadraticCurveTo(cx - sway, gy - hh * 0.5, cx + sway, top);
+        ctx.stroke();
+        ctx.fillStyle = a;
+        leafPath(ctx, cx - sway * 0.4, gy - hh * 0.42, r * 0.38, -Math.PI / 2 + (i % 2 ? 1 : -1));
+        ctx.fill();
+        const pr = r * 0.22 * (1 + 0.1 * Math.sin(t * 8 + i));
+        ctx.fillStyle = b;
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx + sway, top - pr * 0.6, pr * 0.8, pr, 0, 0, TAU);
+        ctx.fill();
+        ctx.stroke();
+        ctx.strokeStyle = a;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx + sway, top - pr * 1.4);
+        ctx.lineTo(cx + sway, top + pr * 0.1);
+        ctx.stroke();
+        ctx.fillStyle = al(b, 0.8);
+        const drip = (t * 1.6 + noise(x, i + 9)) % 1;
+        ctx.beginPath();
+        ctx.arc(cx + sway, top + pr * 0.3 + drip * hh * 0.5, 2.5 * (1 - drip), 0, TAU);
+        ctx.fill();
+      }
+      break;
+    }
+    case "earsplitter": {
+      // the floor cracks open on the beat and stacked shockwaves of sound blast up out of the split
+      ctx.globalCompositeOperation = "lighter";
+      glow(ctx, x, gy - h * 0.3, r * 1.7, a, 0.5);
+      for (let i = 0; i < 6; i++) {
+        const u = (t * 2.6 + i / 6) % 1;
+        const ww = r * (0.45 + u * 0.9);
+        ctx.globalAlpha = Math.sin(Math.PI * u);
+        ctx.strokeStyle = i % 2 ? b : a;
+        ctx.lineWidth = 4 - u * 2;
+        ctx.beginPath();
+        ctx.ellipse(x, gy - u * h, ww, ww * 0.24, 0, Math.PI, TAU);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = "source-over";
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(x - r * 1.1, gy);
+      for (let i = 1; i < 8; i++) ctx.lineTo(x - r * 1.1 + (i / 8) * r * 2.2, gy - 2 - noise(x, i) * 8);
+      ctx.lineTo(x + r * 1.1, gy);
+      ctx.stroke();
+      ctx.strokeStyle = b;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
       break;
     }
     // ----- boss eruptions -----
