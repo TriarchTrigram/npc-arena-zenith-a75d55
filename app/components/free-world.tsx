@@ -18,7 +18,7 @@ import { BOSSES, type BossId } from "~/lib/bosses";
 import { unlockedOf, useQuests } from "~/lib/quests";
 import { useHybrids } from "~/lib/hybrids";
 import { bossesBeaten, loadProgress } from "~/lib/story";
-import { W, H, GROUND, newGame, step, drawScene, strollPose, drawStroller, type Game, type Fighter } from "~/lib/arena-engine";
+import { W, H, GROUND, newGame, step, drawScene, setAir, strollPose, drawStroller, type Game, type Fighter } from "~/lib/arena-engine";
 import { arenaSound } from "~/lib/arena-sound";
 import { arenaMusic } from "~/lib/arena-music";
 import {
@@ -446,6 +446,7 @@ export function FreeWorld({ music, onExit }: { music?: ReactNode; onExit?: () =>
     backdrop.width = W;
     backdrop.height = H;
     backdrop.getContext("2d")!.drawImage(w.canvas, Math.round(w.cam), 0, W, H, 0, 0, W, H);
+    setAir(backdrop, { motes: "dust", hue: 46, amount: 0.8 });
     const ids = [...partyIds, ...okFoes];
     const g = newGame(ids.map(defOf), false, ids.map((_, i) => (i < partyIds.length ? 0 : 1)));
     fightRef.current = { g, backdrop, done: false };

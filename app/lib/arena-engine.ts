@@ -2974,7 +2974,8 @@ export function buildBackdrop(): HTMLCanvasElement {
   v.addColorStop(1, "hsl(250 40% 10% / 0.35)");
   ctx.fillStyle = v;
   ctx.fillRect(0, 0, W, H);
-  return c;
+  // clouds drift over the colosseum while a little confetti falls from the stands
+  return setAir(c, { clouds: "hsl(0 0% 100%)", motes: "confetti", amount: 0.8 });
 }
 
 function limb(ctx: CanvasRenderingContext2D, pts: { x: number; y: number }[], col: string, w: number, flash: boolean, ink = INK) {
@@ -4275,6 +4276,209 @@ function tintBy(f: Fighter | undefined) {
   setLookTint(r ? { a: r.a, b: r.b } : null);
 }
 
+// ---------- living backdrops ----------
+// A backdrop is painted once, so what moves in it (clouds sliding by, rain, embers, snow, spores,
+// twinkling stars, mist along the floor) is drawn live on top of it, behind the fighters.
+
+/** What drifts through the air over a backdrop. */
+export type Air = {
+  motes?: "embers" | "snow" | "rain" | "spores" | "bubbles" | "dust" | "ash" | "confetti" | "sparks";
+  /** Hue of the motes, where it is theirs to choose (embers, spores, sparks, dust). */
+  hue?: number;
+  /** Cloud wisps sliding across the sky, in this colour (an `hsl(h s% l%)` without alpha). */
+  clouds?: string;
+  /** Stars blinking in the sky. */
+  twinkle?: boolean;
+  /** Mist rolling along the horizon, in this colour. */
+  mist?: string;
+  /** Hot air shimmering over the ground. */
+  heat?: boolean;
+  /** How thick it all is, 0.3 to 1.5 (1 by default). */
+  amount?: number;
+};
+
+const airOf = new WeakMap<HTMLCanvasElement, Air>();
+/** Gives a painted backdrop its moving air. Returns the same canvas. */
+export function setAir(backdrop: HTMLCanvasElement, air: Air): HTMLCanvasElement {
+  airOf.set(backdrop, air);
+  return backdrop;
+}
+
+const HORIZON = 440;
+const airSprites = new Map<string, HTMLCanvasElement>();
+function airSprite(key: string, w: number, h: number, paint: (c: CanvasRenderingContext2D) => void) {
+  let s = airSprites.get(key);
+  if (!s) {
+    s = document.createElement("canvas");
+    s.width = w;
+    s.height = h;
+    paint(s.getContext("2d")!);
+    airSprites.set(key, s);
+  }
+  return s;
+}
+const withAlpha = (col: string, a: number) => col.replace(")", ` / ${a})`);
+const hash = (i: number, k: number) => {
+  const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453;
+  return x - Math.floor(x);
+};
+let stillAir: boolean | null = null;
+/** Seconds on the wall clock, so the air keeps moving through pauses and intros; frozen for reduced motion. */
+function airClock() {
+  if (stillAir === null) stillAir = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return stillAir ? 0 : performance.now() / 1000;
+}
+
+function drawAir(ctx: CanvasRenderingContext2D, air: Air) {
+  const t = airClock();
+  const k = air.amount ?? 1;
+  ctx.save();
+  if (air.twinkle) {
+    ctx.globalCompositeOperation = "lighter";
+    const n = Math.round(22 * k);
+    for (let i = 0; i < n; i++) {
+      const x = hash(i, 1) * W, y = hash(i, 2) * (HORIZON - 120);
+      const tw = Math.max(0, Math.sin(t * (0.8 + hash(i, 3) * 1.6) + i * 2.3));
+      if (tw < 0.05) continue;
+      ctx.globalAlpha = tw * 0.85;
+      ctx.fillStyle = i % 4 ? "hsl(210 100% 94%)" : "hsl(46 100% 86%)";
+      const r = 0.8 + tw * 2.2;
+      ctx.fillRect(x - r * 2, y - 0.5, r * 4, 1);
+      ctx.fillRect(x - 0.5, y - r * 2, 1, r * 4);
+    }
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+  }
+  if (air.clouds) {
+    const col = air.clouds;
+    const puff = airSprite(`cloud:${col}`, 260, 90, (c) => {
+      for (const [x, y, rx, ry] of [[130, 52, 110, 26], [92, 40, 52, 30], [160, 34, 60, 30], [200, 54, 46, 20]] as const) {
+        const gr = c.createRadialGradient(x, y, 0, x, y, rx);
+        gr.addColorStop(0, withAlpha(col, 0.55));
+        gr.addColorStop(1, withAlpha(col, 0));
+        c.fillStyle = gr;
+        c.save();
+        c.translate(x, y);
+        c.scale(1, ry / rx);
+        c.translate(-x, -y);
+        c.fillRect(x - rx, y - rx, rx * 2, rx * 2);
+        c.restore();
+      }
+    });
+    const n = Math.max(2, Math.round(4 * k));
+    for (let i = 0; i < n; i++) {
+      const s = 0.6 + hash(i, 4) * 0.7;
+      const span = W + 300 * s;
+      const x = ((hash(i, 5) * span + t * (6 + hash(i, 6) * 10)) % span) - 260 * s;
+      const y = 30 + hash(i, 7) * 170;
+      ctx.globalAlpha = 0.5 + hash(i, 8) * 0.4;
+      ctx.drawImage(puff, x, y, 260 * s, 90 * s);
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (air.mist) {
+    const col = air.mist;
+    const band = airSprite(`mist:${col}`, 420, 80, (c) => {
+      const gr = c.createRadialGradient(210, 40, 0, 210, 40, 210);
+      gr.addColorStop(0, withAlpha(col, 0.5));
+      gr.addColorStop(1, withAlpha(col, 0));
+      c.fillStyle = gr;
+      c.save();
+      c.scale(1, 80 / 420);
+      c.fillRect(0, 0, 420, 420);
+      c.restore();
+    });
+    for (let i = 0; i < 5; i++) {
+      const span = W + 420;
+      const dir = i % 2 ? -1 : 1;
+      const x = ((((hash(i, 9) * span + dir * t * (8 + i * 3)) % span) + span) % span) - 420;
+      ctx.globalAlpha = (0.55 + 0.3 * Math.sin(t * 0.4 + i)) * Math.min(1, k);
+      ctx.drawImage(band, x, HORIZON - 70 + (i % 3) * 18, 420, 80);
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (air.heat) {
+    ctx.globalAlpha = 0.14 * k;
+    ctx.strokeStyle = "hsl(40 100% 92%)";
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 5; i++) {
+      const y = HORIZON - 16 - i * 22;
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += 24) ctx.lineTo(x, y + Math.sin(x * 0.03 + t * 4 + i) * 3);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  const kind = air.motes;
+  if (kind) {
+    const hue = air.hue ?? 30;
+    const bottom = GROUND + 20;
+    const count = { embers: 34, snow: 60, rain: 70, spores: 30, bubbles: 14, dust: 26, ash: 34, confetti: 18, sparks: 26 }[kind];
+    const n = Math.round(count * k);
+    if (kind === "embers" || kind === "sparks" || kind === "spores") ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < n; i++) {
+      const a = hash(i, 10), b = hash(i, 11), c2 = hash(i, 12);
+      if (kind === "rain") {
+        const sp = 520 + b * 260;
+        const y = ((a * bottom + t * sp) % (bottom + 40)) - 40;
+        const x = ((c2 * (W + 120) - y * 0.28) % (W + 120) + W + 120) % (W + 120) - 60;
+        ctx.strokeStyle = `hsl(205 40% 86% / ${0.18 + b * 0.22})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - 7, y + 22);
+        ctx.stroke();
+        continue;
+      }
+      // everything else floats: up (embers, sparks, spores, bubbles) or down (snow, ash, confetti), swaying as it goes
+      const up = kind === "embers" || kind === "sparks" || kind === "spores" || kind === "bubbles" || kind === "dust";
+      const sp = { embers: 34, sparks: 60, spores: 10, bubbles: 22, dust: 7, snow: 26, ash: 18, confetti: 40 }[kind] * (0.6 + b * 0.8);
+      const range = bottom + 40;
+      let y = (a * range + t * sp) % range;
+      y = up ? bottom - y : y - 20;
+      const sway = Math.sin(t * (0.6 + c2) + i * 1.7) * (kind === "snow" || kind === "confetti" ? 18 : 10);
+      const x = c2 * W + sway;
+      if (kind === "embers" || kind === "sparks") {
+        const life = up ? Math.min(1, (bottom - y) / 80) * Math.min(1, y / 120) : 1;
+        const flick = 0.55 + 0.45 * Math.sin(t * 9 + i * 3.1);
+        ctx.fillStyle = `hsl(${hue + b * 24} 100% ${kind === "sparks" ? 78 : 62}% / ${0.75 * life * flick})`;
+        const r = kind === "sparks" ? 1.2 : 1.4 + b * 1.6;
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      } else if (kind === "spores" || kind === "dust") {
+        const pulse = 0.5 + 0.5 * Math.sin(t * 1.4 + i * 2.2);
+        ctx.fillStyle = `hsl(${hue} ${kind === "dust" ? 70 : 90}% ${kind === "dust" ? 86 : 70}% / ${(kind === "dust" ? 0.3 : 0.45) * pulse})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 1.5 + b * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (kind === "bubbles") {
+        ctx.strokeStyle = `hsl(${hue} 90% 86% / 0.45)`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(x, y, 5 + b * 9, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (kind === "confetti") {
+        const cols = ["hsl(14 92% 58%)", "hsl(198 88% 58%)", "hsl(50 96% 58%)", "hsl(140 58% 50%)", "hsl(274 58% 60%)"];
+        ctx.fillStyle = cols[i % cols.length];
+        ctx.globalAlpha = 0.8;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(t * (2 + b * 3) + i);
+        ctx.scale(1, Math.sin(t * 4 + i));
+        ctx.fillRect(-3, -2, 6, 4);
+        ctx.restore();
+        ctx.globalAlpha = 1;
+      } else {
+        // snow and ash
+        ctx.fillStyle = kind === "snow" ? `hsl(210 60% 98% / ${0.5 + b * 0.4})` : `hsl(${hue} 10% 70% / ${0.35 + b * 0.3})`;
+        ctx.beginPath();
+        ctx.arc(x, y, (kind === "snow" ? 1.2 : 1) + b * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+  ctx.restore();
+}
+
 export function drawScene(ctx: CanvasRenderingContext2D, g: Game, backdrop: HTMLCanvasElement) {
   ctx.save();
   if (g.shake > 0) ctx.translate(rand(-g.shake, g.shake), rand(-g.shake, g.shake) * 0.6);
@@ -4298,6 +4502,8 @@ export function drawScene(ctx: CanvasRenderingContext2D, g: Game, backdrop: HTML
     ctx.translate(-fx, -fy);
   }
   ctx.drawImage(backdrop, -12, -8, W + 24, H + 16);
+  const air = airOf.get(backdrop);
+  if (air) drawAir(ctx, air);
   drawRealm(ctx, g);
   if (g.eclipseUntil > g.t) drawEclipse(ctx, g);
   if (g.marks.length) drawMarks(ctx, g.marks, GROUND, g.t + (g.intro?.t ?? 0));

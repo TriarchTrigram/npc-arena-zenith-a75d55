@@ -2,7 +2,7 @@
 // The sky darkens as a chapter goes on (dawn, day, dusk, then the boss's lair), the set pieces move,
 // and each chapter's threat grows stage by stage: the rift widens, the storm thickens, the sun goes out.
 // Painted once per stage onto an offscreen canvas, then drawn behind the fight like the home arena.
-import { W, H } from "./arena-engine";
+import { W, H, setAir, type Air } from "./arena-engine";
 import { lairOf } from "./story";
 
 const INK = "hsl(250 32% 14%)";
@@ -1521,6 +1521,50 @@ const LOOKS: Look[] = [
   },
 ];
 
+/** What moves over each chapter's painting, by part of the chapter (0 dawn to 3 the lair). Indexed by global chapter. */
+const AIRS: ((phase: number) => Air)[] = [
+  // 1. The Rift Opens: clouds by day, sparks drifting up out of the crack as it widens
+  (p) => ({ clouds: p < 2 ? "hsl(0 0% 100%)" : undefined, motes: p >= 1 ? "sparks" : undefined, hue: 280, twinkle: p >= 2, amount: 0.5 + p * 0.3 }),
+  // 2. The Storm Coast: storm clouds racing and rain, heavier every stage
+  (p) => ({ clouds: "hsl(210 14% 72%)", motes: "rain", amount: 0.4 + p * 0.35 }),
+  // 3. The Ember Wastes: embers rising and heat over the dunes
+  (p) => ({ motes: "embers", hue: 14, heat: true, amount: 0.6 + p * 0.25 }),
+  // 4. The Frozen Clock: snow barely drifting
+  (p) => ({ clouds: p < 2 ? "hsl(210 30% 96%)" : undefined, motes: "snow", twinkle: p >= 2, amount: 0.7 + p * 0.15 }),
+  // 5. The Heart of the Rift: violet motes floating in the void
+  (p) => ({ motes: "spores", hue: 318, twinkle: true, amount: 0.7 + p * 0.2 }),
+  // 6. The Hollow Kingdom: fog rolling through, lantern light drifting
+  (p) => ({ mist: "hsl(180 10% 72%)", motes: "dust", hue: 60, twinkle: p >= 2, amount: 0.7 + p * 0.2 }),
+  // 7. The Dying Sun: ash falling and heat haze
+  (p) => ({ motes: "ash", hue: 20, heat: p < 3, amount: 0.5 + p * 0.3 }),
+  // 8. The Edge of Everything: stars blinking, dust drifting toward the black hole
+  (p) => ({ motes: "dust", hue: 272, twinkle: true, amount: 0.7 + p * 0.2 }),
+  // Book 2, 1. Lights Under the Sea: bubbles rising and mist on the water
+  (p) => ({ mist: "hsl(196 30% 46%)", motes: "bubbles", hue: 170, twinkle: true, amount: 0.7 + p * 0.2 }),
+  // Book 2, 2. The Singing Rot: glowing spores hanging in the air
+  (p) => ({ mist: "hsl(170 30% 40%)", motes: "spores", hue: 170, amount: 0.6 + p * 0.3 }),
+  // Book 2, 3. The City That Forgets: fog and flakes of forgotten paper
+  (p) => ({ mist: "hsl(300 10% 88%)", motes: "ash", hue: 40, amount: 0.5 + p * 0.3 }),
+  // Book 2, 4. The Moth Moon: moth dust glinting under the moon
+  (p) => ({ motes: "dust", hue: 46, twinkle: true, amount: 0.8 + p * 0.25 }),
+  // Book 2, 5. The Sleeping Valley: dream bubbles floating up
+  (p) => ({ clouds: p < 1 ? "hsl(320 60% 94%)" : undefined, motes: "bubbles", hue: 46, twinkle: p >= 1, amount: 0.6 + p * 0.3 }),
+  // Book 2, 6. The Silent Bells: red dusk clouds and falling ash
+  (p) => ({ clouds: p < 3 ? "hsl(10 40% 64%)" : undefined, motes: "ash", hue: 354, twinkle: p >= 2, amount: 0.5 + p * 0.25 }),
+  // Book 2, 7. The Elder Dark: no stars, only dark dust pulled up into the crack
+  (p) => ({ mist: "hsl(268 40% 30%)", motes: "dust", hue: 268, amount: 0.7 + p * 0.25 }),
+  // Book 3, 1. The Falling Star: snow over the snowfields
+  (p) => ({ clouds: p < 2 ? "hsl(210 30% 96%)" : undefined, motes: "snow", twinkle: p >= 2, amount: 0.6 + p * 0.25 }),
+  // Book 3, 2. The Hunter in the Stars: the sky full of blinking stars
+  (p) => ({ motes: "dust", hue: 44, twinkle: true, amount: 0.7 + p * 0.25 }),
+  // Book 3, 3. Where Stars Are Born: new stars switching on, rose and green motes over the salt
+  (p) => ({ mist: "hsl(320 30% 92%)", motes: "spores", hue: 150, twinkle: true, amount: 0.7 + p * 0.25 }),
+  // Book 3, 4. The Spinning Heart: heat over the glass, sand blowing
+  (p) => ({ motes: "dust", hue: 40, heat: true, twinkle: p >= 2, amount: 0.7 + p * 0.2 }),
+  // Book 3, 5. The Eye of the Sky: the sea of clouds rolling below, stars crowding closer
+  (p) => ({ mist: "hsl(220 20% 92%)", twinkle: p >= 1, amount: 0.8 + p * 0.25 }),
+];
+
 function paint(ch: number, stage: number): HTMLCanvasElement {
   const c = document.createElement("canvas");
   c.width = W;
@@ -1582,7 +1626,7 @@ function paint(ch: number, stage: number): HTMLCanvasElement {
   v.addColorStop(1, `hsl(250 40% 6% / ${0.3 + phase * 0.12})`);
   ctx.fillStyle = v;
   ctx.fillRect(0, 0, W, H);
-  return c;
+  return setAir(c, (AIRS[ch] ?? AIRS[0])(phase));
 }
 
 const cache = new Map<string, HTMLCanvasElement>();
