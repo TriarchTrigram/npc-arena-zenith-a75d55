@@ -25,7 +25,7 @@ export function meta({}: Route.MetaArgs) {
 function TopBar() {
   const navLabel = useString("roster.navLabel");
   return (
-    <nav aria-label={navLabel} className="mb-6 flex flex-wrap items-center gap-2">
+    <nav aria-label={navLabel} className="mb-6 flex flex-wrap items-center gap-1 sm:gap-2">
       <Text id="common.appName" className="mr-auto font-display text-lg" />
       <Button asChild variant="ghost" size="sm"><Link to="/"><Text id="common.arena" /></Link></Button>
       <Button asChild variant="ghost" size="sm"><Link to="/roster"><Text id="common.fighters" /></Link></Button>
