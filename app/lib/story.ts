@@ -442,8 +442,12 @@ export function loadProgress(): Progress {
   return { cleared: CHAPTERS.map(() => 0), wins: CHAPTERS.map(() => 0) };
 }
 
-/** A chapter opens once every stage of the one before it is cleared. */
-export const chapterOpen = (cleared: number[], ch: number) => ch === 0 || (cleared[ch - 1] ?? 0) >= stagesIn(ch - 1);
+/** A chapter opens once every stage of the one before it is cleared, or it is in `extraOpen` (a developer-mode pick kept open besides real progress). */
+export const chapterOpen = (cleared: number[], ch: number, extraOpen: number[] = []) =>
+  ch === 0 || (cleared[ch - 1] ?? 0) >= stagesIn(ch - 1) || extraOpen.includes(ch);
+
+/** Every chapter of each book in `books` — what a developer-mode book pick keeps open. */
+export const chaptersOfBooks = (books: number[]): number[] => books.flatMap((b) => chaptersOf(b));
 
 export function saveProgress(p: Progress) {
   try {
@@ -476,12 +480,17 @@ export function markIntroSeen(ch: number) {
   }
 }
 
-/** The Story bosses this browser has beaten, in chapter order. Each one is a fighter you can pick outside Story. */
-export const bossesBeaten = (cleared: number[]): BossId[] =>
-  CHAPTERS.flatMap((ch, i) => {
+/**
+ * The Story bosses this browser has beaten, in chapter order, plus any in `extra` (a developer-mode pick
+ * kept unlocked besides real progress). Each one is a fighter you can pick outside Story.
+ */
+export const bossesBeaten = (cleared: number[], extra: BossId[] = []): BossId[] => {
+  const real = CHAPTERS.flatMap((ch, i) => {
     const boss = ch.stages[lairOf(i)]?.boss;
     return boss && (cleared[i] ?? 0) >= stagesIn(i) ? [boss] : [];
   });
+  return [...new Set([...real, ...extra])];
+};
 
 /** Every chapter with every stage cleared: what developer mode treats as open. */
 export const allCleared = (): number[] => CHAPTERS.map((_, i) => stagesIn(i));

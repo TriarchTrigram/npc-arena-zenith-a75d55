@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import { NEWGEN_IDS, QUESTERS, type Power } from "./fighters";
 import { isDevMode, useDevMode } from "./dev-mode";
+import { loadDevUnlocks, useDevUnlocks } from "./dev-unlocks";
 
 /** What the arena counts toward quests. */
 export type Stat = "fights" | "kos" | "tournaments" | "bosses" | "forms";
@@ -106,13 +107,15 @@ export const unlockedOf = (q: QuestSave): Power[] => [
 /** Every quest fighter and every new-generation fighter: what developer mode opens. */
 export const everyUnlock = (): Power[] => unlockedOf({ stats: EMPTY.stats, claimed: QUESTS.map((x) => x.id), newgen: [...NEWGEN_IDS] });
 
-/** The fighters this browser can pick right now: everything in developer mode, otherwise what it has earned. */
-export const unlockedNow = (): Power[] => (isDevMode() ? everyUnlock() : unlockedOf(loadQuests()));
+/** The fighters this browser can pick right now: everything in developer mode, otherwise what it has earned plus any picked to stay unlocked for good. */
+export const unlockedNow = (): Power[] =>
+  isDevMode() ? everyUnlock() : [...new Set([...unlockedOf(loadQuests()), ...loadDevUnlocks().fighters])];
 
 /** `unlockedNow` for a screen, read after the first render. */
 export function useUnlocked(): Power[] {
   const q = useQuests();
-  return useDevMode().on ? everyUnlock() : unlockedOf(q);
+  const perm = useDevUnlocks().fighters;
+  return useDevMode().on ? everyUnlock() : [...new Set([...unlockedOf(q), ...perm])];
 }
 
 /** The saved quest progress, read after the first render so the server and browser agree. */

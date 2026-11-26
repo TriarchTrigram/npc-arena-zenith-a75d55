@@ -23,6 +23,7 @@ import { UnlockCutscene } from "~/components/quest-scenes";
 import { rememberHybrid, useHybrids } from "~/lib/hybrids";
 import { recordFight, recordTournament, rollNewGen, unlockedNow, useUnlocked } from "~/lib/quests";
 import { useDevMode } from "~/lib/dev-mode";
+import { loadDevUnlocks, useDevUnlocks } from "~/lib/dev-unlocks";
 import { DevModeSheet } from "~/components/dev-mode-sheet";
 import { FusionSheet } from "~/components/fusion-sheet";
 import { FighterDot } from "~/components/fighter-dot";
@@ -35,7 +36,7 @@ import { BracketView, type TeamEntry } from "~/components/bracket-view";
 import { TitleScreen, type TitleMode } from "~/components/title-screen";
 import { FreeWorld } from "~/components/free-world";
 import { StoryPanel } from "~/components/story-panel";
-import { CHAPTERS, allCleared, bookOf, bossesBeaten, chapterInBook, endsBook, lairOf, stagesIn, canTeam, chapterOpen, fusionOrder, loadProgress, loadSeenIntros, markIntroSeen, saveProgress, stageLineup, type Pair } from "~/lib/story";
+import { CHAPTERS, allCleared, bookOf, bossesBeaten, chapterInBook, chaptersOfBooks, endsBook, lairOf, stagesIn, canTeam, chapterOpen, fusionOrder, loadProgress, loadSeenIntros, markIntroSeen, saveProgress, stageLineup, type Pair } from "~/lib/story";
 import { StoryScene } from "~/components/story-scene";
 import { storyBackdrop } from "~/lib/story-backdrops";
 import type { Scene } from "~/lib/story-script";
@@ -119,6 +120,9 @@ export default function Home() {
   }, [me.id]);
   // developer mode opens every fighter, boss, chapter and stage, and keeps its fights out of the save
   const dev = useDevMode().on;
+  // fighters, bosses and chapters picked in developer mode to stay unlocked for good, switch or no switch
+  const devUnlocks = useDevUnlocks();
+  const permOpen = chaptersOfBooks(devUnlocks.books);
   const earnedAll = useUnlocked();
   const questers = earnedAll.filter((p) => !isNewGen(p));
   const young = earnedAll.filter(isNewGen);
@@ -146,7 +150,7 @@ export default function Home() {
   const stageRef = useRef<{ ch: number; i: number } | null>(null);
   const cleared = clearedAll[chapter] ?? 0;
   // Story bosses beaten in this browser, playable everywhere but Story
-  const bosses = bossesBeaten(dev ? allCleared() : clearedAll).map(bossRosterId);
+  const bosses = bossesBeaten(dev ? allCleared() : clearedAll, dev ? [] : devUnlocks.bosses).map(bossRosterId);
   // unlock cutscenes waiting to play, one after another: a beaten boss, then a new-generation fighter
   type Unlock = { def: FighterDef; eyebrow: StringKey; joined: StringKey };
   const [unlocks, setUnlocks] = useState<Unlock[]>([]);
@@ -160,23 +164,24 @@ export default function Home() {
     const all = saved.cleared;
     setClearedAll(all);
     setWinsAll(saved.wins);
+    const open = chaptersOfBooks(loadDevUnlocks().books);
     // pick up in the furthest chapter that is open
     let ch = 0;
-    while (ch + 1 < CHAPTERS.length && chapterOpen(all, ch + 1)) ch++;
+    while (ch + 1 < CHAPTERS.length && chapterOpen(all, ch + 1, open)) ch++;
     setChapter(ch);
     setStage(Math.min(all[ch] ?? 0, lairOf(ch)));
   }, []);
-  // switching developer mode off returns Story to the furthest chapter this browser has really opened
+  // switching developer mode off returns Story to the furthest chapter this browser has really opened (or picked to stay open)
   useEffect(() => {
-    if (dev || chapterOpen(clearedAll, chapter)) return;
+    if (dev || chapterOpen(clearedAll, chapter, permOpen)) return;
     let ch = 0;
-    while (ch + 1 < CHAPTERS.length && chapterOpen(clearedAll, ch + 1)) ch++;
+    while (ch + 1 < CHAPTERS.length && chapterOpen(clearedAll, ch + 1, permOpen)) ch++;
     setChapter(ch);
     setStage(Math.min(clearedAll[ch] ?? 0, lairOf(ch)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dev]);
   const chooseChapter = (ch: number) => {
-    if (!dev && !chapterOpen(clearedAll, ch)) return;
+    if (!dev && !chapterOpen(clearedAll, ch, permOpen)) return;
     setChapter(ch);
     setStage(Math.min(clearedAll[ch] ?? 0, lairOf(ch)));
   };

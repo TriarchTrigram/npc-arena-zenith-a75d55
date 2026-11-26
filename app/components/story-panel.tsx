@@ -5,8 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { cn } from "~/lib/utils";
 import { DEF_BY_ID, FIGHTERS, type Power } from "~/lib/fighters";
 import { useUnlocked } from "~/lib/quests";
+import { useDevUnlocks } from "~/lib/dev-unlocks";
 import { PiBookOpenTextFill, PiFastForwardFill, PiFilmSlateBold, PiSwordFill } from "react-icons/pi";
-import { BOOKS, CHAPTERS, SKIP_AFTER, bookOf, canSkipToBoss, canTeam, chapterInBook, chapterOpen, chaptersOf, enemySide, lairOf, playerSide, stagesIn, type Pair } from "~/lib/story";
+import { BOOKS, CHAPTERS, SKIP_AFTER, bookOf, canSkipToBoss, canTeam, chapterInBook, chapterOpen, chaptersOf, chaptersOfBooks, enemySide, lairOf, playerSide, stagesIn, type Pair } from "~/lib/story";
 import { BOSSES } from "~/lib/bosses";
 import { FighterDot } from "~/components/fighter-dot";
 import { StoryMap } from "~/components/story-map";
@@ -38,7 +39,9 @@ export function StoryPanel({ cleared, wins, hasQuester, dev = false, onSkipToBos
   const secondAria = useString("story.second");
   const chaptersAria = useString("story.chaptersAria");
   const booksAria = useString("story.books.aria");
-  const isOpen = (ch: number) => dev || chapterOpen(cleared, ch);
+  // chapters whose book was picked in developer mode to stay open for good, switch or no switch
+  const permOpen = chaptersOfBooks(useDevUnlocks().books);
+  const isOpen = (ch: number) => dev || chapterOpen(cleared, ch, permOpen);
   const book = bookOf(chapter);
   const stages = CHAPTERS[chapter].stages;
   const total = stagesIn(chapter);

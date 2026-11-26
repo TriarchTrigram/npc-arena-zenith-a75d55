@@ -396,6 +396,12 @@
     "opens2": "Every Story boss can be picked outside Story.",
     "opens3": "Every Story book, chapter and stage is open, and every chapter has Skip to the boss.",
     "opens4": "Fights don't count toward quests, Story progress or new-generation fighters, so your real save stays as it was.",
+    "permHeading": "Unlock for good",
+    "permIntro": "Pick fighters, Story bosses and books to keep unlocked here, in your real save, whether the switch above is on or off.",
+    "permCount": "{{count}} unlocked for good",
+    "permFighters": "Fighters",
+    "permBosses": "Story bosses",
+    "permBooks": "Books",
     "lock": "Lock developer mode",
     "lockHint": "Locking it means the code has to be typed again to use it in this browser.",
     "error": {

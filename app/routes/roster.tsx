@@ -18,6 +18,7 @@ import { DEF_BY_ID, FIGHTERS, NEWGEN_IDS, QUESTERS, defOf, isNewGen, type Fighte
 import { BOSSES, BOSS_PHASES, type BossId } from "~/lib/bosses";
 import { allCleared, bossChapter, bossesBeaten, loadProgress } from "~/lib/story";
 import { useDevMode } from "~/lib/dev-mode";
+import { useDevUnlocks } from "~/lib/dev-unlocks";
 import { QUESTS, useUnlocked } from "~/lib/quests";
 import { FighterPortrait } from "~/components/quest-scenes";
 import { FORMS, FORM_NAME, HYPER_FORM, PERFECTED_FLAME, formsOf, type Form, type FormKind } from "~/lib/forms";
@@ -218,11 +219,15 @@ export default function Roster() {
   const shownHybrids = hybrids.filter((f) => role === "all" || f.role === role);
   const unlocked = useUnlocked();
   const dev = useDevMode().on;
+  const devUnlocks = useDevUnlocks();
   const earned = unlocked.filter((p) => !isNewGen(p));
   const youngEarned = unlocked.filter(isNewGen);
   // Story progress lives in this browser, so it is read after the first render
   const [beaten, setBeaten] = useState<BossId[]>([]);
-  useEffect(() => setBeaten(bossesBeaten(dev ? allCleared() : loadProgress().cleared)), [dev]);
+  useEffect(
+    () => setBeaten(bossesBeaten(dev ? allCleared() : loadProgress().cleared, dev ? [] : devUnlocks.bosses)),
+    [dev, devUnlocks.bosses],
+  );
 
   return (
     <PageContainer>
