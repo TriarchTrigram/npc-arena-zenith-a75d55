@@ -1774,6 +1774,60 @@ function stepIntro(g: Game, dt: number) {
   }
 }
 
+// ---------- Story cutscenes ----------
+/** A Story cutscene keeps these fighters out of sight until `arrive` brings them in; everyone else is already standing. */
+export function holdBack(g: Game, keys: number[]) {
+  g.intro = { t: 0, max: Infinity };
+  for (const f of g.fighters) f.spawnAt = keys.includes(f.key) ? Infinity : -1000;
+}
+
+/**
+ * Plays the held-back fighters' own entrances, one after another, `gap` seconds apart.
+ * Returns the seconds until each one lands, in the order given, and until the last has arrived.
+ */
+export function arrive(g: Game, keys: number[], gap: number): { lands: number[]; done: number } {
+  const it = g.intro ?? (g.intro = { t: 0, max: Infinity });
+  let done = 0;
+  const lands = keys.map((k, i) => {
+    const f = g.fighters.find((x) => x.key === k);
+    if (!f) return 0;
+    const sp = introOf(f.def);
+    const len = sp.len ?? INTRO_LEN;
+    f.spawnAt = it.t + i * gap;
+    done = Math.max(done, i * gap + len);
+    return i * gap + sp.hit * len;
+  });
+  it.max = it.t + done + 0.2;
+  return { lands, done: done + 0.2 };
+}
+
+/** Ends every entrance at once: everyone stands in their own stance. */
+export function settle(g: Game) {
+  if (!g.intro) return;
+  g.intro = null;
+  for (const f of g.fighters) f.pose = { ...stanceOf(f.def) };
+}
+
+/** A beaten fighter breaks apart into its own colours, drifting up, and is gone. */
+export function vanish(g: Game, key: number) {
+  const f = g.fighters.find((x) => x.key === key);
+  if (!f) return;
+  const s = f.scale;
+  for (let i = 0; i < 160; i++) {
+    const life = rand(1.2, 2.4);
+    g.particles.push({
+      x: f.x + rand(-26, 26) * s, y: f.y - rand(0, 110) * s,
+      vx: rand(-90, 90), vy: rand(-260, -40),
+      life, max: life, size: rand(3, 8) * s,
+      color: Math.random() < 0.5 ? f.def.color : f.def.glow,
+      shape: Math.random() < 0.6 ? "dust" : "spark", grav: -40, add: Math.random() < 0.5, rot: rand(0, 6),
+    });
+  }
+  g.waves.push({ x: f.x, y: f.y - 50 * s, r: 160 * s, life: 0.7, max: 0.7, a: f.def.glow, b: f.def.color });
+  g.flash = 0.45;
+  g.fighters = g.fighters.filter((x) => x !== f);
+}
+
 function jump(f: Fighter, dir: number) {
   f.vy = f.jugg ? -420 : -760;
   f.vx += dir * 120;
@@ -4098,7 +4152,7 @@ function drawParticle(ctx: CanvasRenderingContext2D, p: Particle) {
   ctx.globalCompositeOperation = "source-over";
 }
 
-function outlinedText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, size: number, fill: string, align: CanvasTextAlign = "center") {
+export function outlinedText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, size: number, fill: string, align: CanvasTextAlign = "center") {
   ctx.font = `700 ${size}px Fredoka, sans-serif`;
   ctx.textAlign = align;
   ctx.textBaseline = "middle";

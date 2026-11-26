@@ -695,3 +695,81 @@ export function drawCutIn(ctx: CanvasRenderingContext2D, c: CutIn, portrait: (x:
   }
   ctx.restore();
 }
+
+// ---------- Story cutscenes ----------
+/** A boss's title as it arrives in a Story cutscene: `t` seconds since it landed, gone after `max`. */
+export type BossTitle = { eyebrow: string; name: string; power: string; a: string; b: string; t: number; max: number };
+
+/**
+ * A tilted band slashes in from the right in the boss's colours, its name slammed across it, then the band
+ * thins away. Screen space, drawn over the arena and under the letterbox.
+ */
+export function drawBossTitle(ctx: CanvasRenderingContext2D, p: BossTitle, text: TextFn) {
+  const u = p.t / p.max;
+  if (u <= 0 || u >= 1) return;
+  const inK = easeOut(seg(u, 0, 0.12));
+  const outK = easeIn(seg(u, 0.82, 1));
+  const cy = H * 0.66;
+  const h = 118 * (1 - outK);
+  if (h < 1) return;
+  const tilt = 14;
+  const off = (1 - inK) * W * 1.2;
+  ctx.save();
+  // the arena sinks back behind the name
+  ctx.fillStyle = `hsl(250 40% 5% / ${0.35 * inK * (1 - outK)})`;
+  ctx.fillRect(0, 0, W, H);
+  ctx.translate(off, 0);
+  const band = () => {
+    ctx.beginPath();
+    ctx.moveTo(-80, cy - h / 2 + tilt);
+    ctx.lineTo(W + 80, cy - h / 2 - tilt);
+    ctx.lineTo(W + 80, cy + h / 2 - tilt);
+    ctx.lineTo(-80, cy + h / 2 + tilt);
+    ctx.closePath();
+  };
+  band();
+  const g = ctx.createLinearGradient(0, 0, W, 0);
+  g.addColorStop(0, "hsl(250 35% 8%)");
+  g.addColorStop(0.45, withA(p.a, 0.95));
+  g.addColorStop(1, p.b);
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.save();
+  ctx.clip();
+  // light streaks racing left across the band
+  const r = rng(3.3);
+  ctx.globalCompositeOperation = "lighter";
+  for (let i = 0; i < 14; i++) {
+    const y = cy - h / 2 + r() * h;
+    const len = 100 + r() * 240;
+    const x = ((r() * W - p.t * (900 + r() * 700)) % (W + 400) + W + 400) % (W + 400) - 200;
+    ctx.fillStyle = `hsl(0 0% 100% / ${0.08 + r() * 0.16})`;
+    ctx.fillRect(x, y, len, 1.5 + r() * 2);
+  }
+  ctx.restore();
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-80, cy - h / 2 + tilt); ctx.lineTo(W + 80, cy - h / 2 - tilt);
+  ctx.moveTo(-80, cy + h / 2 + tilt); ctx.lineTo(W + 80, cy + h / 2 - tilt);
+  ctx.stroke();
+  if (h > 70) {
+    // the name lands big and settles
+    const pop = 1 + 0.35 * (1 - easeOut(seg(u, 0.06, 0.2)));
+    const tx = W * 0.56;
+    text(ctx, p.eyebrow.toUpperCase(), tx, cy - 38, 18, "hsl(0 85% 66%)");
+    text(ctx, p.name.toUpperCase(), tx, cy + 2, Math.round(58 * pop), "white");
+    text(ctx, p.power, tx, cy + 40, 20, p.b);
+  }
+  ctx.restore();
+}
+
+/** The edges of the picture darkened, like a lens. Screen space. */
+export function drawVignette(ctx: CanvasRenderingContext2D, k: number) {
+  if (k <= 0.01) return;
+  const g = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, W * 0.68);
+  g.addColorStop(0, "hsl(250 40% 4% / 0)");
+  g.addColorStop(1, `hsl(250 40% 4% / ${0.6 * k})`);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+}
