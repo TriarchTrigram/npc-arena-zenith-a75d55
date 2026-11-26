@@ -1,5 +1,5 @@
 // Every original fighter has one form it breaks into once per fight when pushed low: four Rage Modes,
-// four Awakened, four Mastery and four Mystic. Pyro goes one step further, from Blue Flame into Perfected Flame.
+// four Awakened, four Mastery and five Mystic. Pyro goes one step further, from Blue Flame into Perfected Flame.
 // A form recolours the fighter and its moves, changes its stats, adds a passive and adds 2 new moves.
 // Shared by the arena engine (the transformation and the fight) and the Fighters page (who has what).
 
@@ -243,6 +243,16 @@ export const FORMS = {
       M({ id: "psychic-maelstrom", name: "Psychic Maelstrom", kind: "burst", anim: "raise", range: 160, cd: 6.5, dmg: 16, radius: 185, kb: 300, lift: -480, wind: 0.32 }),
     ],
   },
+  nova: {
+    power: "nova", kind: "mystic", title: "STARBORN", ...MYSTIC,
+    blurb: "Her hair lights up like a nebula. Stars fall where she points, and every hit she lands pulls a little health back.",
+    body: "hsl(258 70% 30%)", glow: "hsl(322 100% 80%)", a: "hsl(300 80% 62%)", b: "hsl(48 100% 84%)",
+    dmg: 1.25, kb: 1.15, cd: 0.75, speed: 1.1, act: 1.15,
+    moves: [
+      M({ id: "falling-stars", name: "Falling Stars", kind: "rain", anim: "raise", range: 540, cd: 6, dmg: 9, count: 6, radius: 160, shape: "rock", wind: 0.32 }),
+      M({ id: "starburst-rise", name: "Starburst Rise", kind: "eruption", anim: "slam", range: 460, minRange: 50, cd: 6, dmg: 15, radius: 54, lift: -720, status: "blind", statusDur: 1, wind: 0.36 }),
+    ],
+  },
 } as Record<Power, Form>;
 
 // ----- Nightmare Mode: the quest fighters' dark form -----
@@ -347,6 +357,17 @@ FORMS.sand = {
     M({ id: "haboob", name: "Haboob", kind: "zone", anim: "raise", range: 440, cd: 9, dmg: 8, radius: 180, dur: 4.5, pullIn: 200, status: "blind", statusDur: 0.8, wind: 0.36 }),
     M({ id: "glass-tomb", name: "Glass Tomb", kind: "eruption", anim: "slam", range: 620, minRange: 40, cd: 6.5, dmg: 13, radius: 46, count: 5, lift: -680, status: "stun", statusDur: 0.4, wind: 0.36 }),
     M({ id: "sand-sea", name: "Sand Sea", kind: "projectile", anim: "slam", range: 900, minRange: 60, cd: 6, dmg: 18, speed: 360, size: 30, pierce: true, ground: true, shape: "wave", kb: 420, lift: -320, status: "blind", statusDur: 1, wind: 0.4, rec: 0.35 }),
+  ],
+};
+FORMS.pastrift = {
+  power: "pastrift", kind: "nightmare", title: "THE AXIOM'S MARK", ...NIGHTMARE,
+  blurb: "For a moment the Axiom's corruption takes hold: his colours drain to black, his scarf burns pink and a third eye opens. A glimpse of the Riftmaker he will become.",
+  body: "hsl(252 30% 10%)", glow: "hsl(318 100% 70%)", a: "hsl(300 70% 40%)", b: "hsl(186 100% 76%)", dark: "hsl(258 60% 4%)",
+  dmg: 1.3, kb: 1.25, cd: 0.7, speed: 1.2, act: 1.2,
+  moves: [
+    M({ id: "broken-mirror", name: "Broken Mirror", kind: "projectile", anim: "cast", range: 640, minRange: 70, cd: 3.4, dmg: 6, speed: 760, size: 10, count: 6, spread: 0.22, shape: "shard", pierce: true, status: "blind", statusDur: 0.6 }),
+    M({ id: "axioms-grip", name: "Axiom's Grip", kind: "pull", anim: "raise", range: 560, minRange: 100, cd: 5, dmg: 16, status: "stun", statusDur: 0.6, wind: 0.34 }),
+    M({ id: "unmaking", name: "Unmaking", kind: "burst", anim: "slam", range: 170, cd: 7, dmg: 22, radius: 210, kb: 560, lift: -420, status: "blind", statusDur: 1, wind: 0.34, rec: 0.35 }),
   ],
 };
 // ----- Surge Mode: the new generation's own form -----

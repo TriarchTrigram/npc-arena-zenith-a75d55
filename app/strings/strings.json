@@ -240,7 +240,7 @@
   },
   "roster": {
     "eyebrow": "The roster",
-    "title": "Meet the 16 fighters",
+    "title": "Meet the 17 fighters",
     "subtitle": "Every fighter has one power and a set of moves built on it. Pick your favourites in the arena and see who is left standing.",
     "cta": "Go to the arena",
     "navLabel": "Main navigation",
@@ -1752,6 +1752,11 @@
         "title": "Shifting Sands",
         "reward": "Earns Sirocco, Sand Manipulation",
         "story": "A dune has started creeping in from the edge of the arena, and something under it is waiting."
+      },
+      "before": {
+        "title": "Before the Fall",
+        "reward": "Earns Past Riftmaker, Reality Warping",
+        "story": "A small warm rift keeps opening above the arena. Through it is a bright purple fighter in a long scarf: the Riftmaker as he was, before the Axiom corrupted him."
       }
     },
     "cutscene": {

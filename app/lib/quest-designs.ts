@@ -15,6 +15,8 @@
 // Briar (new generation): big young eyes, a flower on the chest, vines up the limbs and a cape of leaves.
 // Turbo (new generation): a black stick figure outlined in blue (body and outline are set on his fighter), with only a long
 // orange scarf that sways behind him and streams flat when he runs. Super Form turns him gold, Hyper Form pale and shimmering.
+// Past Riftmaker: magenta-purple with yellow eyes and a long yellow-orange scarf; the Axiom's third eye in Nightmare Mode.
+// Nova (an original fighter) also draws her hair and scarf from here: drawNovaLook.
 import type { Power } from "./fighters";
 import { drawCrane } from "./move-looks";
 import type { BossRig } from "./boss-designs";
@@ -1110,10 +1112,9 @@ const SCARF = "hsl(28 100% 56%)";
 const SCARF_DARK = "hsl(18 95% 42%)";
 
 /** The long scarf trailing from the neck: sways at rest, streams out flat behind him the faster he runs. */
-function turboScarf(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: number, t: number, alive: boolean, vx: number) {
+function turboScarf(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: number, t: number, alive: boolean, vx: number, main = SCARF, dark = SCARF_DARK, n = 12) {
   const back = -face;
   const speed = Math.min(1, Math.abs(vx) / 320);
-  const n = 12;
   const pts: Pt[] = [];
   let x = r.neck.x + back * 2 * s, y = r.neck.y + 2 * s;
   pts.push({ x, y });
@@ -1131,7 +1132,7 @@ function turboScarf(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: 
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   // two strands, the far one darker, tapering toward the end
-  for (const [col, off, w] of [[SCARF_DARK, 3, 5.5], [SCARF, 0, 6.5]] as const) {
+  for (const [col, off, w] of [[dark, 3, 5.5], [main, 0, 6.5]] as const) {
     for (let i = 1; i < pts.length; i++) {
       const k = i / pts.length;
       ctx.strokeStyle = col;
@@ -1144,7 +1145,7 @@ function turboScarf(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: 
   }
   // the frayed end
   const end = pts[pts.length - 1];
-  ctx.strokeStyle = SCARF;
+  ctx.strokeStyle = main;
   ctx.lineWidth = 1.2 * s;
   for (let i = 0; i < 4; i++) {
     ctx.beginPath();
@@ -1210,6 +1211,152 @@ function turboFront(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: 
   ctx.restore();
 }
 
+// ---------- Past Riftmaker ----------
+// A bright magenta-purple stick figure with yellow eyes and a long yellow-orange scarf, longer than Turbo's. In Nightmare
+// Mode the Axiom's corruption shows through: the scarf burns pink and a third eye opens on his brow, as on the Riftmaker.
+
+const RIFT_SCARF = "hsl(40 100% 56%)";
+const RIFT_SCARF_DARK = "hsl(26 95% 46%)";
+
+function pastriftBack(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: number, t: number, alive: boolean, p: QuestPaint, vx: number) {
+  ctx.save();
+  turboScarf(ctx, r, s, face, t, alive, vx, p.nightmare ? p.glow : RIFT_SCARF, p.nightmare ? p.a : RIFT_SCARF_DARK, 17);
+  // a few stars drifting round him, as if they slipped out of a rift
+  if (alive) {
+    ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < 4; i++) {
+      const a = t * 0.9 + i * 1.6;
+      const x = (r.hip.x + r.head.x) / 2 + Math.cos(a) * 30 * s, y = (r.hip.y + r.head.y) / 2 - 12 * s + Math.sin(a * 1.3) * 26 * s;
+      glowDot(ctx, x, y, 2.4 * s, p.nightmare ? p.b : "hsl(44 100% 74%)", 0.5 + 0.4 * Math.sin(t * 3 + i));
+    }
+  }
+  ctx.restore();
+}
+
+function pastriftFront(ctx: CanvasRenderingContext2D, r: BossRig, s: number, face: number, t: number, alive: boolean, p: QuestPaint) {
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  const h = r.head;
+  const main = p.nightmare ? p.glow : RIFT_SCARF, dark = p.nightmare ? p.a : RIFT_SCARF_DARK;
+  // the scarf wound twice round the neck, knotted at the front
+  ctx.strokeStyle = main;
+  ctx.lineWidth = 6.5 * s;
+  ctx.beginPath();
+  ctx.moveTo(r.neck.x - face * 6 * s, r.neck.y + 1 * s);
+  ctx.lineTo(r.neck.x + face * 6 * s, r.neck.y + 1 * s);
+  ctx.stroke();
+  ctx.strokeStyle = dark;
+  ctx.lineWidth = 1.2 * s;
+  ctx.beginPath();
+  ctx.moveTo(r.neck.x - face * 5 * s, r.neck.y + 1 * s);
+  ctx.lineTo(r.neck.x + face * 5 * s, r.neck.y + 1 * s);
+  ctx.stroke();
+  ctx.fillStyle = dark;
+  ctx.beginPath();
+  ctx.arc(r.neck.x + face * 5 * s, r.neck.y + 2 * s, 3 * s, 0, TAU);
+  ctx.fill();
+  // yellow eyes, glowing softly
+  if (alive) {
+    const eye = p.nightmare ? p.b : "hsl(50 100% 60%)";
+    for (const ex0 of [2, 6.5]) {
+      const ex = h.x + face * ex0 * s, ey = h.y + 0.5 * s;
+      glowDot(ctx, ex, ey, 4.5 * s, eye, 0.45);
+      ctx.fillStyle = eye;
+      ctx.beginPath();
+      ctx.ellipse(ex, ey, 1.8 * s, 2.4 * s, 0, 0, TAU);
+      ctx.fill();
+      ctx.fillStyle = "hsl(0 0% 100%)";
+      ctx.beginPath();
+      ctx.arc(ex + face * 0.5 * s, ey - 0.8 * s, 0.6 * s, 0, TAU);
+      ctx.fill();
+    }
+    if (p.nightmare) {
+      // the Axiom's mark: a third eye opening on the brow
+      const ex = h.x + face * 4 * s, ey = h.y - 5 * s;
+      glowDot(ctx, ex, ey, 5 * s, p.glow, 0.7);
+      ctx.fillStyle = "hsl(0 0% 100%)";
+      ctx.beginPath();
+      ctx.ellipse(ex, ey, 2.4 * s, 1.4 * s, 0, 0, TAU);
+      ctx.fill();
+      ctx.fillStyle = p.glow;
+      ctx.beginPath();
+      ctx.arc(ex, ey, 0.9 * s, 0, TAU);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+// ---------- Nova (an original fighter, not a quest fighter) ----------
+// Long faded hot-pink hair flowing down her back and a long scarf in the same pink. The engine calls this for her
+// behind the body ("back": hair and scarf tail) and after the head ("front": the fringe and the scarf knot).
+
+const NOVA_HAIR = "hsl(324 64% 72%)";
+const NOVA_HAIR_DARK = "hsl(316 52% 56%)";
+const NOVA_SCARF = "hsl(330 76% 68%)";
+const NOVA_SCARF_DARK = "hsl(322 60% 50%)";
+
+export function drawNovaLook(ctx: CanvasRenderingContext2D, layer: "back" | "front", r: BossRig, s: number, face: number, t: number, alive: boolean, vx: number) {
+  const h = r.head;
+  const back = -face;
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  if (layer === "back") {
+    turboScarf(ctx, r, s, face, t + 0.7, alive, vx, NOVA_SCARF, NOVA_SCARF_DARK, 14);
+    // the hair: a few long strands from the crown down past her shoulders, swaying and lifting as she moves
+    const speed = Math.min(1, Math.abs(vx) / 320);
+    for (let k = 0; k < 4; k++) {
+      ctx.strokeStyle = k % 2 ? NOVA_HAIR_DARK : NOVA_HAIR;
+      ctx.lineWidth = (k % 2 ? 5 : 6) * s;
+      ctx.beginPath();
+      let x = h.x + back * (2 + k * 2.4) * s, y = h.y - 9 * s + k * 2 * s;
+      ctx.moveTo(x, y);
+      for (let i = 1; i <= 8; i++) {
+        const sway = alive ? Math.sin(t * (3 + speed * 6) - i * 0.6 + k) * (0.6 + i * 0.35) * s : 0;
+        x += back * (2.4 + speed * 2.2 + k * 0.3) * s;
+        y += (alive ? 5.2 - speed * 2.6 : 6) * s;
+        ctx.lineTo(x + sway, y);
+      }
+      ctx.stroke();
+    }
+  } else {
+    // the fringe over her brow, swept toward the back of her head
+    ctx.fillStyle = NOVA_HAIR;
+    ctx.strokeStyle = NOVA_HAIR_DARK;
+    ctx.lineWidth = 1.2 * s;
+    ctx.save();
+    ctx.translate(h.x, h.y);
+    ctx.scale(face, 1);
+    const R = (HEAD + 1) * s;
+    ctx.beginPath();
+    ctx.arc(0, 0, R, Math.PI, 0);
+    // the lower edge, front to back: short bangs over the eye, longer at the back where it falls away
+    ctx.lineTo(R * 0.62, -6.8 * s);
+    ctx.lineTo(R * 0.3, -5 * s);
+    ctx.lineTo(-R * 0.05, -6.4 * s);
+    ctx.lineTo(-R * 0.5, -2 * s);
+    ctx.lineTo(-R * 0.92, 2 * s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+    // the scarf wrapped round her neck
+    ctx.strokeStyle = NOVA_SCARF;
+    ctx.lineWidth = 6 * s;
+    ctx.beginPath();
+    ctx.moveTo(r.neck.x - face * 6 * s, r.neck.y + 1 * s);
+    ctx.lineTo(r.neck.x + face * 6 * s, r.neck.y + 1 * s);
+    ctx.stroke();
+    ctx.fillStyle = NOVA_SCARF_DARK;
+    ctx.beginPath();
+    ctx.arc(r.neck.x + face * 4.5 * s, r.neck.y + 2 * s, 2.6 * s, 0, TAU);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 export function drawQuestDesign(
   ctx: CanvasRenderingContext2D, id: Power, layer: "back" | "front", r: BossRig, s: number, face: number, t: number,
   alive: boolean, act: QuestAct | undefined, p: QuestPaint, vx = 0,
@@ -1226,4 +1373,5 @@ export function drawQuestDesign(
   if (id === "plasma") return layer === "back" ? voltaBack(ctx, r, s, face, t, alive, act, p) : voltaFront(ctx, r, s, face, t, alive, p);
   if (id === "flora") return layer === "back" ? briarBack(ctx, r, s, face, t, alive, act, p) : briarFront(ctx, r, s, face, t, alive, p);
   if (id === "chaos") return layer === "back" ? turboBack(ctx, r, s, face, t, alive, vx) : turboFront(ctx, r, s, face, t, alive, p);
+  if (id === "pastrift") return layer === "back" ? pastriftBack(ctx, r, s, face, t, alive, p, vx) : pastriftFront(ctx, r, s, face, t, alive, p);
 }

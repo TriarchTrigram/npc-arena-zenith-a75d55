@@ -256,6 +256,18 @@ const CAST: Record<Power, Voice> = {
     bell.forEach((n, i) => s.fm(n * p, 3.5, 2, 0.5 * len, 0.13, 0.18 * len + i * 0.05));
     s.noise(9000, 6000, 0.05, 0.25, { type: "highpass", delay: 0.18 * len });
   },
+  // Nova: a soft rising shimmer of starlight over a deep, slow cosmic hum
+  nova: (s, p, len, v) => {
+    s.tone(90 * p, 70 * p, 0.45 * len, 0.14, { type: "sine", attack: 0.06 * len });
+    s.fm((v === 1 ? 988 : v === 2 ? 1175 : 880) * p, 3, 1.4, 0.4 * len, 0.1, 0.06 * len);
+    s.tone(660 * p, 1980 * p, 0.22 * len, 0.06, { type: "triangle", vib: [7, 12], delay: 0.08 * len });
+  },
+  // Past Riftmaker: a short tearing whoosh as the air splits, then a bright warm chime through the rift
+  pastrift: (s, p, len, v) => {
+    s.noise(800 * p, 4200 * p, 0.14 * len, 0.35, { type: "bandpass", q: 2.5 });
+    s.fm((v === 1 ? 784 : v === 2 ? 880 : 698) * p, 1.5, 2.2, 0.35 * len, 0.12, 0.1 * len);
+    s.tone(1400 * p, 700 * p, 0.18 * len, 0.06, { type: "triangle", delay: 0.12 * len });
+  },
   // Sirocco: a hiss of moving sand that swells and falls away, with a low dry wind under it
   sand: (s, p, len, v) => {
     s.noise(1400 * p, 5200 * p, 0.18 * len, 0.4, { type: "bandpass", q: 1.2, attack: 0.08 * len });
@@ -350,6 +362,18 @@ const IMPACT: Record<Power, Voice> = {
     s.noise(7500, 3500, 0.06, 0.5, { type: "highpass", q: 3 });
     s.fm(2100 * p, 2.4, 3, 0.22, 0.14);
     s.tone(140 * p, 60, 0.12, 0.35, { type: "sine" });
+  },
+  // a soft deep thud and a sparkle of stardust
+  nova: (s, p) => {
+    s.tone(140 * p, 55, 0.16, 0.45, { type: "sine" });
+    s.fm(1760 * p, 2, 1.5, 0.2, 0.1, 0.03);
+    s.noise(9000, 6000, 0.1, 0.18, { type: "highpass", delay: 0.04 });
+  },
+  // a snap of folded space and a ringing echo
+  pastrift: (s, p) => {
+    s.noise(3200 * p, 900, 0.12, 0.5, { type: "bandpass", q: 3 });
+    s.tone(320 * p, 120, 0.14, 0.35, { type: "triangle" });
+    s.fm(1320 * p, 1.5, 2, 0.22, 0.08, 0.05);
   },
   // a thump into sand and a spray of grains
   sand: (s, p) => {

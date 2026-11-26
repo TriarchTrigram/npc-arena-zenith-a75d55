@@ -5,7 +5,7 @@ import { drawMarks, drawFocus, drawBars, drawNameCards, drawCutIn, MARK_LIFE, CU
 import { INTROS, BOSS_INTROS, fusionIntro, INTRO_LEN, INTRO_ARRIVED, type IntroBurst, type IntroPose, type IntroSpec } from "./spawn-intros";
 import { LOOKS, setLookTint, drawFx, drawSpark, drawShotLook, drawBeamLook, drawEruptionLook, drawZoneLook, drawRushLook, drawAnnihilation, eruptionColors, type Fx, type PShape } from "./move-looks";
 import { drawBossDesign, type BossAct } from "./boss-designs";
-import { drawQuestDesign, type QuestAct } from "./quest-designs";
+import { drawNovaLook, drawQuestDesign, type QuestAct } from "./quest-designs";
 import { FORMS, formShout, formsOf, type Form, type FormKind } from "./forms";
 import { BOSS_PHASES } from "./bosses";
 
@@ -158,6 +158,8 @@ const QUEST_STANCE: Partial<Record<Power, Pose>> = {
   crys: { t: 0.12, aF1: 1.05, aF2: 2.75, aB1: 0.75, aB2: 2.6, lF1: 0.6, lF2: 0.1, lB1: -0.55, lB2: -0.22 },
   // Sirocco: low and side-on, front hand trailing a stream of sand, back hand raised to the sky
   sand: { t: 0.26, aF1: 1.35, aF2: 1.1, aB1: 2.4, aB2: 2.9, lF1: 0.75, lF2: -0.05, lB1: -0.62, lB2: -0.45 },
+  // Past Riftmaker: light on his feet and leaning in, front hand open as if holding a rift, back hand loose behind him
+  pastrift: { t: 0.2, aF1: 1.5, aF2: 1.75, aB1: -0.6, aB2: -0.2, lF1: 0.55, lF2: -0.1, lB1: -0.5, lB2: -0.3 },
   // Volta: young and cocky, bouncing forward on the front foot, both fists up and crackling
   plasma: { t: 0.18, aF1: 1.2, aF2: 2.5, aB1: 0.9, aB2: 2.3, lF1: 0.55, lF2: -0.02, lB1: -0.5, lB2: -0.35 },
   // Briar: low and rooted, front palm open to the floor as if feeling the roots, back hand up with a seed ready
@@ -216,7 +218,7 @@ function idlePose(f: Fighter, gt: number): Pose {
     // Parallax drifts slowly, Hexizon bobs on the balls of his feet, Halflife heaves, Redline can't stand still, Liminal sways,
     // Overtone nods to a beat, Vellum drifts like a sheet on the air, Facet barely moves, Sirocco sways like heat haze,
     // Volta can't keep still, Briar sways like a plant in the wind, Turbo taps his foot waiting for the fight to start
-    const hz = ({ hexizon: 5.5, gamma: 2.6, velo: 9, portal: 1.4, sono: 7.5, paper: 1.2, crys: 1, sand: 3.4, plasma: 8, flora: 1.6, chaos: 7 } as Partial<Record<Power, number>>)[f.def.id] ?? 1.8;
+    const hz = ({ hexizon: 5.5, gamma: 2.6, velo: 9, portal: 1.4, sono: 7.5, paper: 1.2, crys: 1, sand: 3.4, pastrift: 4.6, plasma: 8, flora: 1.6, chaos: 7 } as Partial<Record<Power, number>>)[f.def.id] ?? 1.8;
     const b = Math.sin(gt * hz + f.key);
     return { ...st, t: st.t + b * 0.03, aF2: st.aF2 + b * 0.06, aB2: st.aB2 + b * 0.06, lF1: st.lF1 + b * 0.04, lB1: st.lB1 - b * 0.04 };
   }
@@ -319,6 +321,7 @@ const FX: Record<Power, { shape: PShape; add: boolean; grav: number }> = {
   magneto: { shape: "shard", add: false, grav: 700 },
   psy: { shape: "ring", add: true, grav: -20 },
   shift: { shape: "dot", add: true, grav: 0 },
+  nova: { shape: "star", add: true, grav: -30 },
   spatio: { shape: "shard", add: true, grav: 0 },
   hexizon: { shape: "pixel", add: true, grav: -60 },
   gamma: { shape: "spark", add: true, grav: -120 },
@@ -328,6 +331,7 @@ const FX: Record<Power, { shape: PShape; add: boolean; grav: number }> = {
   paper: { shape: "leaf", add: false, grav: 120 },
   crys: { shape: "shard", add: true, grav: 300 },
   sand: { shape: "dust", add: false, grav: 420 },
+  pastrift: { shape: "star", add: true, grav: 0 },
   plasma: { shape: "spark", add: true, grav: -60 },
   flora: { shape: "leaf", add: false, grav: 140 },
   chaos: { shape: "star", add: true, grav: -40 },
@@ -3395,7 +3399,10 @@ function drawFighterBody(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, o: 
   const gear = f.def.custom?.gear;
   if (gear === "cape") drawCape(ctx, neck, hip, face, wave, f.vx, s, o.solid ?? rg?.glow ?? f.def.glow, ink);
   if (f.def.minion && !o.solid) drawMinionGear(ctx, f.def.minion, "back", { head, neck, hip, shoulder }, s, face, wave, f.vx, ink, col);
-  if (!f.def.boss && !quest && !f.def.minion && (!gear || gear === "scarf")) {
+  // Nova wears her own long hair and long pink scarf in place of the usual short one
+  const nova = f.def.id === "nova" && !f.def.parents && !f.def.boss && !f.def.minion && !f.def.custom && !o.solid;
+  if (nova) drawNovaLook(ctx, "back", bossPts, s, face, bt, f.alive, f.vx);
+  if (!f.def.boss && !quest && !nova && !f.def.minion && (!gear || gear === "scarf")) {
   const sx = -face * (16 + Math.abs(f.vx) * 0.03) * s;
   ctx.beginPath();
   ctx.moveTo(neck.x, neck.y + 2 * s);
@@ -3475,6 +3482,7 @@ function drawFighterBody(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, o: 
     ctx.arc(ex + face * 1.3 * s, ey + 0.5 * s, 2 * s, 0, Math.PI * 2);
     ctx.fill();
   }
+  if (nova) drawNovaLook(ctx, "front", bossPts, s, face, bt, f.alive, f.vx);
   if ((gear === "headband" || gear === "mask") && !o.solid) drawHeadGear(ctx, gear, head, face, wave, f.vx, s, rg?.glow ?? f.def.glow, ink, f.alive && !blind);
   if (f.def.minion && !o.solid) drawMinionGear(ctx, f.def.minion, "front", { head, neck, hip, shoulder }, s, face, wave, f.vx, ink, col);
   if (f.def.boss && !o.solid) drawBossDesign(ctx, f.def.boss, "front", bossPts, s, face, bt, f.alive, f.vx, bossAct, bossPhase);

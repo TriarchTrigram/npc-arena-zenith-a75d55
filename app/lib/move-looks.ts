@@ -409,6 +409,31 @@ const QUEST_LOOKS: Record<string, Look> = {
   "haboob": F("miasma-cloud", "hsl(20 40% 18%)", "hsl(10 100% 58%)", "dust", false, -40, "fizz"),
   "glass-tomb": F("glacier-spike", "hsl(14 40% 30%)", "hsl(10 100% 60%)", "shard", true, 300, "shatter"),
   "sand-sea": F("tidal-wall", "hsl(20 40% 16%)", "hsl(10 100% 58%)", "dust", false, 400, "splash"),
+  // Past Riftmaker: magenta-purple and warm gold, stars caught in every rift
+  "rift-jab": F("flash-jab", "hsl(298 80% 62%)", "hsl(44 100% 74%)", "star", true, 0, "portal"),
+  "scarf-lash": F("water-whip", "hsl(36 100% 58%)", "hsl(48 100% 80%)", "spark", true, 0, "slash"),
+  "mirror-bolt": F("ice-shard-volley", "hsl(298 60% 80%)", "hsl(44 100% 80%)", "shard", true, 200, "shatter"),
+  "reality-seam": F("spatial-cut", "hsl(300 70% 30%)", "hsl(44 100% 70%)", "star", true, 0, "slash"),
+  "rift-step": F("shadow-step", "hsl(298 80% 62%)", "hsl(44 100% 78%)", "star", true, -40, "portal"),
+  "warp-rush": F("mach-rush", "hsl(300 80% 60%)", "hsl(40 100% 66%)", "spark", true, 0, "portal"),
+  "floor-flip": F("earth-spike", "hsl(290 50% 46%)", "hsl(42 100% 70%)", "shard", false, 600, "crater"),
+  "starfall-rift": F("light-lances", "hsl(42 100% 66%)", "hsl(0 0% 100%)", "star", true, 120, "starburst"),
+  "pocket-world": F("singularity", "hsl(290 60% 24%)", "hsl(44 100% 74%)", "star", false, -30, "implode"),
+  "unfold": F("rift-burst", "hsl(298 76% 62%)", "hsl(44 100% 80%)", "star", true, 0, "portal"),
+  "rift-hook": F("magnet-pull", "hsl(298 70% 56%)", "hsl(40 100% 70%)", "ring", true, 0, "implode"),
+  "undo": F("rewind", "hsl(44 100% 70%)", "hsl(298 90% 82%)", "star", true, -120),
+  // Past Riftmaker, Nightmare Mode (THE AXIOM'S MARK)
+  "broken-mirror": F("shard-storm", "hsl(300 40% 20%)", "hsl(318 100% 72%)", "shard", true, 200, "shatter"),
+  "axioms-grip": F("mind-crush", "hsl(258 60% 14%)", "hsl(318 100% 72%)", "glyph", true, 0, "implode"),
+  "unmaking": F("rift-burst", "hsl(258 50% 8%)", "hsl(186 100% 76%)", "glyph", true, 0, "starburst"),
+  // Nova: deep cosmic blue with faded pink starlight
+  "stardust-strike": F("mind-jab", "hsl(232 70% 60%)", "hsl(324 90% 82%)", "star", true, -20, "starburst"),
+  "comet-shot": F("fireball", "hsl(324 85% 70%)", "hsl(0 0% 100%)", "star", true, -60, "starburst"),
+  "nebula-cloud": F("miasma-cloud", "hsl(290 60% 46%)", "hsl(324 90% 80%)", "star", true, -20, "swirl"),
+  "orbit-snare": F("gravity-pull", "hsl(232 70% 50%)", "hsl(324 90% 80%)", "star", true, 0, "implode"),
+  // Nova, Mystic Mode (STARBORN)
+  "falling-stars": F("meteor-drop", "hsl(300 70% 56%)", "hsl(48 100% 84%)", "star", true, 200, "starburst"),
+  "starburst-rise": F("flame-pillar", "hsl(48 100% 80%)", "hsl(322 100% 82%)", "star", true, -200, "flare"),
   // Volta (new generation)
   "plasma-jab": F("shock-knuckle", "hsl(322 85% 62%)", "hsl(190 100% 80%)", "spark", true, 0, "fork"),
   "flare-kick": F("gale-kick", "hsl(322 80% 60%)", "hsl(190 100% 78%)", "spark", true, -60, "flare"),

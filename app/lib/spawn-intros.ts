@@ -94,7 +94,7 @@ function jag(ctx: CanvasRenderingContext2D, x0: number, y0: number, x1: number, 
   ctx.lineTo(x1, y1);
 }
 
-// ---------- the 16 entrances ----------
+// ---------- the entrances ----------
 export const INTROS: Record<Power, IntroSpec> = {
   // Pyro: a column of fire roars up and Pyro steps out of it, still white-hot.
   pyro: {
@@ -827,6 +827,43 @@ export const INTROS: Record<Power, IntroSpec> = {
       ctx.restore();
     },
   },
+  // Nova: a small pink-and-blue galaxy spins up on the spot, its arms wind tighter and tighter, and it collapses
+  // into her with a flash of stardust.
+  nova: {
+    hit: 0.56, shake: 6, wave: ["hsl(324 80% 74%)", "hsl(232 70% 64%)"],
+    body: (u) => base(u < 0.56 ? "float" : settle(u, "flex", 0.72), {
+      alpha: seg(u, 0.38, 0.56),
+      sx: 0.4 + 0.6 * easeOut(seg(u, 0.38, 0.62)),
+      solid: "hsl(324 90% 88%)", solidA: 1 - seg(u, 0.56, 0.84),
+    }),
+    bursts: [
+      { at: 0.56, n: 30, spd: 420, shape: "star", a: "hsl(324 85% 76%)", b: "hsl(0 0% 100%)", grav: 0, add: true, from: "body", dir: "out" },
+      { at: 0.56, n: 16, spd: 260, shape: "dot", a: "hsl(232 80% 66%)", b: "hsl(200 100% 86%)", grav: 0, add: true, from: "body", dir: "out" },
+    ],
+    trickle: { rate: 40, until: 0.56, spd: 0, shape: "star", a: "hsl(324 80% 78%)", b: "hsl(232 90% 80%)", grav: 0, add: true, from: "body", dir: "in", spread: 120, life: 0.6 },
+    back: ({ ctx, x, y, s, u, t }) => {
+      const k = easeOut(seg(u, 0, 0.3)) * (1 - easeIn(seg(u, 0.46, 0.58)));
+      if (k <= 0) return;
+      const cx = x, cy = y - 55 * s;
+      const r = 90 * s * (1 - 0.65 * seg(u, 0.3, 0.56));
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      glow(ctx, cx, cy, r * 1.1, r * 0.5, hsla(258, 70, 40, 0.5 * k), hsla(258, 70, 30, 0));
+      // two spiral arms of stars, one pink and one blue
+      for (let arm = 0; arm < 2; arm++) {
+        for (let i = 0; i < 26; i++) {
+          const d = i / 25;
+          const a = t * (5 + 6 * seg(u, 0.2, 0.56)) + arm * Math.PI + d * 5.2;
+          const px = cx + Math.cos(a) * r * d, py = cy + Math.sin(a) * r * d * 0.42;
+          ctx.fillStyle = arm ? hsla(232, 90, 76, (1 - d * 0.6) * k) : hsla(324, 90, 80, (1 - d * 0.6) * k);
+          const sz = (2.6 - d * 1.4) * s;
+          ctx.fillRect(px - sz / 2, py - sz / 2, sz, sz);
+        }
+      }
+      glow(ctx, cx, cy, 16 * s, 12 * s, hsla(48, 100, 90, 0.9 * k), hsla(324, 100, 80, 0));
+      ctx.restore();
+    },
+  },
   // ----- quest fighters -----
   // Parallax: a thin cut opens in the air, peels wide into a pane of open space, he steps out unfolding,
   // and the pane folds shut behind him into a spinning cube that snaps away.
@@ -1398,6 +1435,59 @@ export const INTROS: Record<Power, IntroSpec> = {
       }
       // the low sun-coloured haze it drags with it
       glow(ctx, cx, ground - tall * 0.4, 70 * s, tall * 0.6, hsla(26, 100, 60, 0.22 * fade), hsla(26, 100, 60, 0));
+      ctx.restore();
+    },
+  },
+
+  // Past Riftmaker: a warm rift splits open down the air, edged in gold, he steps through it with his scarf
+  // streaming after him, and it zips shut behind him in a scatter of stars.
+  pastrift: {
+    len: 1.8, hit: 0.5, shake: 8, wave: ["hsl(40 100% 62%)", "hsl(298 80% 66%)"],
+    body: (u) => base(u < 0.5 ? "guard" : settle(u, "flex", 0.7), {
+      alpha: seg(u, 0.32, 0.5),
+      sx: 0.2 + 0.8 * easeOut(seg(u, 0.32, 0.58)),
+      solid: "hsl(44 100% 80%)", solidA: 1 - seg(u, 0.5, 0.8),
+    }),
+    bursts: [
+      { at: 0.5, n: 26, spd: 420, shape: "star", a: "hsl(40 100% 64%)", b: "hsl(0 0% 100%)", grav: 0, add: true, from: "body", dir: "out" },
+      { at: 0.72, n: 18, spd: 360, shape: "shard", a: "hsl(298 80% 72%)", b: "hsl(44 100% 84%)", grav: 400, add: false, from: "body", dir: "out" },
+    ],
+    trickle: { rate: 30, until: 0.5, spd: 0, shape: "star", a: "hsl(40 100% 66%)", b: "hsl(298 80% 78%)", grav: 0, add: true, from: "body", dir: "in", spread: 120, life: 0.6 },
+    back: ({ ctx, x, y, s, u, t }) => {
+      const w = 40 * s * easeOut(seg(u, 0.04, 0.32)) * (1 - easeIn(seg(u, 0.58, 0.74)));
+      if (w < 0.5) return;
+      const top = y - 180 * s, bot = y + 2;
+      ctx.save();
+      // the rift: a lens of a bright dawn sky, still warm, before anything went wrong
+      ctx.beginPath();
+      ctx.moveTo(x, top);
+      for (let i = 1; i < 12; i++) {
+        const k = i / 12;
+        ctx.lineTo(x - w * Math.sin(k * Math.PI) + wob(i * 1.7) * 5 * s, top + (bot - top) * k);
+      }
+      ctx.lineTo(x, bot);
+      for (let i = 11; i >= 1; i--) {
+        const k = i / 12;
+        ctx.lineTo(x + w * Math.sin(k * Math.PI) + wob(i * 2.9) * 5 * s, top + (bot - top) * k);
+      }
+      ctx.closePath();
+      const g = ctx.createLinearGradient(0, top, 0, bot);
+      g.addColorStop(0, "hsl(280 60% 30%)");
+      g.addColorStop(0.55, "hsl(320 70% 52%)");
+      g.addColorStop(1, "hsl(38 100% 60%)");
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.shadowColor = "hsl(40 100% 60%)";
+      ctx.shadowBlur = 16 * s;
+      ctx.strokeStyle = "hsl(44 100% 78%)";
+      ctx.lineWidth = 3 * s;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "hsl(0 0% 100% / 0.85)";
+      for (let i = 0; i < 12; i++) {
+        const k = (i * 0.41 + t * 0.2) % 1;
+        ctx.fillRect(x + wob(i * 4.3) * w * 0.5, top + (bot - top) * k, 2 * s, 2 * s);
+      }
       ctx.restore();
     },
   },

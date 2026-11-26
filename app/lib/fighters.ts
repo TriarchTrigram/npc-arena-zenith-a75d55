@@ -1,4 +1,4 @@
-// The 16 fighters, the 9 quest fighters, the 3 new-generation fighters and their power moves. Shared by the arena engine and the Fighters page.
+// The 17 fighters, the 10 quest fighters, the 3 new-generation fighters and their power moves. Shared by the arena engine and the Fighters page.
 import { BOSSES, type BossId } from "./bosses";
 import {
   OWN_BURSTS, OWN_GLYPHS, OWN_MOTIONS, OWN_TRAILS, designLook,
@@ -7,9 +7,9 @@ import {
 
 export type Power =
   | "pyro" | "cryo" | "electro" | "terra" | "aero" | "hydro" | "umbra" | "lux"
-  | "gravi" | "tele" | "vita" | "toxi" | "chrono" | "magneto" | "psy" | "shift"
+  | "gravi" | "tele" | "vita" | "toxi" | "chrono" | "magneto" | "psy" | "shift" | "nova"
   // quest fighters, earned on the Quests page
-  | "spatio" | "hexizon" | "gamma" | "velo" | "portal" | "sono" | "paper" | "crys" | "sand"
+  | "spatio" | "hexizon" | "gamma" | "velo" | "portal" | "sono" | "paper" | "crys" | "sand" | "pastrift"
   // new generation, a chance to join after any Story boss win
   | "plasma" | "flora" | "chaos";
 
@@ -334,6 +334,17 @@ export const FIGHTERS: FighterDef[] = [
       M({ id: "slime-shot", name: "Slime Shot", kind: "projectile", anim: "thrust", range: 500, minRange: 80, cd: 2, dmg: 8, speed: 480, size: 12, arc: true, status: "slow", statusDur: 1.5 }),
     ],
   },
+  {
+    id: "nova", name: "Nova", power: "Cosmic Manipulation", role: "control",
+    ability: "Shapes the cosmos: stardust fists, comets, nebula clouds and orbits that drag enemies in. She was the Riftmaker's best friend before the Axiom corrupted him. Pyro was his friend too, and after it happened he came by every day to make sure she was okay.",
+    color: "hsl(232 58% 54%)", glow: "hsl(324 72% 74%)", hp: 100, speed: 92,
+    moves: [
+      M({ id: "stardust-strike", name: "Stardust Strike", kind: "melee", anim: "thrust", range: 74, cd: 0.9, dmg: 8, kb: 190 }),
+      M({ id: "comet-shot", name: "Comet Shot", kind: "projectile", anim: "cast", range: 580, minRange: 80, cd: 1.9, dmg: 9, speed: 600, size: 12, shape: "orb", kb: 160 }),
+      M({ id: "nebula-cloud", name: "Nebula Cloud", kind: "zone", anim: "raise", range: 420, cd: 6.5, dmg: 4, radius: 115, dur: 3.5, status: "blind", statusDur: 0.6, wind: 0.3 }),
+      M({ id: "orbit-snare", name: "Orbit Snare", kind: "pull", anim: "cast", range: 430, minRange: 100, cd: 3.2, dmg: 8, status: "stun", statusDur: 0.3 }),
+    ],
+  },
 ];
 
 // ---------- Quest fighters ----------
@@ -512,6 +523,25 @@ export const QUESTERS: FighterDef[] = [
       M({ id: "dune-surf", name: "Dune Surf", kind: "dash", anim: "lunge", range: 360, cd: 3.4, dmg: 13, dist: 360, act: 0.22, kb: 340, lift: -180 }),
     ],
   },
+  {
+    id: "pastrift", name: "Past Riftmaker", power: "Reality Warping", role: "trickster",
+    ability: "The Riftmaker as he was before the Axiom corrupted him: bright, quick and still on your side. He folds space to step anywhere, tears small rifts open to rain stars through and flips the floor out from under his enemies. Nova was his best friend, and Pyro his friend too.",
+    color: "hsl(298 76% 58%)", glow: "hsl(40 100% 58%)", hp: 300, speed: 112,
+    moves: [
+      M({ id: "rift-jab", name: "Rift Jab", kind: "melee", anim: "jab", range: 76, cd: 0.8, dmg: 10, kb: 240 }),
+      M({ id: "scarf-lash", name: "Scarf Lash", kind: "melee", anim: "spin", range: 140, minRange: 30, cd: 1.3, dmg: 12, kb: 300, lift: -260 }),
+      M({ id: "mirror-bolt", name: "Mirror Bolt", kind: "projectile", anim: "cast", range: 580, minRange: 80, cd: 2, dmg: 5, speed: 700, size: 9, count: 3, spread: 0.14, shape: "shard" }),
+      M({ id: "reality-seam", name: "Reality Seam", kind: "beam", anim: "thrust", range: 560, minRange: 70, cd: 3, dmg: 15, act: 0.3, kb: 220, wind: 0.28 }),
+      M({ id: "rift-step", name: "Rift Step", kind: "blink", anim: "uppercut", range: 620, minRange: 110, cd: 3, dmg: 13, lift: -520, kb: 180 }),
+      M({ id: "warp-rush", name: "Warp Rush", kind: "dash", anim: "lunge", range: 360, cd: 3.4, dmg: 13, dist: 360, act: 0.22, kb: 340, lift: -160 }),
+      M({ id: "floor-flip", name: "Floor Flip", kind: "eruption", anim: "slam", range: 500, minRange: 40, cd: 4.4, dmg: 14, radius: 50, lift: -760, wind: 0.32 }),
+      M({ id: "starfall-rift", name: "Starfall Rift", kind: "rain", anim: "raise", range: 540, cd: 5.5, dmg: 7, count: 7, radius: 160, wind: 0.32 }),
+      M({ id: "pocket-world", name: "Pocket World", kind: "zone", anim: "raise", range: 420, cd: 8, dmg: 5, radius: 125, dur: 3.5, pullIn: 220, status: "slow", statusDur: 0.6, wind: 0.32 }),
+      M({ id: "unfold", name: "Unfold", kind: "burst", anim: "slam", range: 150, cd: 5.5, dmg: 15, radius: 170, kb: 480, lift: -300, wind: 0.28 }),
+      M({ id: "rift-hook", name: "Rift Hook", kind: "pull", anim: "cast", range: 460, minRange: 110, cd: 3.6, dmg: 10, status: "stun", statusDur: 0.35 }),
+      M({ id: "undo", name: "Undo", kind: "heal", anim: "raise", range: 2000, cd: 12, dmg: 0, heal: 22, below: 0.55, wind: 0.34, rec: 0.3 }),
+    ],
+  },
   // ----- New generation: young fighters with a chance to join after any Story boss win (app/lib/quests.ts) -----
   {
     id: "plasma", name: "Volta", power: "Plasma Manipulation", role: "attacker",
@@ -590,6 +620,7 @@ const WINGS: Record<Power, Wing> = {
   magneto: { word: "Iron", shape: "shard", status: "stun", statusDur: 0.2 },
   psy: { word: "Mind", shape: "disc", status: "stun", statusDur: 0.25 },
   shift: { word: "Morph", shape: "blade", status: "slow", statusDur: 1 },
+  nova: { word: "Cosmic", shape: "orb", status: "blind", statusDur: 0.8 },
   spatio: { word: "Rift", shape: "shard", status: "slow", statusDur: 1 },
   hexizon: { word: "Bone", shape: "blade", status: "poison", statusDur: 1.5 },
   gamma: { word: "Gamma", shape: "orb", status: "poison", statusDur: 1.5 },
@@ -599,6 +630,7 @@ const WINGS: Record<Power, Wing> = {
   paper: { word: "Paper", shape: "blade", heal: 10 },
   crys: { word: "Crystal", shape: "shard", status: "slow", statusDur: 1 },
   sand: { word: "Dune", shape: "rock", status: "blind", statusDur: 0.8 },
+  pastrift: { word: "Rift", shape: "shard", status: "slow", statusDur: 0.8 },
   plasma: { word: "Plasma", shape: "orb", status: "burn", statusDur: 1.5 },
   flora: { word: "Thorn", shape: "shard", status: "poison", statusDur: 2, heal: 8 },
   chaos: { word: "Chaos", shape: "shard", status: "stun", statusDur: 0.15 },

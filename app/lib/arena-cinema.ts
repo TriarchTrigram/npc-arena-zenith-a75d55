@@ -473,6 +473,30 @@ const MARKS: Partial<Record<Power, MarkDraw>> = {
       ctx.fillRect((r() * 2 - 1) * m.w * 0.9, -r() * 3, 2, 2);
     }
   },
+  nova: (ctx, m, k, r) => {
+    // a faint pool of nebula with a few stars still twinkling in it
+    pool(ctx, m.w, withA(m.a, 0.3 * k), withA(m.a, 0));
+    for (let i = 0; i < 7; i++) {
+      const x = (r() * 2 - 1) * m.w * 0.7, y = -r() * 4, sz = 1.5 + r() * 2;
+      ctx.fillStyle = withA(i % 3 === 0 ? m.a : m.b, 0.85 * k);
+      ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz);
+    }
+  },
+  pastrift: (ctx, m, k, r) => {
+    // a thin seam in the floor where space was folded, glowing gold, with a few stars caught along it
+    flat(ctx, () => {
+      ctx.strokeStyle = withA(m.b, 0.8 * k);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-m.w * 0.55, 0);
+      for (let i = 1; i <= 6; i++) ctx.lineTo(-m.w * 0.55 + (m.w * 1.1 * i) / 6, (r() - 0.5) * m.w * 0.12);
+      ctx.stroke();
+    });
+    for (let i = 0; i < 6; i++) {
+      ctx.fillStyle = withA(i % 2 ? m.a : m.b, 0.85 * k);
+      ctx.fillRect((r() * 2 - 1) * m.w * 0.55, -r() * 3, 2, 2);
+    }
+  },
   plasma: (ctx, m, k, r) => {
     // a scorch with a few arcs of plasma still crackling across it
     pool(ctx, m.w, withA(m.a, 0.3 * k), withA(m.a, 0));
