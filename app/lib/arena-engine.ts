@@ -2975,7 +2975,7 @@ export function buildBackdrop(): HTMLCanvasElement {
   ctx.fillStyle = v;
   ctx.fillRect(0, 0, W, H);
   // clouds drift over the colosseum while a little confetti falls from the stands
-  return setAir(c, { clouds: "hsl(0 0% 100%)", motes: "confetti", amount: 0.8 });
+  return setAir(c, { clouds: "hsl(0 0% 100%)", motes: "confetti", amount: 1 });
 }
 
 function limb(ctx: CanvasRenderingContext2D, pts: { x: number; y: number }[], col: string, w: number, flash: boolean, ink = INK) {
@@ -4354,7 +4354,7 @@ function drawAir(ctx: CanvasRenderingContext2D, air: Air) {
     const puff = airSprite(`cloud:${col}`, 260, 90, (c) => {
       for (const [x, y, rx, ry] of [[130, 52, 110, 26], [92, 40, 52, 30], [160, 34, 60, 30], [200, 54, 46, 20]] as const) {
         const gr = c.createRadialGradient(x, y, 0, x, y, rx);
-        gr.addColorStop(0, withAlpha(col, 0.55));
+        gr.addColorStop(0, withAlpha(col, 0.75));
         gr.addColorStop(1, withAlpha(col, 0));
         c.fillStyle = gr;
         c.save();
@@ -4370,8 +4370,8 @@ function drawAir(ctx: CanvasRenderingContext2D, air: Air) {
       const s = 0.6 + hash(i, 4) * 0.7;
       const span = W + 300 * s;
       const x = ((hash(i, 5) * span + t * (6 + hash(i, 6) * 10)) % span) - 260 * s;
-      const y = 30 + hash(i, 7) * 170;
-      ctx.globalAlpha = 0.5 + hash(i, 8) * 0.4;
+      const y = 30 + hash(i, 7) * 220;
+      ctx.globalAlpha = 0.65 + hash(i, 8) * 0.35;
       ctx.drawImage(puff, x, y, 260 * s, 90 * s);
     }
     ctx.globalAlpha = 1;
@@ -4459,12 +4459,12 @@ function drawAir(ctx: CanvasRenderingContext2D, air: Air) {
       } else if (kind === "confetti") {
         const cols = ["hsl(14 92% 58%)", "hsl(198 88% 58%)", "hsl(50 96% 58%)", "hsl(140 58% 50%)", "hsl(274 58% 60%)"];
         ctx.fillStyle = cols[i % cols.length];
-        ctx.globalAlpha = 0.8;
+        ctx.globalAlpha = 0.9;
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(t * (2 + b * 3) + i);
         ctx.scale(1, Math.sin(t * 4 + i));
-        ctx.fillRect(-3, -2, 6, 4);
+        ctx.fillRect(-5, -3, 10, 6);
         ctx.restore();
         ctx.globalAlpha = 1;
       } else {
