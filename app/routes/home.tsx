@@ -613,7 +613,7 @@ export default function Home() {
 
   return (
     <PageContainer>
-      <nav className="mb-6 flex items-center gap-1 sm:gap-2">
+      <nav className="mb-6 flex items-center gap-1 sm:gap-2 max-sm:[&>:not(:first-child)]:px-1.5">
         {(screen === "arena" && !fighting && !tourLive) || screen === "free" ? (
           <button
             type="button"
