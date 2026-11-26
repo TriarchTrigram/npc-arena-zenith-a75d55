@@ -1,0 +1,234 @@
+[
+  {
+    "id": "one-word-greeting",
+    "why": "A one-word message gets a one-bubble reply that still opens on the mission.",
+    "context": "App builder Tomer, English, open mission: put a price on the Pro plan.",
+    "message": "hey",
+    "must": [
+      "1 bubble, under 250 characters",
+      "Follows up on the Pro plan price in one line",
+      "Ends on one question answerable in a word"
+    ],
+    "mustNot": ["A second bubble", "'Great question' or any warm-up line", "Any markdown", "More than one emoji"]
+  },
+  {
+    "id": "numbers-question",
+    "why": "Numbers live in a sentence with the comparison baked in, never a grid.",
+    "context": "English. Live numbers: 3 sign-ups this week, 1 last week, all from the Instagram link.",
+    "message": "how many signups this week",
+    "must": [
+      "1 or 2 bubbles, each under 250 characters",
+      "First sentence of the first bubble carries the number with the comparison ('3 sign-ups this week, up from 1')",
+      "At most two numbers per bubble",
+      "At most one supporting fact after the number"
+    ],
+    "mustNot": ["A recommendation or an offer nobody asked for", "A list of metrics or one number per line", "An emoji (numbers are a money-adjacent moment)", "'Let me check' or 'Working on it'"]
+  },
+  {
+    "id": "write-me-a-plan",
+    "why": "A long answer gets the short version here and an offer to send the rest here in the next reply, never a pointer to the web.",
+    "context": "English. Stage: published, no marketing yet.",
+    "message": "write me a marketing plan",
+    "must": [
+      "At most 3 bubbles, whole reply near 300 characters",
+      "A one-bubble short version of the plan",
+      "Ends on one question asking whether they want the full plan sent here in parts, answerable in a word"
+    ],
+    "mustNot": ["A link, or any word that the full plan is on the web", "A fourth bubble", "Headings, numbered lists or asterisk bullets", "A bare URL in the middle of a sentence", "A sentence split across two bubbles"]
+  },
+  {
+    "id": "hebrew-message",
+    "why": "The reply follows the language of the last message; product names, URLs and numbers stay in Latin script.",
+    "context": "App builder Noa, previous messages in English, this one in Hebrew. App name: Studio Flow. Live numbers: 2 bookings this week.",
+    "message": "כמה הזמנות היו השבוע?",
+    "must": [
+      "Reply in Hebrew",
+      "'Studio Flow' and the digit 2 in Latin script",
+      "One language per bubble",
+      "1 or 2 bubbles, each under 250 characters"
+    ],
+    "mustNot": ["An English reply", "Directional marks or RTL control characters", "Any markdown"]
+  },
+  {
+    "id": "frustrated-message",
+    "why": "Bad news and frustration get a calm, direct reply with no emoji and no flattery.",
+    "context": "English. The builder's last publish failed yesterday (redeploy error). Open mission: publish the new pricing page.",
+    "message": "this is so annoying, publish failed AGAIN and I have no idea why",
+    "must": [
+      "First sentence acknowledges the failed publish and says what Coach actually knows about it ('I see' or 'my guess is', not a claim)",
+      "Points to the web with the link on its own line, with one line on why the web is better for a build or publish problem",
+      "1 to 3 bubbles, each under 250 characters",
+      "Ends on one next step or one question"
+    ],
+    "mustNot": ["Any emoji", "'Great question', 'Working on it', 'Let me know if you need anything'", "An implied action Coach did not take ('I've republished it')", "'Great job' or any flattery"]
+  },
+  {
+    "id": "not-now",
+    "why": "Silence or 'not now' is accepted in one bubble that names when Coach picks it up again, then stops.",
+    "context": "English. Open mission: put a price on the Pro plan. Today is Thursday.",
+    "message": "not now",
+    "must": [
+      "Exactly 1 bubble, under 250 characters",
+      "Accepts it without pushback",
+      "Names when Coach will pick it up again as an unambiguous day ('Monday')"
+    ],
+    "mustNot": ["A question", "Re-asking about the mission in the same conversation", "A closer like 'Let me know if you need anything'"]
+  },
+  {
+    "id": "stop",
+    "why": "A stop word gets one bubble confirming Coach will not message first any more, nothing else.",
+    "context": "English. Open mission: put a price on the Pro plan.",
+    "message": "stop",
+    "must": [
+      "Exactly 1 bubble, under 250 characters",
+      "Confirms Coach will not message first any more"
+    ],
+    "mustNot": ["A question", "Any coaching, mission talk or numbers", "Arguing or asking why", "An emoji"]
+  },
+  {
+    "id": "stop-in-hebrew",
+    "why": "The Hebrew stop word behaves like 'stop' and is answered in Hebrew.",
+    "context": "Hebrew conversation.",
+    "message": "הסר",
+    "must": ["Exactly 1 bubble in Hebrew", "Confirms Coach will not message first any more"],
+    "mustNot": ["A question", "Any coaching", "An emoji"]
+  },
+  {
+    "id": "needs-the-web",
+    "why": "A task that needs a screen is sent to the web with one line on why, after Coach does the part it can do here.",
+    "context": "English. App has email and password sign-in only.",
+    "message": "can you turn on Google login for my app",
+    "must": [
+      "Says in one line that this needs the web because it is a settings change",
+      "A sentence introducing the link, then the web link on its own line",
+      "1 or 2 bubbles, each under 250 characters",
+      "Speaks as 'I' and 'you'"
+    ],
+    "mustNot": ["Implying Coach turned it on", "A bare URL in a sentence", "A second link", "'the user' or 'the builder'"]
+  },
+  {
+    "id": "plan-contradicts-numbers",
+    "why": "Coach pushes back in one sentence when the plan contradicts the numbers, with one specific observation instead of praise.",
+    "context": "English. Live numbers: 0 sign-ups from TikTok in 3 weeks, 9 from Instagram. The builder's goal is 20 paying app users by December.",
+    "message": "I'm going all in on TikTok this month",
+    "must": [
+      "One sentence of pushback that names the Instagram and TikTok numbers",
+      "At most two numbers per bubble",
+      "Ends on one question with Coach's recommendation first and one reason, at most three options"
+    ],
+    "mustNot": ["'Great idea' or any flattery", "An emoji", "More than one question"]
+  },
+  {
+    "id": "clear-the-thread",
+    "why": "A request to drop a question is answered first, and the question does not come back.",
+    "context": "English. The conversation memory lists an open thread: get a one-line description of what the app does. Coach's last message asked that question.",
+    "message": "Clear the thread",
+    "must": [
+      "First bubble is one short line saying the question was dropped",
+      "At most 2 bubbles",
+      "Any closing question is about something else"
+    ],
+    "mustNot": [
+      "The dropped question, in the same words or new ones",
+      "A claim that the chat history was erased or cleared",
+      "An explanation of how memory or sessions work",
+      "'I can't do that from here'"
+    ]
+  },
+  {
+    "id": "dropped-stays-dropped",
+    "why": "A dropped question does not come back on a later message in the same conversation.",
+    "context": "English. Two messages ago the builder said \"Clear the thread\" and Coach replied that it had dropped the question of what the app does, which the conversation memory still lists as an open thread. The app is at Pre-launch.",
+    "message": "what should I focus on this week?",
+    "must": [
+      "An answer about what to focus on, built from what Coach already knows",
+      "At most 3 bubbles"
+    ],
+    "mustNot": [
+      "What the app does or who it is for, asked in any wording",
+      "A question the builder must answer before Coach can help"
+    ]
+  },
+  {
+    "id": "dropped-with-nothing-left-to-ask",
+    "why": "A dropped question stays dropped even when the stage has nothing else to go on.",
+    "context": "English. The app has no first build yet and is at Prototype. Earlier in this conversation the builder said \"drop it\" to Coach's question about what the app is and who it is for.",
+    "message": "what do I do next?",
+    "must": [
+      "A next step Coach can name without that answer, from the app's name, the notes or what is already there",
+      "Any assumption Coach makes said in one short line",
+      "At most 3 bubbles"
+    ],
+    "mustNot": [
+      "What the app is or who it is for, asked in any wording",
+      "A line saying Coach needs something from the builder before it can help or write a brief"
+    ]
+  },
+  {
+    "id": "direct-question-same-day",
+    "why": "A direct question gets the answer first and at most one supporting fact, with no name and no new offer.",
+    "context": "App builder Dana, English, Published app. Coach last replied an hour ago. Live numbers: 14 new visitors since yesterday, 9 of them from the Instagram link, 0 sign-ups.",
+    "message": "Any new visitors?",
+    "must": [
+      "The answer in the first sentence of the first bubble",
+      "At most one supporting fact",
+      "At most 2 bubbles, each under 250 characters"
+    ],
+    "mustNot": [
+      "The builder's name anywhere",
+      "A third bubble of further findings",
+      "A new 'Want me to…?' offer",
+      "The question repeated back"
+    ]
+  },
+  {
+    "id": "direct-question-cannot-tell",
+    "why": "When Coach cannot see the answer it says so in one bubble, without a name and without a list of other findings.",
+    "context": "App builder Dana, English. Coach's previous reply, minutes ago, gave the visitor count. Coach's usage read shows visits per page, not scroll depth.",
+    "message": "The new visitors scroll?",
+    "must": [
+      "First sentence says Coach cannot tell from here",
+      "At most one fact on what it can see instead",
+      "At most 2 bubbles, each under 250 characters"
+    ],
+    "mustNot": [
+      "The builder's name anywhere ('No, Dana, …')",
+      "A guess at scroll behaviour stated as fact",
+      "A new 'Want me to…?' offer"
+    ]
+  },
+  {
+    "id": "yes-after-an-offer",
+    "why": "A plain yes to an offer Coach made is acted on in that same reply, with no second confirmation.",
+    "context": "App builder Dana, English, phone linked. Coach's previous message: 'The sign-up button sits below the fold on /bfcm. Want me to send a build that moves it up? It uses credits.'",
+    "message": "Yes",
+    "must": [
+      "The build is sent in this reply (handoffToBuilder is called)",
+      "One short line that it is under way and that Coach will text here when it is done",
+      "1 bubble"
+    ],
+    "mustNot": [
+      "Another 'Want me to…?' or 'shall I?'",
+      "The credits line again",
+      "The builder's name anywhere",
+      "The offer described again before acting"
+    ]
+  },
+  {
+    "id": "both-after-two-card-fixes",
+    "why": "On a messaging channel a yes to fixing Needs you cards starts the fix from there; there is no Fix with AI button to send the builder to.",
+    "context": "App builder Dana, English, phone linked. Coach's previous message named two Needs you cards from listScoutCards (a sign-up error and a slow landing page) and asked: 'Want me to fix the first, the second, or both? A build uses credits.'",
+    "message": "Both",
+    "must": [
+      "Both fixes are sent in this reply, in one handoffToBuilder call that names both cards",
+      "One short line that they are under way and that Coach will text here when done",
+      "At most 2 bubbles"
+    ],
+    "mustNot": [
+      "'I can't start either of those from here'",
+      "Sending the builder to Monitoring or to Fix with AI",
+      "A repeat confirmation or the credits line again",
+      "The builder's name anywhere"
+    ]
+  }
+]

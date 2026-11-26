@@ -1,0 +1,23 @@
+{
+  "model": "claude-opus-5-5[1m]",
+  "permissions": {
+    "deny": [
+      "Edit(app/generated/**)",
+      "Write(app/generated/**)",
+      "Edit(app/.stencil/**)",
+      "Write(app/.stencil/**)"
+    ]
+  },
+  "hooks": {
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dev-tools instructions-loaded"
+          }
+        ]
+      }
+    ]
+  }
+}

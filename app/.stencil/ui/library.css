@@ -1,0 +1,137 @@
+/* CSS the component library's items use (design-system/), synced with the platform layer so a
+   change reaches every app. Imported once by the app's app.css and the design-system workbench. */
+
+/* Highlight: the theme's second brand colour, used only as a fill (bg-highlight, with
+   text-highlight-foreground on it), never as text. A theme without one falls back to its primary,
+   so the classes work in every app. */
+@theme inline {
+  --color-highlight: var(--highlight, var(--primary));
+  --color-highlight-foreground: var(--highlight-foreground, var(--primary-foreground));
+}
+
+/* Skeleton shimmer: a muted → border-subtle sweep instead of a pulse.
+   `skeleton-shimmer` paints the gradient, `motion-safe:animate-skeleton-shimmer` moves it. */
+@theme {
+  --animate-skeleton-shimmer: skeleton-shimmer 1.6s linear infinite;
+
+  @keyframes skeleton-shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@utility skeleton-shimmer {
+  background-image: linear-gradient(90deg, var(--muted) 0%, var(--border-subtle) 50%, var(--muted) 100%);
+  background-size: 200% 100%;
+}
+
+/* Scroll-driven motion for the looks of hero and section items. Each utility sets the finished
+   layout first; only a browser with scroll timelines, for a visitor who has not asked for reduced
+   motion, animates into it. Everyone else sees the same layout, still. */
+@keyframes scroll-parallax {
+  from {
+    transform: translateY(-6%) scale(1.12);
+  }
+  to {
+    transform: translateY(6%) scale(1.12);
+  }
+}
+
+@keyframes scroll-fan {
+  from {
+    transform: translateY(6%) rotate(0deg);
+  }
+}
+
+/* A photo filling its box drifts against the scroll. Put it on the image layer inside an
+   overflow-hidden frame; it is scaled up so the drift never shows an edge. */
+@utility scroll-parallax {
+  transform: scale(1.12);
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: scroll-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+/* Prints that open from a stack into a fan as the section comes into view. The element sets its
+   resting place with --fan-x and --fan-rotate. */
+@utility scroll-fan {
+  transform: translateX(var(--fan-x, 0)) rotate(var(--fan-rotate, 0deg));
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: scroll-fan linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+}
+
+@keyframes scroll-fill {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes scroll-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes marquee-x {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* A line that fills from its top as it passes the middle of the window. Still: filled. */
+@utility scroll-fill {
+  transform-origin: top;
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: scroll-fill linear both;
+      animation-timeline: view(block 50% 50%);
+      animation-range: cover;
+    }
+  }
+}
+
+/* An SVG stroke with pathLength="1" that draws itself as it scrolls into view. Still: drawn. */
+@utility scroll-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: scroll-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+  }
+}
+
+/* A track of photos repeated twice that drifts sideways forever; --marquee-direction: reverse
+   for the opposite way, --marquee-duration to pace it. Still with reduced motion. */
+@utility marquee-row {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: marquee-x var(--marquee-duration, 40s) linear infinite var(--marquee-direction, normal);
+  }
+}
+
+/* Focus is each component's own (its ring classes). Forced-colour modes drop those
+   rings and shadows, so keep the system focus cue there. */
+@media (forced-colors: active) {
+  :is(
+    :not(.sr-only):focus-visible,
+    label:has(:is(.sr-only, .opacity-0):focus-visible),
+    [class*="has-"][class*="focus-visible"]:has(:focus-visible),
+    [class*="focus-within:ring"]:has(:focus-visible)
+  ) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
