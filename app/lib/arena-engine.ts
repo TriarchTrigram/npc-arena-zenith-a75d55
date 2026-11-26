@@ -1820,6 +1820,18 @@ function prePose(f: Fighter, pose: PrePose, t: number, gt: number): Pose {
     case "flick": return { ...st, t: -0.1, aF1: 0.55, aF2: 0.35, aB1: 2.6, aB2: 3.9 };
     case "flex": return FLEX;
     case "crouch": return CROUCH;
+    // arms crossed over the chest, leaning back a touch
+    case "fold": return { ...st, t: -0.06, aF1: 0.7, aF2: 2.45, aB1: 0.85, aB2: 2.3 };
+    // front hand held out palm up, fingers curling: come on, then
+    case "beckon": return { ...st, t: 0.06, aF1: 1.35, aF2: 2.1 + Math.sin(t * 9) * 0.4, aB1: -0.3, aB2: 0.1 };
+    // both arms up, power rising
+    case "raise": return { ...st, t: -0.1, aF1: 2.7 + Math.sin(t * 6) * 0.08, aF2: 3.0, aB1: 3.5 - Math.sin(t * 6) * 0.08, aB2: 3.25 };
+    // a slow bow, arms low
+    case "bow": return { ...st, t: 0.72, aF1: 0.35, aF2: 0.15, aB1: -0.25, aB2: -0.1 };
+    // palms up, both arms out to the sides
+    case "shrug": return { ...st, t: -0.08, aF1: 0.95, aF2: 2.15, aB1: -0.95, aB2: -2.15 };
+    // head thrown back, hands on hips, shaking with it
+    case "laugh": return { ...st, t: -0.28 + Math.sin(t * 18) * 0.05, aF1: 0.55, aF2: -0.55, aB1: -0.55, aB2: 0.55 };
     default: return idlePose(f, gt);
   }
 }
