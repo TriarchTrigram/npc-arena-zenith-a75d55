@@ -5,12 +5,15 @@ import { stencilEventRoutes } from "./.stencil/react-router/events/routes";
 import { stencilAgentRoutes } from "./.stencil/react-router/agents/routes";
 import { stencilLocaleRoutes } from "./.stencil/react-router/locale/routes";
 import { stencilWaitlistRoutes } from "./.stencil/react-router/waitlist/routes";
-import { stencilFormGuardRoutes } from "./.stencil/react-router/form-guard/routes";
 
 export default [
   index("routes/home.tsx"),
-  // The signed-in shell. An app nobody signs into drops this line and deletes the file.
-  route("app", "routes/app.tsx"),
+  route("roster", "routes/roster.tsx"),
+  route("quests", "routes/quests.tsx"),
+  // The character creator's "Your own power": the AI designs a power someone typed in.
+  route("api/own-power", "routes/api.own-power.tsx"),
+  // Progress codes: save this browser's progress under a code, or load a code's progress back.
+  route("api/progress-code", "routes/api.progress-code.tsx"),
   // Trusted route the platform calls to run recurring actions (bearer-gated).
   // Keep it registered at this path.
   route("api/internal/scheduled", "routes/api.internal.scheduled.tsx"),
@@ -34,8 +37,6 @@ export default [
   ...stencilLocaleRoutes,
   // Stencil waitlist route pack (where <WaitlistForm> sends an email sign-up).
   ...stencilWaitlistRoutes,
-  // Stencil form-guard route pack (where <FormGuard> fetches a public form's bot-check token).
-  ...stencilFormGuardRoutes,
   // LAST, and it must stay last: it matches every path nothing above did.
   // Redirects the pages the dispatcher owns and 404s for everything else.
   route("*", ".stencil/react-router/catch-all/route.tsx"),

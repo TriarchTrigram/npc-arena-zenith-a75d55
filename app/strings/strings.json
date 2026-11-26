@@ -1,19 +1,1995 @@
 {
-  "home": {
-    "title": "Hello World",
-    "cta": "Go to app"
-  },
-  "app": {
-    "greeting": "Welcome, {{name}}",
-    "signOut": "Sign out"
-  },
-  "platform": {
-    "updateNotice": {
-      "message": "A new version of this app is available.",
-      "action": "Refresh"
+  "arena": {
+    "eyebrow": "Watch the powers clash",
+    "title": "The arena",
+    "subtitle": "Pick your fighters, press Start and watch them battle it out on their own.",
+    "mode": {
+      "label": "Mode",
+      "story": "Story",
+      "duel": "Duel",
+      "ffa": "Free for all",
+      "teams": "Teams",
+      "tournament": "Tournament",
+      "teamTournament": "Team Tournament",
+      "juggernaut": "Juggernaut"
     },
-    "languageSwitcher": {
-      "label": "Language"
+    "pick": {
+      "title": "Fighters",
+      "duelHint": "Pick exactly 2 fighters.",
+      "ffaHint": "Pick 3 to 16 fighters.",
+      "count": "{{count}} picked",
+      "all": "Select all",
+      "clear": "Clear",
+      "teamsHint": "Pick at least 2 fighters for each team. Fighters join teams in the order you pick them.",
+      "tournamentHint": "Pick 3 to 16 fighters for the bracket.",
+      "lockedHint": "Picks are locked until this tournament ends.",
+      "juggHint": "Pick five challengers to face the juggernaut.",
+      "storyHint": "Pick a stage, then the pair you bring into it.",
+      "teamTourHint": "Teams of {{size}}: pick enough fighters for 3 to {{max}} full teams. Fighters join teams in the order you pick them.",
+      "teamTourLocked": "Picks are locked until this team tournament ends."
+    },
+    "controls": {
+      "start": "Start",
+      "pause": "Pause",
+      "resume": "Resume",
+      "restart": "Restart",
+      "speed": "Speed",
+      "speedAria": "Battle speed",
+      "soundAria": "Sound",
+      "mute": "Mute sound",
+      "unmute": "Turn sound on",
+      "volume": "Volume",
+      "musicAria": "Music",
+      "musicMute": "Mute music",
+      "musicUnmute": "Turn music on",
+      "musicVolume": "Music volume"
+    },
+    "status": {
+      "ready": "Ready",
+      "running": "Fighting",
+      "paused": "Paused",
+      "finished": "Finished"
+    },
+    "canvasAria": "Battle arena",
+    "alive": {
+      "title": "Still standing",
+      "empty": "The battle has not started yet.",
+      "kills": "{{count}} KOs"
+    },
+    "feed": {
+      "title": "Kill feed",
+      "emptyTitle": "No knockouts yet",
+      "emptyBody": "Knockouts show up here as they happen.",
+      "ko": "{{killer}} knocked out {{victim}}",
+      "fell": "{{victim}} went down"
+    },
+    "winner": {
+      "title": "{{name}} wins!",
+      "draw": "Nobody is left standing",
+      "again": "Fight again",
+      "team": "{{team}} team wins!",
+      "match": "{{name}} wins the match",
+      "champion": "{{name}} wins the tournament!",
+      "doubleKo": "Double K.O. This match will be replayed.",
+      "nextMatch": "Next match",
+      "rematch": "Replay match",
+      "newTournament": "New tournament",
+      "juggernaut": "{{name}} the juggernaut wins!",
+      "challengers": "The challengers win!",
+      "stageCleared": "Stage {{n}} cleared!",
+      "chapterCleared": "Chapter {{n}} complete!",
+      "stageLost": "Defeated on stage {{n}}",
+      "nextStage": "Next stage",
+      "tryAgain": "Try again",
+      "changePair": "Change pair",
+      "storyComplete": "Story complete! The Axiom has been rewritten.",
+      "nextChapter": "Next chapter",
+      "dropped": "{{name}} drops to the losers bracket",
+      "knockedOut": "{{name}} is knocked out",
+      "resetNeeded": "{{name}} forces a reset match!",
+      "teamMatch": "{{team}} team wins the match",
+      "teamChampion": "{{team}} team wins the tournament!",
+      "teamDropped": "{{name}} team drops to the losers bracket",
+      "teamKnockedOut": "{{name}} team is knocked out",
+      "teamResetNeeded": "{{name}} team forces a reset match!",
+      "nextBook": "Start Book {{n}}",
+      "book2Complete": "Book 2 complete! The Elder Dark is sealed beyond the stars.",
+      "book3Complete": "Book 3 complete! The Celestials are back in the sky, and the light down here is ours."
+    },
+    "idle": "Press Start to begin the battle",
+    "teams": {
+      "countLabel": "Teams",
+      "shuffle": "Shuffle teams",
+      "name0": "Red",
+      "name1": "Blue",
+      "name2": "Gold",
+      "name3": "Green",
+      "tag": "{{team}} team",
+      "name4": "Purple",
+      "name5": "Orange",
+      "name6": "Teal",
+      "name7": "Pink"
+    },
+    "bracket": {
+      "title": "Bracket",
+      "newBracket": "New bracket",
+      "final": "Final",
+      "semis": "Semifinals",
+      "quarters": "Quarterfinals",
+      "round16": "Round of 16",
+      "bye": "Bye",
+      "tbd": "To be decided",
+      "next": "Up next",
+      "champion": "Champion",
+      "matchOf": "Match {{n}} of {{total}}",
+      "formatLabel": "Format",
+      "single": "Single elimination",
+      "double": "Double elimination",
+      "winners": "Winners bracket",
+      "losers": "Losers bracket",
+      "losersHint": "Lose once in the winners bracket and you drop down here. Lose again and you are out.",
+      "grand": "Grand final",
+      "grandHint": "The winners bracket champion meets the losers bracket champion. If the losers bracket fighter wins, a reset match decides the title.",
+      "winnersFinal": "Winners final",
+      "losersRound": "Round {{n}}",
+      "losersFinal": "Losers final",
+      "grandFinal": "Grand final",
+      "reset": "Reset match"
+    },
+    "idleTournament": "Press Start for the next match",
+    "jugg": {
+      "label": "Juggernaut",
+      "perks": "Flies on wings, has 10 moves and double health.",
+      "badge": "Boss"
+    },
+    "idleStory": "Press Start to begin stage {{n}}",
+    "hybrids": {
+      "title": "Hybrids",
+      "count": "{{count}} saved",
+      "empty": "No hybrids yet. Fuse two fighters and the hybrid shows up here, ready to pick."
+    },
+    "quest": {
+      "title": "Quest fighters",
+      "empty": "Earn quest fighters on the Quests page. Each one is strong enough to take on a Story boss alone.",
+      "link": "See quests"
+    },
+    "bosses": {
+      "title": "Bosses",
+      "count": "{{count}} of {{total}} beaten",
+      "empty": "Beat a Story boss and it joins your roster here, phases and all.",
+      "unlockEyebrow": "Boss defeated",
+      "unlockJoined": "{{name}} has joined your roster. Pick it in any mode except Story."
+    },
+    "teamTour": {
+      "sizeLabel": "Fighters per team",
+      "shuffle": "Shuffle teams",
+      "rosterTitle": "Teams",
+      "members": "{{team}} team: {{names}}"
+    },
+    "newgen": {
+      "title": "New generation",
+      "count": "{{count}} of {{total}} unlocked",
+      "empty": "Beat a Story boss for a 2 in 5 chance that a young new-generation fighter joins you. Young, but just as strong.",
+      "unlockEyebrow": "New generation",
+      "unlockJoined": "{{name}} has joined your roster. Young, and every bit as dangerous as the veterans. Pick them in any mode except Story."
+    },
+    "me": {
+      "title": "Your character",
+      "empty": "You haven't made a character yet. Make one in Free World and it shows up here, ready to pick.",
+      "make": "Go to Free World"
+    }
+  },
+  "title": {
+    "eyebrow": "ONE ARENA. ENDLESS FIGHTING POTENTIAL.",
+    "tagline": "Elemental fighters clash until only one is left standing.",
+    "cta": "Choose how to fight",
+    "nowFighting": "Now fighting",
+    "versus": "vs",
+    "backAria": "Back to the title screen",
+    "modes": {
+      "story": "Three books: the Reign 8, the Elder Dark and the Celestials, with a fused or teamed-up pair.",
+      "duel": "One on one, no distractions.",
+      "ffa": "Everyone in, free for all.",
+      "teams": "Pick sides and fight together.",
+      "tournament": "A bracket, round by round.",
+      "teamTournament": "Teams fight through a bracket together.",
+      "juggernaut": "Five challengers against one boss.",
+      "free": "Hang out in six places and start a fight anywhere."
+    }
+  },
+  "nav": {},
+  "common": {
+    "arena": "Arena",
+    "fighters": "Fighters",
+    "appName": "NPC Arena",
+    "quests": "Quests"
+  },
+  "progressCode": {
+    "open": "Progress code",
+    "title": "Progress code",
+    "intro": "Your quests, Story progress, characters and hybrids are saved in this browser. A progress code keeps a copy you can load back later, on this device or another one.",
+    "yours": {
+      "heading": "Your code",
+      "none": "You don't have a code yet. Make one to keep a copy of your progress so far.",
+      "make": "Make my code",
+      "making": "Making your code…",
+      "copy": "Copy",
+      "copied": "Copied",
+      "keep": "Write it down somewhere safe. Anyone who has this code can load your progress. The copy only changes when you save to it.",
+      "update": "Save my latest progress to this code",
+      "saving": "Saving…",
+      "updated": "Saved. Your code now holds your latest progress."
+    },
+    "load": {
+      "heading": "Load progress",
+      "body": "Type a progress code to bring that progress into this browser.",
+      "label": "Progress code",
+      "button": "Load",
+      "looking": "Checking…",
+      "confirm": "Code {{code}} found. Loading it replaces all the progress in this browser with the progress saved in the code. This browser will then save to that code too.",
+      "yes": "Load this progress",
+      "cancel": "Cancel"
+    },
+    "error": {
+      "wrong": "That code doesn't match any saved progress. Check it and try again.",
+      "tooMany": "Too many tries. Wait a few minutes, then try again.",
+      "busy": "Too many saves in a short time. Wait a few minutes, then try again.",
+      "tooLarge": "This progress is too big to save in a code.",
+      "failed": "Something went wrong. Please try again."
+    }
+  },
+  "roster": {
+    "eyebrow": "The roster",
+    "title": "Meet the 16 fighters",
+    "subtitle": "Every fighter has one power and a set of moves built on it. Pick your favourites in the arena and see who is left standing.",
+    "cta": "Go to the arena",
+    "navLabel": "Main navigation",
+    "sectionAll": "All fighters",
+    "count": "{{count}} fighters",
+    "card": {
+      "power": "Power",
+      "ability": "In the arena",
+      "number": "No. {{n}}",
+      "moves": "Moves ({{count}})",
+      "hybrid": "Hybrid",
+      "form": "Form",
+      "formAt": "Below {{at}}% health",
+      "quest": "Quest fighter",
+      "boss": "Boss",
+      "newgen": "New generation"
+    },
+    "forms": {
+      "title": "Forms",
+      "subtitle": "Pushed low, every fighter breaks into its form once per fight: new colours, new stats and two new moves. Hybrids and bosses don't transform.",
+      "rage": "Hits harder and moves faster.",
+      "perfected": "Pyro only, after Blue Flame.",
+      "awakened": "Slowly heals while fighting.",
+      "mastery": "Slips some hits entirely.",
+      "mystic": "Every hit drains health back.",
+      "nightmare": "Quest fighters: darker, stronger, three new moves. Can't be stunned or frozen.",
+      "surge": "New generation: twelve original moves of their own. Can't be stunned or frozen.",
+      "super": "Turbo only: seven emeralds, golden light and twelve new moves.",
+      "hyper": "Turbo only, after Super Form. Can't be stunned or frozen."
+    },
+    "role": {
+      "attacker": "Attacker",
+      "control": "Control",
+      "tank": "Tank",
+      "support": "Support",
+      "trickster": "Trickster"
+    },
+    "filter": {
+      "label": "Show",
+      "all": "All styles"
+    },
+    "empty": {
+      "title": "No fighters with this style",
+      "body": "Pick another style to see more fighters.",
+      "action": "Show all fighters"
+    },
+    "kind": {
+      "melee": "Close strike",
+      "projectile": "Shot",
+      "beam": "Beam",
+      "burst": "Blast",
+      "dash": "Rush",
+      "eruption": "From the ground",
+      "rain": "From the sky",
+      "blink": "Teleport strike",
+      "heal": "Heal",
+      "zone": "Field",
+      "pull": "Pull",
+      "mimic": "Copy"
+    },
+    "sectionHybrids": "Hybrids",
+    "hybridCount": "{{count}} hybrids",
+    "hybridsEmpty": {
+      "title": "No hybrids yet",
+      "body": "Fuse two fighters and the hybrid joins the roster here. Hybrids you make in Story mode show up too."
+    },
+    "hybridsFiltered": "No hybrids with this style yet.",
+    "sectionBosses": "Bosses",
+    "bossCount": "{{count}} beaten",
+    "bossLocked": {
+      "title": "Not beaten yet",
+      "body": "Beat {{name}} at the end of Story chapter {{chapter}} to add it to your roster.",
+      "bodyBook": "Beat {{name}} at the end of Book {{book}}, chapter {{chapter}} of Story mode to add it to your roster."
+    },
+    "sectionQuest": "Quest fighters",
+    "questCount": "{{count}} earned",
+    "questLocked": {
+      "title": "Not earned yet",
+      "body": "Finish its quest to add {{name}} to your roster.",
+      "action": "See quests"
+    },
+    "sectionNewGen": "New generation",
+    "newGenCount": "{{count}} of {{total}} unlocked",
+    "newGenLocked": {
+      "title": "Not unlocked yet",
+      "body": "Every Story boss you beat gives a 2 in 5 chance that a new-generation fighter joins you. {{name}} could be next."
+    }
+  },
+  "story": {
+    "title": "Story",
+    "chapterTitle": "Chapter 1: The Rift Opens",
+    "chapterIntro": "Bring two fighters into each stage. Fuse them into one hybrid that keeps both move sets, or send them in side by side with team attacks.",
+    "progress": "{{count}} of {{total}} stages cleared",
+    "stageNumber": "Stage {{n}}",
+    "locked": "Locked",
+    "cleared": "Cleared",
+    "boss": "Boss",
+    "pairTitle": "Your pair",
+    "first": "First fighter",
+    "second": "Second fighter",
+    "fuse": "Fuse into a hybrid",
+    "team": "Fight as a team",
+    "fuseHint": "One fighter with {{count}} moves: both move sets plus two mixed moves (in bold).",
+    "teamHint": "Both fight side by side. Each one gets a team attack that mixes your two powers:",
+    "sameHint": "The same fighter twice can only fuse.",
+    "stages": {
+      "s1": "Training Grounds",
+      "s2": "Clock Tower",
+      "s3": "Mirror Alley",
+      "s4": "Windy Rooftops",
+      "s5": "Scrapyard",
+      "s6": "Frozen Lake",
+      "s7": "Overgrown Ruins",
+      "s8": "Storm Quarry",
+      "s9": "The Rift Gate",
+      "s10": "Nullshade's Lair"
+    },
+    "chapterLabel": "Chapter {{n}}",
+    "chapterLocked": "Clear chapter {{n}} to open this one.",
+    "chaptersAria": "Chapters",
+    "ch2": {
+      "title": "Chapter 2: The Storm Coast",
+      "stages": {
+        "s1": "Tide Pools",
+        "s2": "Lighthouse",
+        "s3": "Shipwreck",
+        "s4": "Cliff Path",
+        "s5": "Sea Caves",
+        "s6": "Fog Bank",
+        "s7": "Harbour Market",
+        "s8": "Breakwater",
+        "s9": "Eye of the Storm",
+        "s10": "Maelstrom's Whirlpool"
+      }
+    },
+    "ch3": {
+      "title": "Chapter 3: The Ember Wastes",
+      "stages": {
+        "s1": "Ash Road",
+        "s2": "Glass Dunes",
+        "s3": "Sinkhole",
+        "s4": "Bone Canyon",
+        "s5": "Mirage Oasis",
+        "s6": "Lava Tubes",
+        "s7": "Burnt Orchard",
+        "s8": "Obsidian Steps",
+        "s9": "Caldera Rim",
+        "s10": "Magmaw's Furnace"
+      }
+    },
+    "ch4": {
+      "title": "Chapter 4: The Frozen Clock",
+      "stages": {
+        "s1": "Snowfield",
+        "s2": "Ice Library",
+        "s3": "Hall of Gears",
+        "s4": "Glacier Bridge",
+        "s5": "Silent Chapel",
+        "s6": "Clockwork Vault",
+        "s7": "Aurora Ridge",
+        "s8": "Frozen Throne Room",
+        "s9": "The Stopped Hour",
+        "s10": "Everwinter's Keep"
+      }
+    },
+    "ch5": {
+      "title": "Chapter 5: The Heart of the Rift",
+      "stages": {
+        "s1": "Rift Edge",
+        "s2": "Mirror Void",
+        "s3": "Gravity Well",
+        "s4": "Broken Sky",
+        "s5": "Poison Garden",
+        "s6": "Mind Spiral",
+        "s7": "Elemental Court",
+        "s8": "Hall of Echoes",
+        "s9": "The Last Gate",
+        "s10": "The Riftmaker's Core"
+      }
+    },
+    "ch6": {
+      "title": "Chapter 6: The Hollow Kingdom",
+      "stages": {
+        "s1": "Bone Road",
+        "s2": "Lantern Marsh",
+        "s3": "Crypt Gate",
+        "s4": "Weeping Bridge",
+        "s5": "The Ossuary",
+        "s6": "Ghost Market",
+        "s7": "Hall of Chains",
+        "s8": "Cathedral of Ash",
+        "s9": "The Last Vigil",
+        "s10": "The Hollow King's Throne"
+      }
+    },
+    "ch7": {
+      "title": "Chapter 7: The Dying Sun",
+      "stages": {
+        "s1": "Dusk Road",
+        "s2": "Sundial Plaza",
+        "s3": "Solar Forge",
+        "s4": "Corona Steps",
+        "s5": "Shadow Orchard",
+        "s6": "Burning Observatory",
+        "s7": "Halo Bridge",
+        "s8": "Umbra Gate",
+        "s9": "The Last Light",
+        "s10": "The Black Sun's Crown"
+      }
+    },
+    "ch8": {
+      "title": "Chapter 8: The Edge of Everything",
+      "stages": {
+        "s1": "Starlit Road",
+        "s2": "Observatory Steps",
+        "s3": "The Slow Orbit",
+        "s4": "Twin Stars",
+        "s5": "Mirror Nebula",
+        "s6": "Asteroid Belt",
+        "s7": "Frozen Comet",
+        "s8": "Event Horizon",
+        "s9": "The Last Star",
+        "s10": "Where Reality Ends"
+      }
+    },
+    "script": {
+      "c1": {
+        "intro": {
+          "l1": "A crack opened in the sky above the arena last night. Nobody saw what came out of it.",
+          "l2": "By morning, shadows were walking on their own. They call themselves Voidlings, and they answer to one name: Nullshade.",
+          "l3": "Nullshade erases whatever it touches. If the rift stays open, there will be nothing left to fight for."
+        },
+        "s1": {
+          "l1": "Training is over. The Voidlings are here to stay.",
+          "l2": "Then you can stay down. Let's go."
+        },
+        "s2": {
+          "l1": "Every clock in this tower stopped when the rift opened. Yours stops next.",
+          "l2": "Funny. We were about to say the same thing."
+        },
+        "s3": {
+          "l1": "Which one of you is real? It doesn't matter. Both of you vanish.",
+          "l2": "Break the mirrors, then break the acolyte."
+        },
+        "s4": {
+          "l1": "Up here, one push and you're gone.",
+          "l2": "Good thing there are two of us."
+        },
+        "s5": {
+          "l1": "Nullshade turns everything into scrap. You're next on the pile.",
+          "l2": "Not today. Not us."
+        },
+        "s6": {
+          "l1": "The ice is thin. Fight carefully. Or don't.",
+          "l2": "Stay on your feet and hit hard."
+        },
+        "s7": {
+          "l1": "These ruins were a city once. Nullshade was hungry.",
+          "l2": "Then we end this before it eats another one."
+        },
+        "s8": {
+          "l1": "The storm is ours now. So is the quarry.",
+          "l2": "Clear them out. The Rift Gate is right behind them."
+        },
+        "s9": {
+          "l1": "I am the Herald. Past this gate, there is only Nullshade.",
+          "l2": "Then step aside, or get moved."
+        },
+        "s10": {
+          "l1": "You came all this way to be erased.",
+          "l2": "We came to close your rift.",
+          "l3": "Matter meets antimatter. Only one of us is left standing."
+        },
+        "outro": {
+          "l1": "Impossible. You should have cancelled out.",
+          "l2": "Turns out two is more than nothing.",
+          "l3": "The rift shrinks to a thin line of light. Out past the coast, a storm is already gathering over the sea."
+        }
+      },
+      "c2": {
+        "intro": {
+          "l1": "The last of the rift's light fell into the sea, and the sea woke up angry.",
+          "l2": "Ships stopped coming home. The lighthouse went dark. Past the breakwater, a whirlpool has been turning for nine days without stopping.",
+          "l3": "Its name is Maelstrom, and every wave on this coast answers to it now."
+        },
+        "s1": {
+          "l1": "The tide pools belong to the Brine Imps now. Splash off.",
+          "l2": "Small fish first. Then the big one."
+        },
+        "s2": {
+          "l1": "I put the lighthouse out myself. Ships crash better in the dark.",
+          "l2": "Then let's light the place up."
+        },
+        "s3": {
+          "l1": "This ship sank in one wave. Want to see how?",
+          "l2": "We'd rather see you sink."
+        },
+        "s4": {
+          "l1": "One slip on the cliff and the sea takes you. Maelstrom always wins.",
+          "l2": "Not if we never slip."
+        },
+        "s5": {
+          "l1": "The caves echo. Every scream comes back twice as loud.",
+          "l2": "Then they'll hear yours twice."
+        },
+        "s6": {
+          "l1": "You can't hit what you can't see.",
+          "l2": "Stay close. Swing at the thunder."
+        },
+        "s7": {
+          "l1": "The market's closed. Storm tax, paid in full.",
+          "l2": "We're paying you back, with interest."
+        },
+        "s8": {
+          "l1": "Past this wall is open water. Nobody swims home from the whirlpool.",
+          "l2": "We're not swimming. We're winning."
+        },
+        "s9": {
+          "l1": "Captain of the tide, at your service. The eye of the storm is the calmest place to lose.",
+          "l2": "Calm is good. We'll hear you fall."
+        },
+        "s10": {
+          "l1": "I am the sea that does not stop. Every storm you have seen was only me breathing.",
+          "l2": "Then hold your breath.",
+          "l3": "Come into the whirlpool. Everyone does, eventually."
+        },
+        "outro": {
+          "l1": "The tide is turning away from me.",
+          "l2": "That's what tides do.",
+          "l3": "The whirlpool slows, then stills. The lighthouse flickers back on, and its beam points inland, toward a column of black smoke rising over the wastes."
+        }
+      },
+      "c3": {
+        "intro": {
+          "l1": "Inland, the ground is cracking open. Rivers of lava are carving new roads through the desert.",
+          "l2": "Something under the wastes is walking. With every step it takes, a mountain splits.",
+          "l3": "The Cinder Imps call it Magmaw. They say it will swallow the world one bite at a time."
+        },
+        "s1": {
+          "l1": "The ash road only goes one way: down into the furnace.",
+          "l2": "Then we'll take it, and you're coming with us."
+        },
+        "s2": {
+          "l1": "Magmaw melted this sand into glass. You're next.",
+          "l2": "Glass breaks. So will you."
+        },
+        "s3": {
+          "l1": "The ground here eats people. I just help.",
+          "l2": "Watch your footing and keep moving."
+        },
+        "s4": {
+          "l1": "Every bone in this canyon belonged to someone brave.",
+          "l2": "We're not here to add to the pile."
+        },
+        "s5": {
+          "l1": "The water isn't real. Neither are your chances.",
+          "l2": "We'll check that for ourselves."
+        },
+        "s6": {
+          "l1": "Inside the tubes, the walls never cool down.",
+          "l2": "Then let's make this quick."
+        },
+        "s7": {
+          "l1": "This orchard burned in a minute. I'll take longer with you.",
+          "l2": "You won't get the chance."
+        },
+        "s8": {
+          "l1": "Every step up these stairs is sharper than the last.",
+          "l2": "Good. We like a climb."
+        },
+        "s9": {
+          "l1": "I keep the rim. Nobody looks into the caldera and walks away.",
+          "l2": "We're not looking. We're going in."
+        },
+        "s10": {
+          "l1": "Little sparks. I have eaten mountains bigger than you.",
+          "l2": "Then you've never tasted anything like us.",
+          "l3": "The furnace is hungry. Feed it."
+        },
+        "outro": {
+          "l1": "My fire is going out.",
+          "l2": "Rest, Magmaw. The ground needs to cool.",
+          "l3": "The lava hardens into black glass. Far to the north, every clock in the world stops at the same second."
+        }
+      },
+      "c4": {
+        "intro": {
+          "l1": "Snow is falling in the north, and it isn't moving. Each flake hangs in the air where it stopped.",
+          "l2": "Time is freezing over. Birds hang mid-flight. Rivers stand still in their beds.",
+          "l3": "At the centre of it all is Everwinter, the winter that stopped the clocks, and it does not want them to start again."
+        },
+        "s1": {
+          "l1": "Out here, nothing moves unless Everwinter allows it.",
+          "l2": "We're moving. Try and stop us."
+        },
+        "s2": {
+          "l1": "Every book in this library ends on the same page. So does your story.",
+          "l2": "We'll write a new one."
+        },
+        "s3": {
+          "l1": "The gears have stopped. I can see your future, and it's frozen too.",
+          "l2": "Then you didn't look closely."
+        },
+        "s4": {
+          "l1": "The bridge holds one at a time. I'm heavier.",
+          "l2": "Then we'll knock you off it."
+        },
+        "s5": {
+          "l1": "Quiet. The chapel has not heard a sound in a hundred years.",
+          "l2": "It's about to."
+        },
+        "s6": {
+          "l1": "The vault keeps every lost second. You'll stay in here with them.",
+          "l2": "We're on a schedule."
+        },
+        "s7": {
+          "l1": "The lights in the sky froze too. Beautiful, isn't it?",
+          "l2": "They'll look better moving."
+        },
+        "s8": {
+          "l1": "The throne waits for its ruler. You will kneel in front of it.",
+          "l2": "We don't kneel."
+        },
+        "s9": {
+          "l1": "This is the stopped hour. Nothing that enters it ever leaves.",
+          "l2": "Then we'll be the first."
+        },
+        "s10": {
+          "l1": "Why fight? In my winter, nothing ever ends. Nothing ever hurts.",
+          "l2": "Nothing ever happens, either.",
+          "l3": "Then stand still forever."
+        },
+        "outro": {
+          "l1": "The ice is ticking.",
+          "l2": "Time's up, Everwinter.",
+          "l3": "The snowflakes finally fall. In the thaw, something strange shows in the meltwater: the reflection of a sky that isn't this one."
+        }
+      },
+      "c5": {
+        "intro": {
+          "l1": "The rift Nullshade came through never really closed. Someone has been holding it open from the other side.",
+          "l2": "Through the crack lies a world of floating stone and folded space, where up and down take turns.",
+          "l3": "Its maker rewrites reality on a whim. The Riftmaker has been watching every fight you've won."
+        },
+        "s1": {
+          "l1": "Step over the edge. The fall is the fun part.",
+          "l2": "We'll take the fight right here."
+        },
+        "s2": {
+          "l1": "In the void, you fight your own reflection.",
+          "l2": "Then we already know all your moves."
+        },
+        "s3": {
+          "l1": "Down is wherever I say it is.",
+          "l2": "Plant your feet and hit it anyway."
+        },
+        "s4": {
+          "l1": "The sky broke the last time the Riftmaker got bored.",
+          "l2": "Let's not give it another reason."
+        },
+        "s5": {
+          "l1": "Every flower here is poison. So am I.",
+          "l2": "Keep your distance and keep swinging."
+        },
+        "s6": {
+          "l1": "Round and round. You'll forget why you came.",
+          "l2": "We came to win. Easy to remember."
+        },
+        "s7": {
+          "l1": "Fire, water, earth and air. The court plays them all against you.",
+          "l2": "We brought our own."
+        },
+        "s8": {
+          "l1": "Every word you say comes back twice.",
+          "l2": "Then listen closely. We win. We win."
+        },
+        "s9": {
+          "l1": "One gate left. I fold space, and you fold in half.",
+          "l2": "Last guard. Let's finish it."
+        },
+        "s10": {
+          "l1": "Welcome to the core. Shall we fight on the Moon? In a nebula? I can make anywhere the arena.",
+          "l2": "Pick anywhere you like. We'll still beat you there.",
+          "l3": "Then let's see how you fall without gravity."
+        },
+        "outro": {
+          "l1": "Reality is refusing to bend.",
+          "l2": "Some things stay put.",
+          "l3": "The floating stones settle. Through the last crack in the rift, a cold bell rings from a kingdom where nobody has lived for a very long time."
+        }
+      },
+      "c6": {
+        "intro": {
+          "l1": "A kingdom that died long ago has started to stir. Its bells ring at midnight with no one to pull the ropes.",
+          "l2": "Lanterns float over the marsh. Armour walks the roads with nobody inside it.",
+          "l3": "On a throne of ash sits the Hollow King, gathering an army that can't be killed, because it was never alive."
+        },
+        "s1": {
+          "l1": "The road is paved with old knights. Lie down and join them.",
+          "l2": "We'll walk over them instead."
+        },
+        "s2": {
+          "l1": "Follow the lanterns. They always lead somewhere worse.",
+          "l2": "We'll follow them straight to the King."
+        },
+        "s3": {
+          "l1": "The crypt is locked from the inside.",
+          "l2": "Then we'll knock."
+        },
+        "s4": {
+          "l1": "The river under this bridge is made of tears. Add yours.",
+          "l2": "Not a chance."
+        },
+        "s5": {
+          "l1": "Every skull in the ossuary was a hero once.",
+          "l2": "And none of them gave up. Neither do we."
+        },
+        "s6": {
+          "l1": "Everything here is for sale. Souls go for two coins each.",
+          "l2": "Ours aren't for sale."
+        },
+        "s7": {
+          "l1": "Every chain in this hall holds someone who said no to the King.",
+          "l2": "Then let's break a few."
+        },
+        "s8": {
+          "l1": "The cathedral burned a thousand years ago. It's still warm.",
+          "l2": "Stay sharp. We're close."
+        },
+        "s9": {
+          "l1": "I have kept vigil at the King's door since before your world began.",
+          "l2": "Your watch is over."
+        },
+        "s10": {
+          "l1": "Kneel. Everyone kneels, in the end.",
+          "l2": "Your kingdom is empty. There's nobody left to kneel to you.",
+          "l3": "Then you will be my first new subjects."
+        },
+        "outro": {
+          "l1": "My crown is so heavy.",
+          "l2": "Put it down. Rest.",
+          "l3": "The bells fall silent. The sky over the kingdom brightens for a moment, then goes strangely dim. Far above, the sun is starting to go out."
+        }
+      },
+      "c7": {
+        "intro": {
+          "l1": "The days are getting shorter, and not because of the season. The sun is burning black from the inside.",
+          "l2": "Every hour, the sky gets a little darker. Shadows stretch longer than the things that cast them.",
+          "l3": "Something has made its home in the heart of the sun. It calls itself the Black Sun, and it is eating the light."
+        },
+        "s1": {
+          "l1": "It's always dusk now. Soon it will always be night.",
+          "l2": "Not if we have anything to say about it."
+        },
+        "s2": {
+          "l1": "The sundial has no shadow left to tell the time with.",
+          "l2": "We'll give it a long one. Yours."
+        },
+        "s3": {
+          "l1": "This forge made the sun's crown. It'll make your grave too.",
+          "l2": "Hit hard, hit fast."
+        },
+        "s4": {
+          "l1": "Every step closer to the sun, the hotter it gets.",
+          "l2": "We can take the heat."
+        },
+        "s5": {
+          "l1": "The trees here grow toward the dark.",
+          "l2": "Then let's bring a little light."
+        },
+        "s6": {
+          "l1": "The astronomers saw the Black Sun coming. Nobody believed them.",
+          "l2": "We believe them. That's why we're here."
+        },
+        "s7": {
+          "l1": "The halo is the last ring of light. I'll snuff it out with you.",
+          "l2": "Two of us, one of you. Do the maths."
+        },
+        "s8": {
+          "l1": "Past this gate, the sun is black all the way down.",
+          "l2": "Then we'll bring our own light."
+        },
+        "s9": {
+          "l1": "I am the last paladin of the dusk. When I fall, nothing stands between you and the crown.",
+          "l2": "That's the plan."
+        },
+        "s10": {
+          "l1": "Look up. Every star you have ever seen, I will swallow.",
+          "l2": "Then you'll have to start with us.",
+          "l3": "Burn, then. Burn black."
+        },
+        "outro": {
+          "l1": "The light is coming back.",
+          "l2": "It never really left.",
+          "l3": "Gold floods the sky again. When night finally falls, there is one star too many, and it is falling toward the edge of the world."
+        }
+      },
+      "c8": {
+        "intro": {
+          "l1": "Every enemy you have beaten came through a crack in reality. Every crack leads back to one place.",
+          "l2": "Past the last star, at the edge of everything, the cosmos has woken up and given itself a will.",
+          "l3": "It calls itself the Axiom. It folds galaxies in its fists, and it has decided the universe would be tidier without you."
+        },
+        "s1": {
+          "l1": "The stars led you here. They were never guiding you. They were herding you.",
+          "l2": "Then we'll follow them all the way to the end."
+        },
+        "s2": {
+          "l1": "Each step up is one more proof that you can't win.",
+          "l2": "We've heard that seven times already."
+        },
+        "s3": {
+          "l1": "In the slow orbit, every punch takes a year to land.",
+          "l2": "Then let's start swinging now."
+        },
+        "s4": {
+          "l1": "Two stars, two of you. One of each pair burns out.",
+          "l2": "Not this pair."
+        },
+        "s5": {
+          "l1": "The nebula shows you what you'll become: dust.",
+          "l2": "Dust that hits back."
+        },
+        "s6": {
+          "l1": "A billion rocks, and every one of them is aimed at you.",
+          "l2": "Dodge left, hit right."
+        },
+        "s7": {
+          "l1": "This comet stopped in its tracks the day the Axiom woke up.",
+          "l2": "We'll get it moving again."
+        },
+        "s8": {
+          "l1": "Past the horizon, not even light comes back. You won't either.",
+          "l2": "We always come back."
+        },
+        "s9": {
+          "l1": "I am the paradox that guards the end. You can't beat me, because you have already lost.",
+          "l2": "We'll take our chances."
+        },
+        "s10": {
+          "l1": "Everything you fought was a rough draft. I am the final version.",
+          "l2": "Then we're the edit you didn't see coming.",
+          "l3": "Reality ends here. Let me show you how."
+        },
+        "outro": {
+          "l1": "Impossible. That outcome was not in the equations.",
+          "l2": "We were never good at following rules.",
+          "l3": "The edge of everything holds. The rift is gone for good, and every fighter who came this far has a story worth telling."
+        }
+      },
+      "c9": {
+        "intro": {
+          "l1": "The Reign 8 are gone. For a while the sky stayed quiet, and the fighters went home.",
+          "l2": "But the cracks they tore in reality never fully closed, and something older than the stars has been listening at them.",
+          "l3": "Now lights rise out of the sea at night. The first herald of the Elder Dark has come to fish."
+        },
+        "s1": {
+          "l1": "The water is warm tonight. Something big is turning over down there.",
+          "l2": "Then it can stay down there."
+        },
+        "s2": {
+          "l1": "Can you hear it? Under the waves, it is singing your names.",
+          "l2": "It can sing all it likes."
+        },
+        "s3": {
+          "l1": "Every street in this town runs downhill to the sea. You'll see why.",
+          "l2": "We'll take the long way back up."
+        },
+        "s4": {
+          "l1": "The bell in this chapel rang for the drowned. Today it rings for you.",
+          "l2": "Then we'll ring it louder."
+        },
+        "s5": {
+          "l1": "The tide bell rang thirteen times. The sea only counts that high for a herald.",
+          "l2": "Let it count. We'll still be standing."
+        },
+        "s6": {
+          "l1": "Each step down this stair takes you closer to the light that eats.",
+          "l2": "We stopped being scared of the dark eight bosses ago."
+        },
+        "s7": {
+          "l1": "Pray here, little heroes. Everyone does, near the end.",
+          "l2": "We'd rather fight."
+        },
+        "s8": {
+          "l1": "I light the way down. Follow my lamp and you will never be cold again.",
+          "l2": "We're putting the lamp out."
+        },
+        "s9": {
+          "l1": "You beat eight tyrants and thought the story was over. They were only loud. We are old.",
+          "l2": "Old things break too.",
+          "l3": "Look at my light. Keep looking. You'll want to come closer."
+        },
+        "outro": {
+          "l1": "My light goes out, but the dark behind it is wide awake. It saw you.",
+          "l2": "Good. Let it come up and take a proper look.",
+          "l3": "The sea goes still. Far above, a second crack opens in the sky, and through it something enormous turns one eye toward the world."
+        }
+      },
+      "c10": {
+        "intro": {
+          "l1": "The eye in the sky looked down once, and where its gaze fell, the Mirewood began to sing.",
+          "l2": "Travellers who went in to listen never came out. Now the trees are wearing their voices.",
+          "l3": "Deep in the wood, the second herald of the Elder Dark has planted a garden. Everything in it belongs to one mind."
+        },
+        "s1": {
+          "l1": "Hush. Hear it? The whole wood is humming the same note.",
+          "l2": "We hear it. We just don't feel like humming."
+        },
+        "s2": {
+          "l1": "Stay a while. Breathe deep. The spores are kind.",
+          "l2": "We'll hold our breath, thanks."
+        },
+        "s3": {
+          "l1": "I came here looking for my brother. Now I sing with him.",
+          "l2": "Then we'll get you both out."
+        },
+        "s4": {
+          "l1": "This oak stood a thousand years. The rot took it in one night.",
+          "l2": "And we'll take it back in one fight."
+        },
+        "s5": {
+          "l1": "Every one of us is a mouth. All of us are one voice.",
+          "l2": "Lucky for you, we're used to fighting crowds."
+        },
+        "s6": {
+          "l1": "The song gets louder the further in you walk.",
+          "l2": "Good. We'll know we're getting close."
+        },
+        "s7": {
+          "l1": "Lie down in the moss. Let it grow over you. It stops hurting after a while.",
+          "l2": "We'll stay standing."
+        },
+        "s8": {
+          "l1": "Weeds. You are weeds in Mother's garden. I am here to pull you out.",
+          "l2": "Bring your shears. You'll need them."
+        },
+        "s9": {
+          "l1": "Little voices. Each of you sings alone. How lonely that must be.",
+          "l2": "We're not alone. We're just not yours.",
+          "l3": "Everyone joins the choir in the end. Let me show you the harmony."
+        },
+        "outro": {
+          "l1": "The song does not end. It only moves to a new garden. And the one who eats memories is already feeding.",
+          "l2": "Then we'll find it before it gets full.",
+          "l3": "The wood falls quiet and the travellers wake up in the moss, coughing. But far away, a whole city has started to forget its own name."
+        }
+      },
+      "c11": {
+        "intro": {
+          "l1": "Greyhaven was the city that stood longest against the Reign 8. Its people swore they would never forget.",
+          "l2": "Now they can't remember the war, or their neighbours, or the way home. Streets are fading off the map one by one.",
+          "l3": "The third herald of the Elder Dark is eating the city's memories, and every one it swallows makes it stronger."
+        },
+        "s1": {
+          "l1": "Have we met? You have the kind of face people forget.",
+          "l2": "We'll make sure you remember this one."
+        },
+        "s2": {
+          "l1": "I filed this street under Never Was. It has stopped being there.",
+          "l2": "We're walking on it right now."
+        },
+        "s3": {
+          "l1": "I guarded this square for a hero. I can't remember which one.",
+          "l2": "Then let's make some new memories."
+        },
+        "s4": {
+          "l1": "I borrowed this face from a baker. He won't be needing it.",
+          "l2": "Give it back when we're done."
+        },
+        "s5": {
+          "l1": "The records say you won a great war. Shall I tear out the page?",
+          "l2": "Tear all you like. We were there."
+        },
+        "s6": {
+          "l1": "Every clock in Greyhaven stopped at the same minute. It forgot the next one.",
+          "l2": "Then we'll wind it back up."
+        },
+        "s7": {
+          "l1": "Your friends, your homes, your names. Tell me the one you'd miss least.",
+          "l2": "None of them are on the menu."
+        },
+        "s8": {
+          "l1": "I play the lives the master leaves behind. Tonight I'll play yours.",
+          "l2": "Sorry. We're not finished with them."
+        },
+        "s9": {
+          "l1": "I know you. You beat eight tyrants and one herald of the deep. I can taste it on you.",
+          "l2": "Then you know how this ends.",
+          "l3": "Endings are only memories too. And I am so very hungry."
+        },
+        "outro": {
+          "l1": "Before you came I ate the oldest memory in this city. It was of the Elder Dark, before the stars were lit. It remembers the way home.",
+          "l2": "Then it can forget it.",
+          "l3": "Greyhaven's streets come back one by one, and its people remember their names. That night the moon rises with a shadow across it, and the shadow has wings."
+        }
+      },
+      "c12": {
+        "intro": {
+          "l1": "Above the Starward Peaks, the old observatory has watched the moon for three hundred years.",
+          "l2": "Last night its keepers watched a shape cross the moon, and then another, and then a thousand more. The moon is going dark.",
+          "l3": "The fourth herald of the Elder Dark has come to eat the last light in the night sky, and the brightest things on the mountain are its first meal."
+        },
+        "s1": {
+          "l1": "Bright. You're so bright. Hold still.",
+          "l2": "You'll find we're hard to catch."
+        },
+        "s2": {
+          "l1": "I swallowed a lamp once. Then another. I can't stop.",
+          "l2": "We'll help you stop."
+        },
+        "s3": {
+          "l1": "The moon tastes of frost and silver. Soon there'll be none left.",
+          "l2": "Leave the moon alone."
+        },
+        "s4": {
+          "l1": "I never finished hatching. The Mother says I don't need to.",
+          "l2": "Then you won't be needing these wings either."
+        },
+        "s5": {
+          "l1": "Look how the stars go out. One by one, like lamps at bedtime.",
+          "l2": "We're not sleepy."
+        },
+        "s6": {
+          "l1": "The keepers lit every lamp in the tower to call for help. We ate the lamps first.",
+          "l2": "Help's here anyway."
+        },
+        "s7": {
+          "l1": "Can you feel the dust in your eyes? Soon you won't need them.",
+          "l2": "We've fought blind before."
+        },
+        "s8": {
+          "l1": "I am the dark side of the moon. When the Mother is finished, I'll be the only side.",
+          "l2": "Not tonight."
+        },
+        "s9": {
+          "l1": "Small lights. I have eaten suns smaller than you, in the dark between the stars.",
+          "l2": "Then you've never eaten anything that fights back.",
+          "l3": "Everything flickers out when my wings close. Come into the dark."
+        },
+        "outro": {
+          "l1": "Too late, little lights. With the moon dark for one night, the door was open long enough.",
+          "l2": "Open for what?",
+          "l3": "The moon comes back, pale and scarred. But behind it the stars have moved, and they trace a shape that was never there before: something vast, waiting at the edge of the sky."
+        }
+      },
+      "c13": {
+        "intro": {
+          "l1": "The night the moon went dark, the valley of Hollowmere went to sleep, and in the morning nobody woke up.",
+          "l2": "The farmers sleepwalk through their fields. The children all dream the same dream. Under the hills, something enormous is breathing in time with every one of them.",
+          "l3": "The fifth herald of the Elder Dark has slept beneath the valley since before the first dawn. Now it is dreaming the door open."
+        },
+        "s1": {
+          "l1": "Shh. Lie down. The ground is soft and the night is long.",
+          "l2": "We've only just got up."
+        },
+        "s2": {
+          "l1": "We all dream the same dream now. You'd like it. It's very dark and very quiet.",
+          "l2": "Sounds like a nightmare."
+        },
+        "s3": {
+          "l1": "Hush now, little ones. I sang a whole village to sleep. Two more won't take long.",
+          "l2": "Save your voice."
+        },
+        "s4": {
+          "l1": "Ninety-nine. A hundred. A hundred and one. I'm the one they never stopped counting.",
+          "l2": "Then let's count you out."
+        },
+        "s5": {
+          "l1": "Mother put the kettle on a week ago. It's still on. We're all still dreaming.",
+          "l2": "Then it's time somebody woke you."
+        },
+        "s6": {
+          "l1": "The cradle rocks, the windmills stop, and the whole valley breathes as one.",
+          "l2": "We're not breathing with it."
+        },
+        "s7": {
+          "l1": "Every dream in the valley ends at the same black hill. You'll see it soon.",
+          "l2": "We'll see it on our own two feet."
+        },
+        "s8": {
+          "l1": "Every lamp in Hollowmere is out. Yours are the last two still burning.",
+          "l2": "And they're staying lit."
+        },
+        "s9": {
+          "l1": "Small waking things. You are a dream I had once, a long time ago, and did not like.",
+          "l2": "We're the alarm clock.",
+          "l3": "Then lie down beside me. When my eye opens, the whole world will sleep, and the Elder Dark will walk in through its dreams."
+        },
+        "outro": {
+          "l1": "You woke me. For the first time in all the ages, I am awake, and I remember what I was dreaming of. A bell. A great bell, ringing the last hour.",
+          "l2": "What happens at the last hour?",
+          "l3": "Hollowmere wakes to a bright, cold morning, and the kettles finally boil. But far off on the sea cliffs, the bells of Carillon stop in the middle of a peal, and do not start again."
+        }
+      },
+      "c14": {
+        "intro": {
+          "l1": "Carillon is a city of a thousand bells, built on the cliffs where the sea meets the sky. In a thousand years they have never all been silent at once.",
+          "l2": "Three days ago every bell stopped mid-swing. Then the birds went quiet, then the waves, then the people. Nobody in Carillon can make a sound.",
+          "l3": "The sixth herald of the Elder Dark is eating the noise of the world, so that nothing will hear its master coming."
+        },
+        "s1": {
+          "l1": "Forty years I rang the hours. Now I ring the quiet. Listen. Can you hear it?",
+          "l2": "We can hear you fine."
+        },
+        "s2": {
+          "l1": "Shh. Every word you say is one more thing for the Hush to eat.",
+          "l2": "Then we'll give it plenty."
+        },
+        "s3": {
+          "l1": "I WAS THE VOICE OF THE GREAT BELL. NOW I AM ONLY THE WEIGHT.",
+          "l2": "Weight we can move."
+        },
+        "s4": {
+          "l1": "Pull the rope. The bell swings. Nothing. Isn't it peaceful?",
+          "l2": "It's the worst sound we've ever heard."
+        },
+        "s5": {
+          "l1": "EVERY TOWER IS QUIET NOW. ALL BUT THE LAST ONE.",
+          "l2": "Then the last one rings for us."
+        },
+        "s6": {
+          "l1": "We took a vow of silence. The Hush made sure we would keep it forever.",
+          "l2": "Vows can be broken. So can you."
+        },
+        "s7": {
+          "l1": "WHEN THE GREAT BELL CRACKS, THE LAST HOUR STRIKES. YOU WILL NOT HEAR IT.",
+          "l2": "We'll feel it, though."
+        },
+        "s8": {
+          "l1": "I sang in the cathedral every evening. Now I only remember the shape of the song. Let me show you how it ends.",
+          "l2": "We'd rather hear how it starts again."
+        },
+        "s9": {
+          "l1": "You are so loud. Your hearts, your breath, your footsteps. I will eat them all.",
+          "l2": "Come and take them, then.",
+          "l3": "When the last bell is silent, nothing in this world will hear the Elder Dark arrive. Not even you."
+        },
+        "outro": {
+          "l1": "Listen. Can you hear it now? The stars are singing. They are singing it home.",
+          "l2": "Then we'll go up there and stop the song.",
+          "l3": "The bells of Carillon ring all at once, so loud the sea answers. As the last peal fades, the sky over the cliffs splits open from one side to the other, and the Elder Dark looks down."
+        }
+      },
+      "c15": {
+        "intro": {
+          "l1": "Before the first star was lit there was only the Dark. It was not cruel and it was not kind. It simply was, and it was everything.",
+          "l2": "Then the light came and pushed it out to the edge of the sky. For all the ages since, it has waited there, sending its heralds ahead to open the door.",
+          "l3": "Now the door is open. The ground breaks loose and rises toward the crack in the sky, and the only way to stop the Elder Dark is to go up and meet it."
+        },
+        "s1": {
+          "l1": "Hungry. Hungry. You smell like light.",
+          "l2": "And you smell like the bottom of a well."
+        },
+        "s2": {
+          "l1": "Hear the hymn of the stars that went out before your world was born. Soon we will add your sun to it.",
+          "l2": "Our sun isn't finished yet."
+        },
+        "s3": {
+          "l1": "More of us coming. Always more. The Dark has no end.",
+          "l2": "Then we'll keep going until it does."
+        },
+        "s4": {
+          "l1": "Everything falls toward the Dark in the end. Rocks. Worlds. You.",
+          "l2": "Not today."
+        },
+        "s5": {
+          "l1": "Every herald you beat was only one finger of the hand. Now you stand in its palm.",
+          "l2": "Then let's see if it can make a fist."
+        },
+        "s6": {
+          "l1": "The light was the mistake. We are only putting things back the way they were.",
+          "l2": "We like things the way they are."
+        },
+        "s7": {
+          "l1": "I opened the first crack in your sky, long before your kind could look up. I have kept the door ever since.",
+          "l2": "Then it's time somebody closed it."
+        },
+        "s8": {
+          "l1": "You beat the Lanternmaw, the Sporemother, the Mnemovore, the Dustmoth, the Somnarch and the Hush. But nobody beats the door.",
+          "l2": "Then we'll walk through it."
+        },
+        "s9": {
+          "l1": "SMALL LIGHT. I WAS HERE BEFORE YOUR STARS, AND I WILL BE HERE AFTER THEM.",
+          "l2": "Then you'll have a long time to remember losing.",
+          "l3": "COME, THEN. COME INTO THE DARK BEFORE THE FIRST LIGHT, AND BE NOTHING WITH ME."
+        },
+        "outro": {
+          "l1": "HOW? THE LIGHT WAS SO SMALL. HOW CAN SOMETHING SO SMALL PUSH BACK THE DARK?",
+          "l2": "Small lights are still lights.",
+          "l3": "The Elder Dark folds in on itself like a closing eye and falls back past the edge of the sky. Behind it the crack seals shut, and one by one the stars come back on."
+        }
+      },
+      "c16": {
+        "intro": {
+          "l1": "Long before there was anyone to see them, the first stars were already old. They are the Celestials: the comets, the constellations, the lights that pushed the Elder Dark to the edge of the sky.",
+          "l2": "They have watched the world from above ever since and kept it in its place. Then something down there beat the Elder Dark on its own, and the Celestials did not like how bright the world had become.",
+          "l3": "Now a new star hangs over the snowfields of the far north, a little closer every night. It is not a star. It is Perihelion, the first of the Celestials, and it is coming down."
+        },
+        "s1": {
+          "l1": "Bright little world. Too bright. We fell to put you out!",
+          "l2": "You fell. That part went fine."
+        },
+        "s2": {
+          "l1": "More of us fall every night. Soon the snow will burn blue all the way to the sea.",
+          "l2": "Then we'd better stop the thing you're falling off."
+        },
+        "s3": {
+          "l1": "Hit the ground hard. Got up harder. You next.",
+          "l2": "You're not the first rock we've beaten."
+        },
+        "s4": {
+          "l1": "The solar wind sings to us. It sings that your world has wandered out of its place.",
+          "l2": "Our world is right where we left it."
+        },
+        "s5": {
+          "l1": "Crater. Big. You. Small.",
+          "l2": "Small hits hard too."
+        },
+        "s6": {
+          "l1": "Look up! It is so close now you can feel it on your face.",
+          "l2": "We can. And we're still not running."
+        },
+        "s7": {
+          "l1": "I passed this world when it was all fire, and again when it was all ice. Each time it looked smaller than you think it is now.",
+          "l2": "Then this time, take a better look."
+        },
+        "s8": {
+          "l1": "Little world. You pushed back the Dark by yourselves, and now you burn too brightly to be left alone.",
+          "l2": "So you came all this way to tell us off?",
+          "l3": "I came to put you back in your place. Hold still, and the fire will be quick."
+        },
+        "outro": {
+          "l1": "Impossible. I have crossed this sky ten thousand times, and nothing has ever turned me around.",
+          "l2": "There's a first time for everything.",
+          "l3": "Perihelion breaks into a shower of blue sparks that drift up and up, back into the sky. Far above, between the stars, something holding a spear turns to watch."
+        }
+      },
+      "c17": {
+        "intro": {
+          "l1": "The Celestials do not hunt alone. The oldest of them, Asterion, has run across the night since before the first sunrise, and every beast in the sky runs with him.",
+          "l2": "He saw Perihelion fall, and he saw who knocked it down. Now there is a new shape in the sky every night: a spear, pointing at the world.",
+          "l3": "On the high plateau of Starfall Reach the old standing stones are glowing again. That is where the Hunter will land, and that is where he expects to find his prey."
+        },
+        "s1": {
+          "l1": "Grr. You smell like falling stars. The Hunter wants you.",
+          "l2": "He'll have to catch us first."
+        },
+        "s2": {
+          "l1": "Every note I play moves a star. Listen: this one moves you.",
+          "l2": "Let's see how you like our music."
+        },
+        "s3": {
+          "l1": "The pack found your trail. The pack always finds the trail.",
+          "l2": "Then the pack can follow us home, sit and stay."
+        },
+        "s4": {
+          "l1": "I have carried the sky on my horns since before your mountains were born. You are not heavy.",
+          "l2": "We're heavier than we look."
+        },
+        "s5": {
+          "l1": "The spheres are singing your last song. It is a short one.",
+          "l2": "We know a few more verses."
+        },
+        "s6": {
+          "l1": "Once I chased the Hunter across half the sky. Now I guard his gate. That is how much he wants you.",
+          "l2": "Then he can come and get us himself."
+        },
+        "s7": {
+          "l1": "My sting is the brightest red in the night. It will be the last light you see.",
+          "l2": "We've stood in the dark before the stars. Your sting doesn't scare us."
+        },
+        "s8": {
+          "l1": "So this is the prey that broke a comet. Small. Fast. Brave.",
+          "l2": "We're not prey.",
+          "l3": "Everything under the sky is prey. I have hunted since before the first dawn, and I have never missed."
+        },
+        "outro": {
+          "l1": "Missed. I missed. In all the ages of the sky, I have never missed.",
+          "l2": "Maybe you were aiming at the wrong thing.",
+          "l3": "Asterion's stars come loose one by one and rise back into the night, until only his belt is left: three stars in a row. Above them the sky turns, and three more Celestials begin to look down at the world."
+        }
+      },
+      "c18": {
+        "intro": {
+          "l1": "Two Celestials have fallen, and the sky has started to whisper about it. Far to the south, over the white salt of the Mirror Flats, the night has turned rose and green.",
+          "l2": "That glow is Carina, the Star Mother: a cloud so vast that new stars are born inside her. She lit half the lights in the sky, and she thinks the world is shining where only her children should.",
+          "l3": "She has come down to draw her veil over it. If the cloud closes, the world goes dark underneath, and her newborn stars will be the only light left."
+        },
+        "s1": {
+          "l1": "I was born last night! Mother says I'm going to be the brightest thing you ever see.",
+          "l2": "Born last night and already picking fights."
+        },
+        "s2": {
+          "l1": "Breathe me in. Everything goes soft and pink, and then it goes away.",
+          "l2": "We'll hold our breath."
+        },
+        "s3": {
+          "l1": "Not a star yet. Getting tighter. Getting hotter. Getting ANGRY.",
+          "l2": "Maybe come back when you're finished."
+        },
+        "s4": {
+          "l1": "The veil is closing. Can you feel the sky getting closer?",
+          "l2": "We can feel you getting closer. That's worse for you."
+        },
+        "s5": {
+          "l1": "Mother made a hundred of us tonight. You can't put out a hundred stars.",
+          "l2": "We've had a busy few books. Watch us."
+        },
+        "s6": {
+          "l1": "I have stood in her cloud since before your sun was lit. Stars are born at my tips. Nothing gets past my feet.",
+          "l2": "Then we'll go round."
+        },
+        "s7": {
+          "l1": "You broke a comet and made the Hunter miss. Mother is waiting for you. She isn't angry. That is what should scare you.",
+          "l2": "We've met angry. We can handle calm."
+        },
+        "s8": {
+          "l1": "Look at you. So bright, and so small. I have made more stars than there are grains of salt on these flats.",
+          "l2": "Then you won't miss one little world keeping its own light.",
+          "l3": "Every light in the sky is mine. Sleep now, little ones. The veil is coming down."
+        },
+        "outro": {
+          "l1": "My cloud is thinning. I can see straight through myself.",
+          "l2": "Turns out the world can shine without you.",
+          "l3": "Carina comes apart into soft colour and drifts back up into the night. Where she was, the stars she made go on burning, small and new. And far off, past the edge of the sky, something begins to tick."
+        }
+      },
+      "c19": {
+        "intro": {
+          "l1": "Every star burns out in the end. Vela was the first that did, and it never stopped spinning. Its heart crushed down to the size of a city, it turns a hundred times a heartbeat and keeps the time of the whole sky.",
+          "l2": "Two beams of fire sweep out from it like a lighthouse. Every night they cross the deserts of the east, and wherever they touch, the sand turns to glass.",
+          "l3": "Vela has counted every second since the first stars were lit. Now it says the world's time is up, and it has come down to the Glasslands to stop the clock."
+        },
+        "s1": {
+          "l1": "On. Off. On. Off. Which one was the real me? Too slow!",
+          "l2": "We'll just hit both."
+        },
+        "s2": {
+          "l1": "Kssshh... can you hear it? The pulse... the pulse is counting you down... kssshh.",
+          "l2": "Change the station."
+        },
+        "s3": {
+          "l1": "Was dune. Beam came. Now glass. Now big. Now you.",
+          "l2": "Glass breaks."
+        },
+        "s4": {
+          "l1": "Vela spins a hundred times a heartbeat. How fast do you spin?",
+          "l2": "Fast enough to get out of your way."
+        },
+        "s5": {
+          "l1": "Every star in the sky keeps time to Vela's beat. Soon your world's beat stops.",
+          "l2": "Ours has a few left in it."
+        },
+        "s6": {
+          "l1": "I circled Vela when it was still a star. I burned out too, but I never left its side. Nobody stops it turning.",
+          "l2": "Loyal. We respect that. We still have to get past you."
+        },
+        "s7": {
+          "l1": "Hear that? Tick. Tick. That's the clock you came to stop. It's very, very close now.",
+          "l2": "Good. We were looking for it."
+        },
+        "s8": {
+          "l1": "Tick. You are late. Tick. You were always late. Tick. Your world's time ran out the night it outshone us.",
+          "l2": "Then we'll wind it back up.",
+          "l3": "I keep the time of the sky. Nobody winds me. Hold still, and I will count you out."
+        },
+        "outro": {
+          "l1": "My spin... it's slowing. I can hear the seconds falling out of me.",
+          "l2": "Take a break. You've been going for a while.",
+          "l3": "Vela's beams flicker and go dim, and it settles into the glass like a stopped watch. For the first time in an age, the sky has no beat to keep. High above, the oldest of the Celestials opens its eye."
+        }
+      },
+      "c20": {
+        "intro": {
+          "l1": "Four Celestials have fallen, and the sky has gone quiet. No comet, no Hunter, no glowing cloud, no beat. One light is left up there, and it is the oldest of them all.",
+          "l2": "Aeon was the first star that ever burned. It lit the sky, it drove the Dark out of it, and then it sat at the top of everything and watched. It has been watching ever since.",
+          "l3": "Now its eye has opened over Zenith, the highest mountain in the world, where the clouds lie below like a sea. Aeon has decided the world is too bright to be allowed. To stop it, your fighters will have to climb."
+        },
+        "s1": {
+          "l1": "I left Aeon before your world was made. I have come SO far. Do you know how long that took?",
+          "l2": "Long enough to get tired, we hope."
+        },
+        "s2": {
+          "l1": "I have watched this patch of sky since the beginning. Nothing new has ever come into it. Until you.",
+          "l2": "Then look closely. You'll want to remember this."
+        },
+        "s3": {
+          "l1": "Ate... my planets. Still... hungry. You... look... small.",
+          "l2": "We're also very hard to chew."
+        },
+        "s4": {
+          "l1": "The stars are leaning down to watch. Nothing has ever climbed this high to fight Aeon before.",
+          "l2": "Then let's give them a good one."
+        },
+        "s5": {
+          "l1": "Comet, Hunter, Mother, Clock. We saw all of it, and so did Aeon. It was not impressed.",
+          "l2": "It's about to be."
+        },
+        "s6": {
+          "l1": "I am the North Star. Every lost traveller who ever lived found their way home by me. You will not find your way past me.",
+          "l2": "We're not lost. We know exactly where we're going."
+        },
+        "s7": {
+          "l1": "This is the top of the world. Above here there is only Aeon, and Aeon has never lost.",
+          "l2": "Everyone says that right before the last stage."
+        },
+        "s8": {
+          "l1": "I lit the first light in the sky. I drove the Dark out with my own fire. Then for an age I watched you shine brighter and brighter, as if the light were yours.",
+          "l2": "Some of it is. We made it ourselves.",
+          "l3": "Nothing shines that I did not light first. I will take it back, every spark of it, and the sky will be as it was on the first night: mine."
+        },
+        "outro": {
+          "l1": "So bright... You were always this bright. I never looked closely enough to see that the light was your own.",
+          "l2": "There's room up there for both of us.",
+          "l3": "Aeon's great eye slowly closes. The light it gathered streams back up into the sky, star by star, until the night is full again. On the summit of Zenith the first star rests, and for the first time in an age, it isn't keeping watch alone."
+        }
+      }
+    },
+    "map": {
+      "aria": "Stages on the chapter map",
+      "watchIntro": "Watch the intro",
+      "play": "Fight this stage",
+      "enemies": "Who you'll face"
+    },
+    "minion": {
+      "grunt": "Grunt",
+      "caster": "Caster",
+      "brute": "Brute",
+      "elite": "Lieutenant",
+      "power": "· {{power}}"
+    },
+    "scene": {
+      "aria": "Story scene",
+      "next": "Next",
+      "skip": "Skip",
+      "fight": "Fight",
+      "continue": "Continue"
+    },
+    "books": {
+      "aria": "Story books",
+      "b1": "Book 1: The Reign 8",
+      "b2": "Book 2: The Elder Dark",
+      "b2Locked": "Defeat all of the Reign 8 in Book 1 to open Book 2.",
+      "b3": "Book 3: The Celestials",
+      "b3Locked": "Defeat the Elder Dark in Book 2 to open Book 3."
+    },
+    "ch9": {
+      "title": "Chapter 1: Lights Under the Sea",
+      "stages": {
+        "s1": "The Quiet Pier",
+        "s2": "Lamplit Docks",
+        "s3": "Fog Market",
+        "s4": "Sunken Chapel",
+        "s5": "Tide Bell Tower",
+        "s6": "The Drowned Stair",
+        "s7": "Kelp Cathedral",
+        "s8": "The Hadal Gate",
+        "s9": "The Lanternmaw's Deep"
+      }
+    },
+    "ch10": {
+      "title": "Chapter 2: The Singing Rot",
+      "stages": {
+        "s1": "Mirewood Edge",
+        "s2": "The Humming Path",
+        "s3": "Hollow Oaks",
+        "s4": "Rotwood Bridge",
+        "s5": "The Spore Glade",
+        "s6": "Choir Hollow",
+        "s7": "The Mossbed",
+        "s8": "The Gardener's Rows",
+        "s9": "The Sporemother's Garden"
+      }
+    },
+    "ch11": {
+      "title": "Chapter 3: The City That Forgets",
+      "stages": {
+        "s1": "Greyhaven Gate",
+        "s2": "Unnamed Street",
+        "s3": "Statue Square",
+        "s4": "The Bakers' Row",
+        "s5": "The Hall of Records",
+        "s6": "Clock Tower Stop",
+        "s7": "The Faded Quarter",
+        "s8": "The Empty Theatre",
+        "s9": "The Blank Page"
+      }
+    },
+    "ch12": {
+      "title": "Chapter 4: The Moth Moon",
+      "stages": {
+        "s1": "Starward Trail",
+        "s2": "Lamp Post Climb",
+        "s3": "Frost Ridge",
+        "s4": "Cocoon Hollow",
+        "s5": "The Silver Steps",
+        "s6": "Keepers' Tower",
+        "s7": "The Dusty Terrace",
+        "s8": "The Dark Side",
+        "s9": "The Dustmoth's Eclipse"
+      }
+    },
+    "ch13": {
+      "title": "Chapter 5: The Sleeping Valley",
+      "stages": {
+        "s1": "Hollowmere Road",
+        "s2": "The Drowsy Fields",
+        "s3": "Cradle Lane",
+        "s4": "The Counting Fold",
+        "s5": "Windmill Hill",
+        "s6": "The Nursery Lights",
+        "s7": "The Black Hill",
+        "s8": "The Snuffer's Walk",
+        "s9": "The Somnarch's Dream"
+      }
+    },
+    "ch14": {
+      "title": "Chapter 6: The Silent Bells",
+      "stages": {
+        "s1": "Carillon Steps",
+        "s2": "The Mute Cloister",
+        "s3": "Ringers' Row",
+        "s4": "The Rope Loft",
+        "s5": "Cliffside Belfry",
+        "s6": "The Quiet Market",
+        "s7": "The Fallen Peal",
+        "s8": "The Cathedral Choir",
+        "s9": "The Great Bell"
+      }
+    },
+    "ch15": {
+      "title": "Chapter 7: The Elder Dark",
+      "stages": {
+        "s1": "The Rising Ground",
+        "s2": "The Broken Stair",
+        "s3": "Island of Rubble",
+        "s4": "The Fallen Temple",
+        "s5": "The Starless Reach",
+        "s6": "The Edge of the Sky",
+        "s7": "The Door",
+        "s8": "The Threshold",
+        "s9": "The Dark Before the Stars"
+      }
+    },
+    "ch16": {
+      "title": "Chapter 1: The Falling Star",
+      "stages": {
+        "s1": "Kaldmark Road",
+        "s2": "The Frozen Lake",
+        "s3": "Pinewatch",
+        "s4": "The Meteor Field",
+        "s5": "Snowblind Pass",
+        "s6": "The Burning Ice",
+        "s7": "Rim of the Crater",
+        "s8": "Perihelion's Crater"
+      }
+    },
+    "ch17": {
+      "title": "Chapter 2: The Hunter in the Stars",
+      "stages": {
+        "s1": "The Long Climb",
+        "s2": "Wolf Ridge",
+        "s3": "The Shepherd's Stones",
+        "s4": "Skyfield",
+        "s5": "The Bull's Path",
+        "s6": "Observers' Ring",
+        "s7": "The Hunter's Gate",
+        "s8": "Asterion's Circle"
+      }
+    },
+    "ch18": {
+      "title": "Chapter 3: Where Stars Are Born",
+      "stages": {
+        "s1": "The Salt Road",
+        "s2": "Mirror Flats",
+        "s3": "The Glow Wells",
+        "s4": "Nursery Shallows",
+        "s5": "The Dust Towers",
+        "s6": "Starfall Pan",
+        "s7": "The Pillar's Shadow",
+        "s8": "Carina's Cradle"
+      }
+    },
+    "ch19": {
+      "title": "Chapter 4: The Spinning Heart",
+      "stages": {
+        "s1": "Edge of the Sand",
+        "s2": "The Glass Dunes",
+        "s3": "Beacon Rock",
+        "s4": "The Sweep Line",
+        "s5": "Shatter Canyon",
+        "s6": "The Melted Road",
+        "s7": "The Still Point",
+        "s8": "Vela's Clockface"
+      }
+    },
+    "ch20": {
+      "title": "Chapter 5: The Eye of the Sky",
+      "stages": {
+        "s1": "The Cloud Stair",
+        "s2": "Above the Clouds",
+        "s3": "The Thin Air",
+        "s4": "Lantern Ridge",
+        "s5": "The Watchers' Ledge",
+        "s6": "The North Gate",
+        "s7": "The Last Steps",
+        "s8": "The Eye of the Sky"
+      }
+    },
+    "ending": {
+      "title": "Epilogue: First Light",
+      "l1": "The ground the Elder Dark tore loose settles back into place, softly, like a sleeper turning over.",
+      "l2": "In the drowned harbour the lighthouse is lit again. The Mirewood stops singing, Greyhaven remembers its own name, and the moon comes up whole over the Starward Peaks.",
+      "l3": "In Hollowmere the kettles boil, and in Carillon the bells ring every hour, a little louder than they need to.",
+      "l4": "Somewhere past the edge of the sky the Dark is still waiting. It always will be. But now it knows something it never knew before: the light fights back.",
+      "l5": "Come on. Let's go home.",
+      "l6": "The end of Book 2: The Elder Dark."
+    },
+    "ending3": {
+      "title": "Epilogue: A Shared Sky",
+      "l1": "One by one the Celestials go back up. Perihelion swings out past the northern snow, the Hunter steps back into his place among the stones, Carina's cloud drifts high and soft, and Vela keeps the time again, a little gentler than before.",
+      "l2": "Down below, the snowfields thaw at the edges, the Mirror Flats hold the stars like still water, and in the Glasslands the dunes catch every sunrise and throw it back.",
+      "l3": "In the old harbour the lighthouse keeps burning. Somewhere past the edge of the sky the Dark is still waiting, as it always will be.",
+      "l4": "But if it looks this way tonight, it will see two kinds of light: the old stars overhead and the new ones down below, each of them keeping an eye on the other.",
+      "l5": "Look up. They're still there. Good. Somebody has to watch the sky.",
+      "l6": "The end of Book 3: The Celestials."
+    }
+  },
+  "fusion": {
+    "open": "Fuse a hybrid",
+    "title": "Fuse a hybrid",
+    "intro": "Pick two fighters. The hybrid keeps both move sets and gains two mixed moves. The same fighter twice makes a Prime hybrid of its own.",
+    "yours": "Your hybrid",
+    "moves": "{{count}} moves. Mixed moves are in bold.",
+    "from": "Fused from {{a}} and {{b}}",
+    "fromSame": "Fused from {{a}} twice",
+    "fuse": "Fuse and save",
+    "saved": "Already in your hybrids",
+    "savedNote": "{{name}} is saved. Pick it under Hybrids in the arena, or find it on the Fighters page."
+  },
+  "quests": {
+    "eyebrow": "Quests",
+    "title": "Earn new fighters",
+    "subtitle": "Every quest earns a quest fighter for good: 12 moves, its own entrance and a Nightmare Mode. Fights in any mode count, and progress is saved in this browser.",
+    "card": {
+      "number": "Quest {{n}}",
+      "claim": "Claim fighter",
+      "locked": "Finish every goal to claim",
+      "fight": "Fight as {{name}}",
+      "moves": "{{count}} moves",
+      "sealed": "This quest opens when its fighter arrives in a later update."
+    },
+    "state": {
+      "open": "In progress",
+      "ready": "Ready to claim",
+      "claimed": "Earned",
+      "sealed": "Sealed"
+    },
+    "goal": {
+      "fights": "Finish {{need}} fights in any mode",
+      "kos": "See {{need}} fighters knocked out",
+      "tournaments": "Crown a Tournament champion",
+      "bosses": "Beat a Story boss",
+      "forms": "See {{need}} forms break loose"
+    },
+    "list": {
+      "fold": {
+        "title": "A Tear in Space",
+        "reward": "Earns Parallax, Spatiokinesis",
+        "story": "Something keeps watching the arena from the other side of the air. Give it enough fights to study and it will step through."
+      },
+      "gameover": {
+        "title": "Game Over",
+        "reward": "Earns Hexizon, Indie Game Manipulation",
+        "story": "A black figure with one green eye has been glitching into the background. Prove the arena is worth playing and he'll load in."
+      },
+      "gamma": {
+        "title": "Critical Mass",
+        "reward": "Earns Halflife, Gamma Radiation",
+        "story": "Readings off the scale under the arena floor."
+      },
+      "speed": {
+        "title": "Faster Than Sound",
+        "reward": "Earns Redline, Superspeed",
+        "story": "Afterimages in the replays that nobody can explain."
+      },
+      "portal": {
+        "title": "Between Worlds",
+        "reward": "Earns Liminal, Portal and Matter Manipulation",
+        "story": "A door keeps opening where no door should be."
+      },
+      "encore": {
+        "title": "Encore",
+        "reward": "Earns Overtone, Sound Manipulation",
+        "story": "The crowd keeps cheering after the arena goes quiet, and nobody is in the stands."
+      },
+      "cranes": {
+        "title": "A Thousand Cranes",
+        "reward": "Earns Vellum, Paper Manipulation",
+        "story": "Folded paper birds turn up in the corners of the arena, a few more after every fight."
+      },
+      "facet": {
+        "title": "Under Pressure",
+        "reward": "Earns Facet, Crystal Manipulation",
+        "story": "Crystals keep growing up through the cracks in the arena floor, a little bigger after every knockout."
+      },
+      "dunes": {
+        "title": "Shifting Sands",
+        "reward": "Earns Sirocco, Sand Manipulation",
+        "story": "A dune has started creeping in from the edge of the arena, and something under it is waiting."
+      }
+    },
+    "cutscene": {
+      "eyebrow": "Quest complete",
+      "joined": "{{name}} has joined your roster.",
+      "close": "Done",
+      "skip": "Skip"
+    }
+  },
+  "free": {
+    "modeName": "Free World",
+    "exit": "Back to the arena",
+    "eyebrow": "Free World",
+    "youTag": "YOU",
+    "canvasAria": "The Free World: your party walking around, or a fight in progress",
+    "travel": "Places",
+    "status": {
+      "explore": "Exploring",
+      "fight": "Fighting"
+    },
+    "places": {
+      "house": {
+        "name": "House",
+        "blurb": "Your place. Put your feet up, watch some TV, raid the fridge."
+      },
+      "city": {
+        "name": "City",
+        "blurb": "Busy streets full of fighters going about their day."
+      },
+      "dojo": {
+        "name": "Dojo",
+        "blurb": "Quiet mats, a worn training dummy and a corner to meditate in."
+      },
+      "arcade": {
+        "name": "Arcade",
+        "blurb": "Neon, cabinets and a claw machine that might actually pay out."
+      },
+      "park": {
+        "name": "Park",
+        "blurb": "Grass, a lake with ducks, and a bench in the shade."
+      },
+      "rooftop": {
+        "name": "Rooftop",
+        "blurb": "Up above the city at dusk, with the stars coming out."
+      }
+    },
+    "spots": {
+      "couch": {
+        "label": "Relax on the couch",
+        "done": "{{name}} kicks back on the couch."
+      },
+      "tv": {
+        "label": "Watch TV",
+        "done": "{{name}} puts a show on."
+      },
+      "kitchen": {
+        "label": "Grab a snack",
+        "done": "{{name}} raids the fridge."
+      },
+      "foodcart": {
+        "label": "Get a bite at the food cart",
+        "done": "{{name}} grabs something from the food cart."
+      },
+      "fountain": {
+        "label": "Toss a coin in the fountain",
+        "done": "{{name}} tosses a coin and makes a wish."
+      },
+      "dummy": {
+        "label": "Train on the dummy",
+        "done": "{{name}} lands a combo on the training dummy."
+      },
+      "mat": {
+        "label": "Meditate",
+        "done": "{{name}} sits still and breathes."
+      },
+      "cabinet": {
+        "label": "Play a game",
+        "done": "{{name}} scores {{score}} points."
+      },
+      "claw": {
+        "label": "Try the claw machine",
+        "done": "{{name}} wins a prize from the claw machine."
+      },
+      "bench": {
+        "label": "Sit on the bench",
+        "done": "{{name}} takes a breather on the bench."
+      },
+      "lake": {
+        "label": "Skip a stone",
+        "done": "{{name}} skips a stone across the lake."
+      },
+      "ledge": {
+        "label": "Look out over the city",
+        "done": "{{name}} takes in the city lights."
+      },
+      "stargaze": {
+        "label": "Stargaze",
+        "done": "{{name}} spots a shooting star."
+      }
+    },
+    "controls": {
+      "left": "Walk left",
+      "right": "Walk right",
+      "hint": "Walk with the arrow keys or A and D. Press E at a star to do something there."
+    },
+    "fight": {
+      "open": "Start a fight",
+      "title": "Start a fight here",
+      "intro": "Your party fights on one side, right where you're standing. Pick up to 6 opponents for the other side. There's no timer: it goes until one side is down.",
+      "count": "{{count}} of {{max}} opponents",
+      "surprise": "Surprise me",
+      "clear": "Clear",
+      "go": "Fight",
+      "need": "Pick at least one opponent.",
+      "hint": "Your party fights on its own, like everywhere else in the arena.",
+      "leave": "Leave fight",
+      "won": "Your side wins!",
+      "lost": "Your side was knocked out.",
+      "draw": "Nobody is left standing.",
+      "again": "Fight again",
+      "back": "Keep exploring"
+    },
+    "party": {
+      "title": "Your party",
+      "change": "Change",
+      "you": "You",
+      "intro": "Pick who you are, and up to 3 companions who walk with you and fight on your side.",
+      "youTitle": "You",
+      "matesTitle": "Walking with you",
+      "count": "{{count}} of {{max}}",
+      "empty": "Nobody is walking with you yet. Add up to 3 companions.",
+      "bossNote": "Bosses you beat in Story and rehabilitate can join your party too.",
+      "done": "Done"
+    },
+    "groups": {
+      "originals": "Fighters",
+      "quest": "Quest fighters",
+      "newgen": "New generation",
+      "bosses": "Rehabilitated bosses",
+      "hybrids": "Hybrids",
+      "beaten": "Bosses you've beaten",
+      "mine": "Your character"
+    },
+    "bosses": {
+      "title": "Bosses you've beaten",
+      "empty": "Beat a chapter boss in Story to meet it here.",
+      "hint": "Rehabilitate a beaten boss and it can walk with you and fight on your side.",
+      "rehab": "Rehabilitate",
+      "rehabbed": "Rehabilitated",
+      "done": "{{name}} has turned over a new leaf and can join your party."
+    },
+    "me": {
+      "title": "Your character",
+      "empty": "Make your own stick-figure fighter. Its powers decide how it looks and fights.",
+      "make": "Make a character",
+      "edit": "Edit",
+      "play": "Walk as {{name}}"
+    }
+  },
+  "creator": {
+    "title": "Your character",
+    "intro": "Name your stick figure, give it up to 3 powers and choose its look. The powers decide its colours, stance, entrance, effects and moves.",
+    "previewAria": "Your character standing in the stance its powers give it",
+    "fallbackName": "You",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g. Nova",
+    "powersTitle": "Powers",
+    "powersHint": "The first power is your main one: it sets your colour, stance and voice. A second power adds its glow and a fused entrance.",
+    "powersCount": "{{count}} of {{max}} picked",
+    "mainPower": "Main",
+    "lookTitle": "Look",
+    "lookHint": "The colours always come from your powers. Pick what you wear, how tall you stand and which of those colours your body takes.",
+    "gearLabel": "Wear",
+    "gear": {
+      "scarf": "Scarf",
+      "cape": "Cape",
+      "headband": "Headband",
+      "mask": "Mask",
+      "none": "Nothing"
+    },
+    "buildLabel": "Build",
+    "build": {
+      "small": "Small",
+      "regular": "Regular",
+      "tall": "Tall"
+    },
+    "shadeLabel": "Body colour",
+    "shade": {
+      "main": "Main colour",
+      "glow": "Glow colour",
+      "dark": "Black, glowing outline"
+    },
+    "givesTitle": "What your powers give you",
+    "stat": {
+      "role": "Style",
+      "health": "Health",
+      "speed": "Speed"
+    },
+    "role": {
+      "attacker": "Attacker",
+      "control": "Control",
+      "tank": "Tank",
+      "support": "Support",
+      "trickster": "Trickster"
+    },
+    "movesCount": "{{count}} moves",
+    "tune": {
+      "title": "Health and abilities",
+      "hint": "Choose how tough your character is and how many of its moves it fights with.",
+      "healthLabel": "Health",
+      "healthAuto": "Set by your powers and build. Move the slider to choose your own.",
+      "healthChosen": "Chosen by you.",
+      "reset": "Use the powers' health",
+      "abilitiesLabel": "Abilities",
+      "abilitiesOf": "{{count}} of {{total}}",
+      "abilitiesHint": "Fewer abilities keeps a mix from each of your powers."
+    },
+    "save": "Save character",
+    "needName": "Give your character a name to save it.",
+    "savedNote": "Saved. {{name}} is walking as you in Free World and can be picked in the arena.",
+    "own": {
+      "title": "Your own power",
+      "hint": "Type any power the game doesn't have and the AI turns it into a real one, with its own colours, effects and moves. It becomes your main power.",
+      "label": "Power idea",
+      "placeholder": "e.g. storm piano, magnet bees, shadow ink",
+      "make": "Make it",
+      "making": "Making your power…",
+      "remake": "Make a new one",
+      "remove": "Remove",
+      "removeAria": "Remove {{name}}",
+      "soundsLike": "Sounds and arrives like {{power}}",
+      "replaceNote": "Making a power takes one of your 3 slots, so your last picked power will be dropped.",
+      "error": {
+        "short": "Type a power idea of at least 2 letters.",
+        "busy": "That's a lot of powers in a short time. Wait a few minutes and try again.",
+        "refused": "That one can't be a power here. Try a different idea.",
+        "failed": "The power couldn't be made right now. Try again."
+      }
     }
   }
 }

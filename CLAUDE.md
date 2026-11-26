@@ -10,16 +10,13 @@ happens, and anything chained after it still runs.
 
 ## About this app
 
-Not written yet. On this app's first build, replace this paragraph with the app's
-purpose, its main flows, and the mechanism it chose for each big job — how it
-renders, exports, sends, syncs — one plain-English line each. Ten to twenty lines,
-no code: the app builder reads this section too. Write it with your file-editing tool,
-in its own step before the build, never through a shell command. Fixed after a build has
-deployed, it is saved and goes out with the next build — never build for it alone. Keep it
-current — a turn that introduces, replaces or removes a mechanism updates this section in the
-same turn. It is a summary of the app as it is now, not a log of what each turn changed:
-rewrite it when it grows. Anything past about 16,000 characters is moved to `APP-HISTORY.md` before
-the next turn; read that file only when a task needs what an earlier turn did.
+NPC Arena is a single-player browser game where you watch power-themed NPCs fight. No sign-in; all progress (quests, Story, hybrids, own character, volume) lives in the browser's localStorage. Brought over file for file from the builder's GitHub code (same Stencil stack), so screens, wording and rules are theirs.
+- Arena (`/`): title screen with a silent demo fight, then a canvas arena. Modes: Duel, Free for all, Teams, Tournament (`lib/bracket.ts`), Team Tournament, Juggernaut, Story, Free World.
+- Engine `lib/arena-engine.ts` (physics, camera, AI, forms, entrances); cinematic layer `lib/arena-cinema.ts`; sound and music synthesised with Web Audio (`arena-sound.ts`, `arena-music.ts`).
+- Fighters are data in `lib/fighters.ts`; move looks, forms, entrances, quest and boss designs in their own lib files. A new fighter touches fighters/bosses, forms, move-looks, arena-engine, arena-sound, spawn-intros, designs, arena-cinema and strings.
+- Story: `lib/story.ts` CHAPTERS + BOOKS (Book 1 8x10 stages, Book 2 7x9, Book 3 5x8). Always use `stagesIn(ch)` / `lairOf(ch)`. Per-chapter arrays and strings are indexed by global chapter number. Minions in `lib/minions.ts`, bosses in `lib/bosses.ts` / `boss-designs.ts`, map `components/story-map.tsx`, backdrops `lib/story-backdrops.ts`, scenes `components/story-scene.tsx` with speakers in `lib/story-script.ts` and words in strings `story.script`; endings ENDING / ENDING3. Avoid `prism-beam` for new moves.
+- Progress code (`components/progress-code-sheet.tsx`): copies the saves listed in `lib/progress-code.ts` SAVE_KEYS into the `progress_saves` table under a code from `~stencil/access-codes`; `routes/api.progress-code.tsx`, guarded by `limitVisitor`. New progress saves must be added to SAVE_KEYS.
+- Free World (`components/free-world.tsx` + `lib/free-world.ts`), own character (`components/character-creator.tsx`, `lib/my-fighter.ts`, AI power via `routes/api.own-power.tsx` with `limitVisitor`), Fusion lab (`components/fusion-sheet.tsx`), Fighters page (`/roster`), Quests page (`/quests`, `lib/quests.ts`); "Fight as X" opens `/?fighter=<id>`.
 Everything below this section is Stencil's platform documentation.
 
 ## Platform-managed — don't touch
