@@ -8,6 +8,7 @@ import { drawBossDesign, type BossAct } from "./boss-designs";
 import { drawNovaLook, drawQuestDesign, type QuestAct } from "./quest-designs";
 import { FORMS, formShout, formsOf, type Form, type FormKind } from "./forms";
 import { BOSS_PHASES } from "./bosses";
+import { preFightFor, type PreFight, type PrePose } from "./pre-fight";
 
 export const W = 960;
 export const H = 600;
@@ -497,6 +498,8 @@ export type Game = {
   cut: { key: number; t: number; max: number } | null;
   /** Entrances before READY / FIGHT: the match holds until every fighter has arrived. */
   intro: { t: number; max: number } | null;
+  /** A moment two fighters who know each other play after the entrances, before READY (see pre-fight.ts). */
+  pre: PreRun | null;
   /** Where reality has been moved to, for how long, and who moved it. */
   realm: { id: Realm; t: number; left: number; by: number; heat: number } | null;
   /** A realm just ended: the old one fades out over the arena. */
@@ -533,6 +536,9 @@ export type Game = {
 };
 
 let feedId = 0;
+
+/** A pre-fight moment in progress: its fighters (by index, first of its pair first), where they stood, and when it starts. */
+type PreRun = { spec: PreFight; keys: [number, number]; homes: [number, number]; start: number; base: number };
 
 /** Team colours, in team order. Names live in the screen's copy. */
 export const TEAM_COLORS = ["hsl(0 82% 60%)", "hsl(212 90% 62%)", "hsl(46 100% 58%)", "hsl(138 62% 50%)", "hsl(276 70% 64%)", "hsl(24 95% 56%)", "hsl(178 72% 42%)", "hsl(326 80% 64%)"] as const;
@@ -590,12 +596,16 @@ export function newGame(ids: (Power | FighterDef)[], preview = false, teams?: nu
     };
   });
   const introEnd = Math.max(0, ...fighters.map((f) => f.spawnAt + introLen(f))) + 0.2;
+  // two fighters who know each other share a moment before READY
+  const pf = !preview && n === 2 && !teamMode && jugg < 0 ? preFightFor(fighters[0].def, fighters[1].def) : null;
+  const keys: [number, number] = pf?.first === 1 ? [1, 0] : [0, 1];
+  const pre: PreRun | null = pf ? { spec: pf.spec, keys, homes: [fighters[keys[0]].x, fighters[keys[1]].x], start: introEnd + 0.05, base: introEnd } : null;
   gravK = 1;
   return {
     t: 0, fighters, projectiles: [], beams: [], eruptions: [], zones: [], particles: [], pops: [], waves: [], fx: [], feed: [], sfx: [],
     shake: 0, hitstop: 0, ending: 0, over: false, winner: null, preview, duel: n === 2 && !teamMode,
     teamMode, winnerId: null, winnerTeam: null, cut: null,
-    intro: preview || n === 0 ? null : { t: 0, max: introEnd },
+    intro: preview || n === 0 ? null : { t: 0, max: pre ? pre.start + pre.spec.len + 0.3 : introEnd }, pre,
     realm: null, realmOut: null, annis: [], stopUntil: 0, eclipseUntil: 0, flash: 0,
     cam: { x: W / 2, y: H / 2, z: 1 }, punch: null, kick: { x: 0, y: 0 }, slow: 0, impacts: [], demo: false,
     marks: [], cutin: null, lastCutIn: -99, bars: 0, inv: 0, focus: [],
@@ -606,6 +616,8 @@ export function newGame(ids: (Power | FighterDef)[], preview = false, teams?: nu
 export function newDemo(ids: (Power | FighterDef)[]): Game {
   const g = newGame(ids);
   g.demo = true;
+  if (g.pre && g.intro) g.intro.max = g.pre.base;
+  g.pre = null;
   return g;
 }
 
@@ -742,7 +754,15 @@ function stepCam(g: Game, dt: number) {
       const u = introU(g, f);
       if (u >= 0 && u < 0.92 && (!star || f.spawnAt > star.spawnAt)) star = f;
     }
-    if (star) {
+    const p = g.pre;
+    if (p && g.intro.t >= p.start - 0.15) {
+      const a = g.fighters[p.keys[0]], b = g.fighters[p.keys[1]];
+      const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x);
+      follow = true;
+      tz = clamp(W / (x1 - x0 + 460), 1, 1.32);
+      tx = (x0 + x1) / 2;
+      ty = Math.min(GROUND + 34 - H / (2 * tz), Math.min(a.y - bodyH(a), b.y - bodyH(b)) - 70 + H / (2 * tz));
+    } else if (star) {
       follow = true;
       tz = g.duel ? 1.3 : 1.2;
       tx = star.x;
@@ -1744,12 +1764,13 @@ function stepIntro(g: Game, dt: number) {
   const it = g.intro!;
   const prev = it.t;
   it.t += dt;
+  const pre = g.pre && it.t >= g.pre.start ? g.pre : null;
   for (const f of g.fighters) {
     const sp = introOf(f.def);
     const len = sp.len ?? INTRO_LEN;
     const u0 = (prev - f.spawnAt) / len, u1 = (it.t - f.spawnAt) / len;
     if (u1 < 0) continue;
-    if (u0 >= 1) { smoothPose(f, idlePose(f, it.t), dt, 8); continue; }
+    if (u0 >= 1) { if (!pre) smoothPose(f, idlePose(f, it.t), dt, 8); continue; }
     const crossed = (at: number) => u0 <= at && u1 > at;
     smoothPose(f, introPose(f.def, sp.body(clamp(u1, 0, 1), f.scale).pose), dt, 14);
     for (const b of sp.bursts) if (crossed(b.at)) introBurst(g, f, b, b.n);
@@ -1771,17 +1792,213 @@ function stepIntro(g: Game, dt: number) {
       if (sp.wave) g.waves.push({ x: f.x, y: f.y - 30 * f.scale, r: 120 * f.scale, life: 0.5, max: 0.5, a: sp.wave[0], b: sp.wave[1] });
     }
   }
+  if (pre) stepPre(g, pre, prev - pre.start, it.t - pre.start, dt);
   tickBits(g, dt);
   if (it.t >= it.max) {
     g.intro = null;
+    endPre(g);
     for (const f of g.fighters) f.pose = { ...stanceOf(f.def) };
   }
+}
+
+// ---------- the moment before READY ----------
+let preWord: (key: string) => string = () => "";
+/** Where the speech bubbles get their words: the screen passes a lookup into its strings (`arena.prefight.<key>`). */
+export function setPreFightWords(fn: (key: string) => string) {
+  preWord = fn;
+}
+
+/** The pose a fighter holds during a pre-fight moment, `t` seconds in. */
+function prePose(f: Fighter, pose: PrePose, t: number, gt: number): Pose {
+  const st = stanceOf(f.def);
+  switch (pose) {
+    case "wave": return { ...st, t: 0.02, aF1: 2.75, aF2: 3.35 + Math.sin(t * 14) * 0.45 };
+    case "highfive": return { ...st, t: 0.12, aF1: 2.3, aF2: 2.55 };
+    case "reach": return { ...st, t: 0.2, aF1: 1.4, aF2: 1.62, aB1: 0.15, aB2: 0.35 };
+    case "offer": return { ...st, t: 0.04, aF1: 1.15, aF2: 2.35 };
+    case "point": return { ...st, t: 0.08, aF1: 1.62, aF2: 1.6, aB1: -0.45, aB2: 0.5 };
+    case "flick": return { ...st, t: -0.1, aF1: 0.55, aF2: 0.35, aB1: 2.6, aB2: 3.9 };
+    case "flex": return FLEX;
+    case "crouch": return CROUCH;
+    default: return idlePose(f, gt);
+  }
+}
+
+/** Walks the pair to where the moment puts them, holds their poses and throws its bursts. */
+function stepPre(g: Game, p: PreRun, t0: number, t: number, dt: number) {
+  const fs = [g.fighters[p.keys[0]], g.fighters[p.keys[1]]];
+  const reach = Math.max(0, (Math.abs(p.homes[0] - p.homes[1]) - 66 * Math.max(fs[0].scale, fs[1].scale)) / 2);
+  for (const who of [0, 1] as const) {
+    const f = fs[who];
+    const dir = p.homes[1 - who] > p.homes[who] ? 1 : -1;
+    let pose: PrePose = "idle", to = 0;
+    for (const a of p.spec.acts) {
+      if (a.who !== who || a.at > t) continue;
+      pose = a.pose;
+      if (a.to !== undefined) to = a.to;
+    }
+    const target = p.homes[who] + dir * to * reach;
+    const d = target - f.x;
+    const sp = (p.spec.walk ?? 240) * dt;
+    f.facing = dir;
+    if (Math.abs(d) > 1.5) {
+      const mv = clamp(d, -sp, sp);
+      f.x += mv;
+      f.walkDir = Math.sign(mv);
+      f.walk += Math.abs(mv) / 14;
+      smoothPose(f, walkPose(f), dt, 26);
+    } else {
+      f.x = target;
+      f.walkDir = 0;
+      smoothPose(f, prePose(f, pose, t, g.intro?.t ?? 0), dt, 12);
+    }
+  }
+  for (const b of p.spec.bursts) {
+    if (!(t0 < b.at && t >= b.at)) continue;
+    const f = b.who === "mid" ? null : fs[b.who];
+    let x: number, y: number;
+    if (!f) {
+      x = (fs[0].x + fs[1].x) / 2;
+      y = Math.min(rig(fs[0].x, fs[0].y, fs[0].pose, fs[0].scale, fs[0].facing).hF.y, rig(fs[1].x, fs[1].y, fs[1].pose, fs[1].scale, fs[1].facing).hF.y);
+    } else {
+      const r = rig(f.x, f.y, f.pose, f.scale, f.facing);
+      const at = b.where === "head" ? r.head : r.hF;
+      x = at.x; y = at.y;
+    }
+    const s = f?.scale ?? fs[0].scale;
+    for (let i = 0; i < b.n && g.particles.length < 900; i++) {
+      const life = rand(0.45, 0.9);
+      const a = rand(0, Math.PI * 2), v = rand(b.spd * 0.3, b.spd);
+      g.particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life, max: life, size: rand(3, 7) * Math.max(0.8, s), color: Math.random() < 0.5 ? b.a : b.b, shape: b.shape, grav: b.grav, add: true, rot: rand(0, 6) });
+    }
+    if (b.ring) g.waves.push({ x, y, r: 80 * s, life: 0.45, max: 0.45, a: b.a, b: b.b });
+    if (f) sfx(g, { k: "intro", power: f.def.id });
+    else {
+      sfx(g, { k: "clash" });
+      g.shake = Math.max(g.shake, 5);
+    }
+  }
+}
+
+/** The moment is over: everyone back where they stood. */
+function endPre(g: Game) {
+  const p = g.pre;
+  if (!p) return;
+  p.keys.forEach((k, i) => {
+    const f = g.fighters[k];
+    if (!f) return;
+    f.x = p.homes[i];
+    f.walkDir = 0;
+    f.facing = p.homes[1 - i] > p.homes[i] ? 1 : -1;
+  });
+  g.pre = null;
+}
+
+/** Speech bubbles over the speakers' heads, typed out a letter at a time, and any star held up on a hand. */
+function drawPre(ctx: CanvasRenderingContext2D, g: Game) {
+  const p = g.pre, it = g.intro;
+  if (!p || !it || it.t < p.start) return;
+  const t = it.t - p.start;
+  const fs = [g.fighters[p.keys[0]], g.fighters[p.keys[1]]];
+  for (const st of p.spec.stars ?? []) {
+    if (t < st.at || t > st.until) continue;
+    const f = fs[st.who];
+    const r = rig(f.x, f.y, f.pose, f.scale, f.facing);
+    const k = clamp((t - st.at) / 0.3, 0, 1) * clamp((st.until - t) / 0.15, 0, 1);
+    const tw = 0.75 + 0.25 * Math.sin(it.t * 12);
+    const x = r.hF.x, y = r.hF.y - 12 * f.scale;
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    const grd = ctx.createRadialGradient(x, y, 0, x, y, 22 * f.scale);
+    grd.addColorStop(0, `hsl(48 100% 90% / ${0.8 * k})`);
+    grd.addColorStop(1, "hsl(324 100% 80% / 0)");
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(x, y, 22 * f.scale, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = st.color;
+    ctx.beginPath();
+    const R = 9 * f.scale * k * tw;
+    for (let i = 0; i < 8; i++) {
+      const a = it.t * 1.5 + (i * Math.PI) / 4, d = i % 2 ? R * 0.36 : R;
+      if (i) ctx.lineTo(x + Math.cos(a) * d, y + Math.sin(a) * d);
+      else ctx.moveTo(x + Math.cos(a) * d, y + Math.sin(a) * d);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  for (const ln of p.spec.lines) {
+    if (t < ln.at || t > ln.until) continue;
+    const text = preWord(ln.key);
+    if (!text) continue;
+    const f = fs[ln.who];
+    const k = clamp((t - ln.at) / 0.15, 0, 1) * clamp((ln.until - t) / 0.2, 0, 1);
+    const shown = text.slice(0, Math.max(1, Math.floor((t - ln.at) * 38)));
+    speechBubble(ctx, text, shown, f.x, f.y - 128 * f.scale, k);
+  }
+}
+
+/** A white speech bubble with an ink outline and a tail pointing down at the speaker; sized for the whole line so it does not grow as it types. */
+function speechBubble(ctx: CanvasRenderingContext2D, full: string, shown: string, x: number, bottom: number, k: number) {
+  const size = 17, lh = 22, maxW = 230, padX = 14, padY = 10;
+  ctx.save();
+  ctx.font = `600 ${size}px Fredoka, sans-serif`;
+  const wrap = (str: string) => {
+    const out: string[] = [];
+    let line = "";
+    for (const w of str.split(" ")) {
+      const next = line ? line + " " + w : w;
+      if (line && ctx.measureText(next).width > maxW) { out.push(line); line = w; }
+      else line = next;
+    }
+    if (line) out.push(line);
+    return out;
+  };
+  const all = wrap(full);
+  const w = Math.max(...all.map((l) => ctx.measureText(l).width)) + padX * 2;
+  const h = all.length * lh + padY * 2;
+  const cx = clamp(x, w / 2 + 8, W - w / 2 - 8);
+  const top = bottom - h - 12;
+  ctx.globalAlpha = k;
+  ctx.translate(x, bottom);
+  ctx.scale(0.85 + 0.15 * k, 0.85 + 0.15 * k);
+  ctx.translate(-x, -bottom);
+  ctx.fillStyle = "hsl(0 0% 100%)";
+  ctx.strokeStyle = INK;
+  ctx.lineWidth = 3;
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.roundRect(cx - w / 2, top, w, h, 14);
+  ctx.fill();
+  ctx.stroke();
+  // the tail, drawn over the outline so it joins the bubble
+  ctx.beginPath();
+  ctx.moveTo(x - 9, bottom - 13.5);
+  ctx.lineTo(x, bottom);
+  ctx.lineTo(x + 9, bottom - 13.5);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillRect(x - 7.5, bottom - 15, 15, 3);
+  ctx.fillStyle = INK;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  // type the line out inside the layout of the whole line
+  let left = shown.length;
+  all.forEach((l, i) => {
+    if (left <= 0) return;
+    const part = l.slice(0, left);
+    left -= l.length + 1;
+    ctx.fillText(part, cx - w / 2 + padX, top + padY + lh * (i + 0.5));
+  });
+  ctx.restore();
 }
 
 // ---------- Story cutscenes ----------
 /** A Story cutscene keeps these fighters out of sight until `arrive` brings them in; everyone else is already standing. */
 export function holdBack(g: Game, keys: number[]) {
   g.intro = { t: 0, max: Infinity };
+  g.pre = null;
   for (const f of g.fighters) f.spawnAt = keys.includes(f.key) ? Infinity : -1000;
 }
 
@@ -1809,6 +2026,7 @@ export function arrive(g: Game, keys: number[], gap: number): { lands: number[];
 export function settle(g: Game) {
   if (!g.intro) return;
   g.intro = null;
+  endPre(g);
   for (const f of g.fighters) f.pose = { ...stanceOf(f.def) };
 }
 
@@ -3401,7 +3619,7 @@ function drawFighterBody(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, o: 
   if (f.def.minion && !o.solid) drawMinionGear(ctx, f.def.minion, "back", { head, neck, hip, shoulder }, s, face, wave, f.vx, ink, col);
   // Nova wears her own long hair and long pink scarf in place of the usual short one
   const nova = f.def.id === "nova" && !f.def.parents && !f.def.boss && !f.def.minion && !f.def.custom && !o.solid;
-  if (nova) drawNovaLook(ctx, "back", bossPts, s, face, bt, f.alive, f.vx);
+  if (nova) drawNovaLook(ctx, "back", bossPts, s, face, bt, f.alive, f.vx, rg?.power === "nova");
   if (!f.def.boss && !quest && !nova && !f.def.minion && (!gear || gear === "scarf")) {
   const sx = -face * (16 + Math.abs(f.vx) * 0.03) * s;
   ctx.beginPath();
@@ -3482,7 +3700,7 @@ function drawFighterBody(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, o: 
     ctx.arc(ex + face * 1.3 * s, ey + 0.5 * s, 2 * s, 0, Math.PI * 2);
     ctx.fill();
   }
-  if (nova) drawNovaLook(ctx, "front", bossPts, s, face, bt, f.alive, f.vx);
+  if (nova) drawNovaLook(ctx, "front", bossPts, s, face, bt, f.alive, f.vx, rg?.power === "nova");
   if ((gear === "headband" || gear === "mask") && !o.solid) drawHeadGear(ctx, gear, head, face, wave, f.vx, s, rg?.glow ?? f.def.glow, ink, f.alive && !blind);
   if (f.def.minion && !o.solid) drawMinionGear(ctx, f.def.minion, "front", { head, neck, hip, shoulder }, s, face, wave, f.vx, ink, col);
   if (f.def.boss && !o.solid) drawBossDesign(ctx, f.def.boss, "front", bossPts, s, face, bt, f.alive, f.vx, bossAct, bossPhase);
@@ -4556,6 +4774,7 @@ export function drawScene(ctx: CanvasRenderingContext2D, g: Game, backdrop: HTML
   }
   ctx.globalAlpha = 1;
   for (const x of g.focus) drawFocus(ctx, x);
+  if (g.pre) drawPre(ctx, g);
   if (!g.duel && !g.demo && !cut) drawHeadBars(ctx, g);
   ctx.restore();
   // the impact frame: one instant of the whole picture in negative
@@ -4618,7 +4837,7 @@ function nameCards(g: Game): NameCard[] {
   const fs = [...g.fighters].sort((a, b) => a.x - b.x);
   const n = fs.length;
   const w = Math.min(300, W / n - 24);
-  const fade = clamp((it.max - it.t) / 0.3, 0, 1);
+  const fade = clamp(((g.pre ? g.pre.start : it.max) - it.t) / 0.3, 0, 1);
   return fs.map((f, i) => {
     const sp = introOf(f.def);
     const since = introU(g, f) - sp.hit;

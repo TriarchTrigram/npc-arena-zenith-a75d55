@@ -1289,70 +1289,271 @@ function pastriftFront(ctx: CanvasRenderingContext2D, r: BossRig, s: number, fac
 }
 
 // ---------- Nova (an original fighter, not a quest fighter) ----------
-// Long faded hot-pink hair flowing down her back and a long scarf in the same pink. The engine calls this for her
-// behind the body ("back": hair and scarf tail) and after the head ("front": the fringe and the scarf knot).
+// A hot-pink stick figure (her body colour is set on her fighter) with long faded hot-pink hair and a long scarf in the
+// same pink, each kept apart from the body by the ink outline. The hair is three layered locks, deep pink at the roots
+// fading to pale pink at the tips, with strands, a shine, loose wisps, swept bangs, a face-framing lock and a little
+// star clip. The engine calls this behind the body ("back": hair and scarf tail) and after the head ("front": the
+// bangs, the side lock, the clip and the scarf knot). `lit` is her Starborn form: the hair glows like a nebula.
 
-const NOVA_HAIR = "hsl(324 64% 72%)";
-const NOVA_HAIR_DARK = "hsl(316 52% 56%)";
-const NOVA_SCARF = "hsl(330 76% 68%)";
-const NOVA_SCARF_DARK = "hsl(322 60% 50%)";
+const NOVA_INK = "hsl(250 32% 14%)";
+const NOVA_ROOT = "hsl(326 74% 58%)";
+const NOVA_MID = "hsl(322 80% 70%)";
+const NOVA_TIP = "hsl(304 72% 86%)";
+const NOVA_UNDER = "hsl(318 58% 42%)";
+const NOVA_STRAND = "hsl(320 56% 46%)";
+const NOVA_SHINE = "hsl(330 100% 93%)";
+const NOVA_SCARF = "hsl(332 82% 66%)";
+const NOVA_SCARF_DARK = "hsl(322 62% 46%)";
+const NOVA_CLIP = "hsl(48 100% 80%)";
 
-export function drawNovaLook(ctx: CanvasRenderingContext2D, layer: "back" | "front", r: BossRig, s: number, face: number, t: number, alive: boolean, vx: number) {
+/** The centre line of one lock: from the back of the crown, round the head, then falling down her back. */
+function novaSpine(h: Pt, s: number, back: number, t: number, alive: boolean, speed: number, o: { len: number; phase: number; lift: number; out: number }) {
+  const pts: Pt[] = [];
+  let x = h.x + back * 3 * s, y = h.y - 8 * s;
+  pts.push({ x, y });
+  const n = 11;
+  for (let i = 1; i <= n; i++) {
+    const k = i / n;
+    // the first steps hug the back of the head, then it falls and swings out
+    const hug = i <= 2 ? 1 : 0;
+    const dx = back * (hug ? 4.2 : 1.5 + o.out + speed * 3.4) * s;
+    const dy = ((hug ? 3.6 : alive ? 6.2 - speed * 3.6 : 6.8) - o.lift) * s * o.len;
+    const sway = alive ? Math.sin(t * (2.4 + speed * 6) - i * 0.55 + o.phase) * (0.3 + k * 4.2) * s : 0;
+    x += dx;
+    y += dy;
+    pts.push({ x: x + sway * 0.5, y: y + (alive ? Math.abs(sway) * 0.15 : 0) });
+  }
+  return pts;
+}
+
+/** A tapered ribbon along a spine: wide at the root, a point at the tip. */
+function novaRibbon(ctx: CanvasRenderingContext2D, pts: Pt[], w0: number, w1: number) {
+  const L: Pt[] = [], R: Pt[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
+    let nx = -(b.y - a.y), ny = b.x - a.x;
+    const d = Math.hypot(nx, ny) || 1;
+    nx /= d; ny /= d;
+    const k = i / (pts.length - 1);
+    // full width for the first third, then tapering to the point
+    const w = (k < 0.3 ? w0 : w0 + (w1 - w0) * ((k - 0.3) / 0.7)) / 2;
+    L.push({ x: pts[i].x + nx * w, y: pts[i].y + ny * w });
+    R.push({ x: pts[i].x - nx * w, y: pts[i].y - ny * w });
+  }
+  ctx.beginPath();
+  ctx.moveTo(L[0].x, L[0].y);
+  for (let i = 1; i < L.length; i++) {
+    const p = L[i - 1], q = L[i];
+    ctx.quadraticCurveTo(p.x, p.y, (p.x + q.x) / 2, (p.y + q.y) / 2);
+  }
+  const tip = pts[pts.length - 1];
+  ctx.lineTo(tip.x, tip.y);
+  for (let i = R.length - 1; i >= 0; i--) {
+    const p = R[Math.min(R.length - 1, i + 1)], q = R[i];
+    ctx.quadraticCurveTo(p.x, p.y, (p.x + q.x) / 2, (p.y + q.y) / 2);
+  }
+  ctx.closePath();
+}
+
+/** Root-to-tip fade along a spine. */
+function novaFade(ctx: CanvasRenderingContext2D, pts: Pt[], root: string, mid: string, tip: string) {
+  const a = pts[0], b = pts[pts.length - 1];
+  const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+  g.addColorStop(0, root);
+  g.addColorStop(0.45, mid);
+  g.addColorStop(1, tip);
+  return g;
+}
+
+/** A small four-point star. */
+function novaStar(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, rot: number) {
+  ctx.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const a = rot + (i * Math.PI) / 4;
+    const d = i % 2 ? r * 0.38 : r;
+    const px = x + Math.cos(a) * d, py = y + Math.sin(a) * d;
+    if (i) ctx.lineTo(px, py);
+    else ctx.moveTo(px, py);
+  }
+  ctx.closePath();
+}
+
+export function drawNovaLook(ctx: CanvasRenderingContext2D, layer: "back" | "front", r: BossRig, s: number, face: number, t: number, alive: boolean, vx: number, lit = false) {
   const h = r.head;
   const back = -face;
+  const speed = Math.min(1, Math.abs(vx) / 320);
   ctx.save();
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   if (layer === "back") {
     turboScarf(ctx, r, s, face, t + 0.7, alive, vx, NOVA_SCARF, NOVA_SCARF_DARK, 14);
-    // the hair: a few long strands from the crown down past her shoulders, swaying and lifting as she moves
-    const speed = Math.min(1, Math.abs(vx) / 320);
-    for (let k = 0; k < 4; k++) {
-      ctx.strokeStyle = k % 2 ? NOVA_HAIR_DARK : NOVA_HAIR;
-      ctx.lineWidth = (k % 2 ? 5 : 6) * s;
+    // three locks, back to front: a dark underlayer, the long main fall, and a shorter top lock
+    const under = novaSpine(h, s, back, t, alive, speed, { len: 1.02, phase: 1.3, lift: -0.2, out: 1.1 });
+    const main = novaSpine(h, s, back, t, alive, speed, { len: 1, phase: 0, lift: 0, out: 0.6 });
+    const top = novaSpine(h, s, back, t, alive, speed, { len: 0.72, phase: 0.7, lift: 0.4, out: 0.2 });
+    if (lit) {
+      // Starborn: a soft nebula glow round the whole fall
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.shadowColor = "hsl(318 100% 70%)";
+      ctx.shadowBlur = 18 * s;
+      ctx.fillStyle = "hsl(318 100% 70% / 0.35)";
+      novaRibbon(ctx, main, 20 * s, 4 * s);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.strokeStyle = NOVA_INK;
+    ctx.lineWidth = 2.4 * s;
+    ctx.fillStyle = NOVA_UNDER;
+    novaRibbon(ctx, under, 16 * s, 1.5 * s);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = lit ? novaFade(ctx, main, "hsl(318 90% 60%)", "hsl(290 90% 74%)", "hsl(220 100% 88%)") : novaFade(ctx, main, NOVA_ROOT, NOVA_MID, NOVA_TIP);
+    novaRibbon(ctx, main, 18 * s, 1 * s);
+    ctx.fill();
+    ctx.stroke();
+    // strands running down the main fall
+    ctx.strokeStyle = NOVA_STRAND;
+    ctx.globalAlpha = 0.7;
+    ctx.lineWidth = 1 * s;
+    for (const off of [-4.2, -1.2, 2, 5]) {
       ctx.beginPath();
-      let x = h.x + back * (2 + k * 2.4) * s, y = h.y - 9 * s + k * 2 * s;
-      ctx.moveTo(x, y);
-      for (let i = 1; i <= 8; i++) {
-        const sway = alive ? Math.sin(t * (3 + speed * 6) - i * 0.6 + k) * (0.6 + i * 0.35) * s : 0;
-        x += back * (2.4 + speed * 2.2 + k * 0.3) * s;
-        y += (alive ? 5.2 - speed * 2.6 : 6) * s;
-        ctx.lineTo(x + sway, y);
+      for (let i = 1; i < main.length - 1; i++) {
+        const k = i / (main.length - 1);
+        const w = off * (k < 0.3 ? 1 : 1 - (k - 0.3) / 0.75) * s;
+        const px = main[i].x + w * 0.35, py = main[i].y + w * face * 0.2;
+        if (i === 1) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
       }
       ctx.stroke();
     }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = NOVA_INK;
+    ctx.lineWidth = 2.2 * s;
+    ctx.fillStyle = lit ? novaFade(ctx, top, "hsl(322 100% 70%)", "hsl(300 100% 80%)", "hsl(48 100% 88%)") : novaFade(ctx, top, NOVA_MID, NOVA_MID, NOVA_TIP);
+    novaRibbon(ctx, top, 12 * s, 1 * s);
+    ctx.fill();
+    ctx.stroke();
+    // a shine along the top of the main fall
+    ctx.strokeStyle = NOVA_SHINE;
+    ctx.globalAlpha = 0.85;
+    ctx.lineWidth = 1.8 * s;
+    ctx.beginPath();
+    ctx.moveTo(main[2].x, main[2].y - 3 * s);
+    ctx.quadraticCurveTo(main[3].x, main[3].y - 2 * s, main[4].x + face * 1 * s, main[4].y);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    // a couple of loose wisps that drift off the ends
+    const tip = main[main.length - 1];
+    ctx.strokeStyle = NOVA_MID;
+    ctx.lineWidth = 1.1 * s;
+    for (let i = 0; i < 3; i++) {
+      const drift = alive ? Math.sin(t * 3.2 + i * 2) * 3 * s : 1.5 * s;
+      ctx.beginPath();
+      ctx.moveTo(main[main.length - 3 - i].x, main[main.length - 3 - i].y);
+      ctx.quadraticCurveTo(tip.x + back * (3 + i * 2) * s, tip.y - (6 - i * 3) * s + drift, tip.x + back * (7 + i * 3) * s, tip.y + (2 + i * 2) * s + drift);
+      ctx.stroke();
+    }
+    if (lit && alive) {
+      // stars caught in her hair
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      for (let i = 0; i < 6; i++) {
+        const p = main[2 + ((i * 3) % (main.length - 3))];
+        const tw = 0.5 + 0.5 * Math.sin(t * 5 + i * 1.7);
+        ctx.fillStyle = `hsl(48 100% 90% / ${0.4 + tw * 0.6})`;
+        novaStar(ctx, p.x + Math.sin(i * 2.3) * 4 * s, p.y + Math.cos(i * 1.9) * 3 * s, (1.4 + tw * 1.6) * s, t * 0.8 + i);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
   } else {
-    // the fringe over her brow, swept toward the back of her head
-    ctx.fillStyle = NOVA_HAIR;
-    ctx.strokeStyle = NOVA_HAIR_DARK;
-    ctx.lineWidth = 1.2 * s;
+    const R = (HEAD + 1.4) * s;
     ctx.save();
     ctx.translate(h.x, h.y);
     ctx.scale(face, 1);
-    const R = (HEAD + 1) * s;
+    // the cap of hair over her crown, swept back, with bangs falling in points over her brow
+    const cap = ctx.createLinearGradient(0, -R, 0, R * 0.3);
+    cap.addColorStop(0, lit ? "hsl(322 100% 74%)" : NOVA_MID);
+    cap.addColorStop(1, lit ? "hsl(318 90% 58%)" : NOVA_ROOT);
+    ctx.fillStyle = cap;
+    ctx.strokeStyle = NOVA_INK;
+    ctx.lineWidth = 2 * s;
     ctx.beginPath();
-    ctx.arc(0, 0, R, Math.PI, 0);
-    // the lower edge, front to back: short bangs over the eye, longer at the back where it falls away
-    ctx.lineTo(R * 0.62, -6.8 * s);
-    ctx.lineTo(R * 0.3, -5 * s);
-    ctx.lineTo(-R * 0.05, -6.4 * s);
-    ctx.lineTo(-R * 0.5, -2 * s);
-    ctx.lineTo(-R * 0.92, 2 * s);
+    ctx.moveTo(-R * 1.02, R * 0.25);
+    ctx.bezierCurveTo(-R * 1.15, -R * 0.9, R * 0.2, -R * 1.35, R * 1.0, -R * 0.35);
+    // the bangs, front to back: three points of different lengths
+    ctx.lineTo(R * 0.9, R * 0.05);
+    ctx.lineTo(R * 0.72, -R * 0.55);
+    ctx.lineTo(R * 0.5, -R * 0.45);
+    ctx.lineTo(R * 0.3, -R * 0.64);
+    ctx.lineTo(R * 0.1, -R * 0.4);
+    ctx.lineTo(-R * 0.1, -R * 0.58);
+    ctx.quadraticCurveTo(-R * 0.55, -R * 0.2, -R * 0.82, R * 0.42);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
-    ctx.restore();
-    // the scarf wrapped round her neck
-    ctx.strokeStyle = NOVA_SCARF;
-    ctx.lineWidth = 6 * s;
+    // the parting and a couple of strands sweeping back from it
+    ctx.strokeStyle = NOVA_STRAND;
+    ctx.lineWidth = 1 * s;
+    for (const [x0, y0, x1, y1] of [[R * 0.55, -R * 0.85, -R * 0.7, -R * 0.35], [R * 0.75, -R * 0.45, -R * 0.4, -R * 0.75], [R * 0.3, -R * 0.4, -R * 0.75, R * 0.05]]) {
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.quadraticCurveTo((x0 + x1) / 2, Math.min(y0, y1) - R * 0.25, x1, y1);
+      ctx.stroke();
+    }
+    // the shine across the crown
+    ctx.strokeStyle = NOVA_SHINE;
+    ctx.lineWidth = 2 * s;
     ctx.beginPath();
-    ctx.moveTo(r.neck.x - face * 6 * s, r.neck.y + 1 * s);
-    ctx.lineTo(r.neck.x + face * 6 * s, r.neck.y + 1 * s);
+    ctx.arc(-R * 0.1, -R * 0.1, R * 0.78, -2.5, -1.75);
     ctx.stroke();
-    ctx.fillStyle = NOVA_SCARF_DARK;
+    // a lock framing her face, hanging past the chin and swaying a little
+    const sway = alive ? Math.sin(t * 2.6) * 1.2 * s : 0;
+    ctx.fillStyle = lit ? "hsl(318 100% 70%)" : NOVA_MID;
+    ctx.strokeStyle = NOVA_INK;
+    ctx.lineWidth = 1.6 * s;
     ctx.beginPath();
-    ctx.arc(r.neck.x + face * 4.5 * s, r.neck.y + 2 * s, 2.6 * s, 0, TAU);
+    ctx.moveTo(R * 0.86, -R * 0.45);
+    ctx.quadraticCurveTo(R * 1.16, R * 0.3, R * 0.96 + sway, R * 1.45);
+    ctx.quadraticCurveTo(R * 0.86, R * 0.6, R * 0.74, -R * 0.15);
+    ctx.closePath();
     ctx.fill();
+    ctx.stroke();
+    // a star clip at the back of the crown, twinkling
+    const tw = alive ? 0.5 + 0.5 * Math.sin(t * 3.4) : 0.3;
+    ctx.fillStyle = NOVA_CLIP;
+    ctx.strokeStyle = NOVA_INK;
+    ctx.lineWidth = 1.2 * s;
+    novaStar(ctx, -R * 0.62, -R * 0.62, (3.6 + tw * 0.8) * s, -Math.PI / 2);
+    ctx.fill();
+    ctx.stroke();
+    if (lit || tw > 0.8) {
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.fillStyle = `hsl(48 100% 90% / ${lit ? 0.6 : (tw - 0.8) * 3})`;
+      ctx.beginPath();
+      ctx.arc(-R * 0.62, -R * 0.62, 4.5 * s, 0, TAU);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+    // the scarf wrapped round her neck, outlined so it stands off her pink body
+    for (const [col, w] of [[NOVA_INK, 8.6], [NOVA_SCARF, 6]] as const) {
+      ctx.strokeStyle = col;
+      ctx.lineWidth = w * s;
+      ctx.beginPath();
+      ctx.moveTo(r.neck.x - face * 6 * s, r.neck.y + 1 * s);
+      ctx.lineTo(r.neck.x + face * 6 * s, r.neck.y + 1 * s);
+      ctx.stroke();
+    }
+    ctx.fillStyle = NOVA_SCARF_DARK;
+    ctx.strokeStyle = NOVA_INK;
+    ctx.lineWidth = 1.4 * s;
+    ctx.beginPath();
+    ctx.arc(r.neck.x + face * 4.5 * s, r.neck.y + 2 * s, 2.8 * s, 0, TAU);
+    ctx.fill();
+    ctx.stroke();
   }
   ctx.restore();
 }

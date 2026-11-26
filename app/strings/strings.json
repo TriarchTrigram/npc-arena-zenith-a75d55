@@ -50,6 +50,19 @@
       "paused": "Paused",
       "finished": "Finished"
     },
+    "prefight": {
+      "pyroNova1": "Morning, Nova! Doing okay today?",
+      "pyroNova2": "Every single day you ask. I'm okay, Pyro.",
+      "pyroNova3": "Good. Then I'm not going easy on you.",
+      "novaRift1": "Rift? Is that really you?",
+      "novaRift2": "Who else? Here, a star. You look like you need one.",
+      "novaRift3": "Thanks. Let's fight like old times.",
+      "pyroRift1": "Pyro! First one to land a hit wins.",
+      "pyroRift2": "You're on, Rift!",
+      "novaNova1": "Nice hair.",
+      "novaNova2": "I know.",
+      "novaAny1": "Make a wish."
+    },
     "canvasAria": "Battle arena",
     "alive": {
       "title": "Still standing",

@@ -337,7 +337,7 @@ export const FIGHTERS: FighterDef[] = [
   {
     id: "nova", name: "Nova", power: "Cosmic Manipulation", role: "control",
     ability: "Shapes the cosmos: stardust fists, comets, nebula clouds and orbits that drag enemies in. She was the Riftmaker's best friend before the Axiom corrupted him. Pyro was his friend too, and after it happened he came by every day to make sure she was okay.",
-    color: "hsl(232 58% 54%)", glow: "hsl(324 72% 74%)", hp: 100, speed: 92,
+    color: "hsl(326 72% 64%)", glow: "hsl(286 100% 86%)", hp: 100, speed: 92,
     moves: [
       M({ id: "stardust-strike", name: "Stardust Strike", kind: "melee", anim: "thrust", range: 74, cd: 0.9, dmg: 8, kb: 190 }),
       M({ id: "comet-shot", name: "Comet Shot", kind: "projectile", anim: "cast", range: 580, minRange: 80, cd: 1.9, dmg: 9, speed: 600, size: 12, shape: "orb", kb: 160 }),

@@ -246,7 +246,7 @@ export const FORMS = {
   nova: {
     power: "nova", kind: "mystic", title: "STARBORN", ...MYSTIC,
     blurb: "Her hair lights up like a nebula. Stars fall where she points, and every hit she lands pulls a little health back.",
-    body: "hsl(258 70% 30%)", glow: "hsl(322 100% 80%)", a: "hsl(300 80% 62%)", b: "hsl(48 100% 84%)",
+    body: "hsl(318 80% 52%)", glow: "hsl(322 100% 80%)", a: "hsl(300 80% 62%)", b: "hsl(48 100% 84%)",
     dmg: 1.25, kb: 1.15, cd: 0.75, speed: 1.1, act: 1.15,
     moves: [
       M({ id: "falling-stars", name: "Falling Stars", kind: "rain", anim: "raise", range: 540, cd: 6, dmg: 9, count: 6, radius: 160, shape: "rock", wind: 0.32 }),

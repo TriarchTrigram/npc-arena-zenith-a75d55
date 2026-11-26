@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import type { Route } from "./+types/home";
-import { Text, useString, type StringKey } from "~stencil/ui/strings";
+import { Text, readString, useString, useStrings, type StringKey } from "~stencil/ui/strings";
 import { Button } from "~/components/ui/button";
 import {
   PageContainer,
@@ -24,7 +24,7 @@ import { rememberHybrid, useHybrids } from "~/lib/hybrids";
 import { loadQuests, recordFight, recordTournament, rollNewGen, unlockedOf, useQuests } from "~/lib/quests";
 import { FusionSheet } from "~/components/fusion-sheet";
 import { FighterDot } from "~/components/fighter-dot";
-import { W, H, TEAM_COLORS, newGame, step, drawScene, buildBackdrop, type Game, type FeedItem } from "~/lib/arena-engine";
+import { W, H, TEAM_COLORS, newGame, step, drawScene, buildBackdrop, setPreFightWords, type Game, type FeedItem } from "~/lib/arena-engine";
 import { arenaSound } from "~/lib/arena-sound";
 import { arenaMusic, chapterTheme } from "~/lib/arena-music";
 import { MusicControl } from "~/components/music-control";
@@ -222,6 +222,11 @@ export default function Home() {
   const volumeAria = useString("arena.controls.volume");
   const soundAria = useString("arena.controls.soundAria");
   const canvasAria = useString("arena.canvasAria");
+  // the words fighters say to each other before READY
+  const allStrings = useStrings();
+  useEffect(() => {
+    setPreFightWords((key) => readString(allStrings, `arena.prefight.${key}`) ?? "");
+  }, [allStrings]);
   const titleBackAria = useString("title.backAria");
   const speedAria = useString("arena.controls.speedAria");
   const juggAria = useString("arena.jugg.label");
